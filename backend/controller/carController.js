@@ -1,0 +1,10 @@
+const mainController = require('./mainController')
+const catchAsyncErr = require('./../utils/catchAsyncErr')
+const AppError = require('../utils/appError')
+const Car = require('../model/carModel')
+
+exports.getAllCars = mainController.getAll(Car)
+exports.getCar = mainController.getOne(Car)
+exports.createCar = mainController.createOne(Car)
+exports.updateCar = mainController.updateOne(Car)
+exports.deleteCar = mainController.deleteOne(Car)
