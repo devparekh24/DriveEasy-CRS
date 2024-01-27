@@ -25,21 +25,21 @@ import sedan3 from "../assets/sedans/sedan-3.webp";
 
 
 interface Car {
-  id: number;
+  id: number | string;
   name: string;
   image: string;
   carLink: string;
 }
 
 interface CarType {
-  id: number;
+  id: number | string;
   name: string;
   image: string;
   address: string;
 }
 
 interface CarForBooking {
-  id: number;
+  id: number | string;
   name: string;
   image: string;
   ratePerDay: string;
@@ -61,7 +61,7 @@ interface CarForBooking {
 }
 
 interface CarByType {
-  id: number;
+  id: number | string;
   name: string;
   type: string;
   image: string;

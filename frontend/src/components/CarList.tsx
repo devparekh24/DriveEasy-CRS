@@ -28,7 +28,7 @@ const CarList = () => {
 
         <div className="car-list-container">
           {cars.map((car: Car) => (
-            <div className="car-card" id={car.id} key={car.id}>
+            <div className="car-card" id={String(car.id)} key={car.id}>
               <img src={car.image} alt="" className="card-image" />
               <div className="overlay">{car.name}</div>
             </div>
@@ -46,7 +46,7 @@ const CarList = () => {
           {carType.map((car: CarType) => (
             <div
               className="car-card"
-              id={car.id}
+              id={String(car.id)}
               key={car.id}
               onClick={() => navigate(`/${car.name}`)}
             >

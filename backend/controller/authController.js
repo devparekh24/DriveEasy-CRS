@@ -25,7 +25,7 @@ const createSendToken = (user, statusCode, res) => {
     })
 }
 
-exports.register = catchAsyncErr(async (req, res, next) => {
+exports.signup = catchAsyncErr(async (req, res, next) => {
 
     const newUser = await User.create({
         name: req.body.name,
