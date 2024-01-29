@@ -26,7 +26,7 @@
   position: relative;
   border-radius: 13px;
   margin: 1rem 0.5rem;
-  /* box-shadow: 0 0 20px 0px rgb(128, 128, 128); */
+  box-shadow: 0 0 2px 0px rgb(128, 128, 128);
 }
 
 .card-image {
@@ -35,7 +35,7 @@
   display: block;
   filter: brightness(80%);
   border-radius: 13px;
-  object-fit: cover;
+  object-fit: contain;
   cursor: pointer;
 }
 
@@ -49,10 +49,10 @@
 .overlay {
   position: absolute;
   bottom: 0;
-  color: #f1f1f1;
+  /* color: #f1f1f1; */
   width: 100%;
   transition: 0.5s ease;
-  color: white;
+  /* color: white; */
   font-size: 1.6rem;
   padding: 10px;
   text-align: left;

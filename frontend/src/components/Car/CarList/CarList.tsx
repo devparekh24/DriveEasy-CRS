@@ -29,13 +29,13 @@ const CarList = () => {
         <div className="car-list-container">
           {cars.map((car: Car) => (
             <div className="car-card" id={String(car.id)} key={car.id}>
-              <img src={car.image} alt="" className="card-image" />
+              <img src={car.image} alt={car.name} className="card-image" />
               <div className="overlay">{car.name}</div>
             </div>
           ))}
         </div>
       </div>
-      <div className="find-car-list">
+      {/* <div className="find-car-list">
         <h1>Find Car by Type</h1>
         <h5>
           We offer professional car rental services in our range of
@@ -55,7 +55,7 @@ const CarList = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </>
   )
 }
