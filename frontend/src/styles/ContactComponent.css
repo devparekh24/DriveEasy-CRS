@@ -1,9 +1,53 @@
+.contact-header {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.contact-form-container {
+  border: 1px solid rgb(207, 204, 204);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.input-group #firstname {
+  margin-bottom: 20px;
+}
+
+.input-group #email,
+input {
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  width: 100%;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.input-group #email:focus,
+input:focus {
+  border-color: #000000;
+  outline: none;
+}
+
+.input-group #message {
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  width: 100%;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
 .contact-component {
   width: 100%;
   min-height: 50vh;
-  padding: 7rem 5rem;
+  padding: 4rem 3rem;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -43,5 +87,6 @@
 
   .contact-component .contact-box {
     width: 90%;
+    margin-top: 50px;
   }
 }

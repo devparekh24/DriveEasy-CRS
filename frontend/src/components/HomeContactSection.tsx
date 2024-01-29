@@ -14,7 +14,7 @@ const HomeContactSection: React.FC = () => {
           services, in the tourism and business industry, stand out for their
           quality and good taste, to offer you a unique experience
         </h6>
-        <p>Call Now (54)-344-4533-4</p>
+        <p>Call Now (+91) 12345-67890</p>
         <button className="call-btn">Request a Quote</button>
       </div>
       <div className="why-choose-us">

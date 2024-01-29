@@ -10,6 +10,7 @@ import Signup from "./components/Signup";
 import ForgotPassword from "./components/ForgotPassword";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { MyProfile } from "./components/MyProfile";
 
 const AppRouting = () => {
     return (
@@ -22,6 +23,7 @@ const AppRouting = () => {
                 <Route path="/cars/:carName/:id" element={< Booking />} />
                 <Route path="/:type/:carName/:id" element={< Booking />} />
                 <Route path="/contact" element={< Contact />} />
+                <Route path="/my-profile" element={< MyProfile />} />
                 <Route path="/login" element={< Login />} />
                 <Route path="/signup" element={< Signup />} />
                 <Route path="/forgot-password" element={< ForgotPassword />} />

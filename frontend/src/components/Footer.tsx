@@ -19,11 +19,11 @@ const Footer = () => {
                 <div className="footer-col">
                     <h3>Contact Info</h3>
                     <p>
-                        <HiOutlineDevicePhoneMobile className="footer-icon" /> 0-000-000-0000
+                        <HiOutlineDevicePhoneMobile className="footer-icon" /> +91-123-456-7890
                     </p>
                     <p>
                         <IoLocationOutline className="footer-icon" />
-                        Lorem ipsum dolor sit amet.
+                        Luxuria Business Hub, Dumas Rd, Surat
                     </p>
                     {/* <p>
                         <GiAlarmClock className="footer-icon" />

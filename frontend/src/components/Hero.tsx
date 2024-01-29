@@ -1,37 +1,37 @@
 import React from 'react';
-import { MdOutlineExpandMore } from 'react-icons/md';
-import { BsArrowDownUp } from 'react-icons/bs';
+// import { MdOutlineExpandMore } from 'react-icons/md';
+// import { BsArrowDownUp } from 'react-icons/bs';
 import '../styles/Hero.css';
 
 interface HeroProps { }
 
 const Hero: React.FC<HeroProps> = () => {
-  const function_1 = () => {
-    const dropdown = document.getElementById('myDropdown');
-    if (dropdown) {
-      dropdown.classList.toggle('show');
-    }
-  };
+  // const function_1 = () => {
+  //   const dropdown = document.getElementById('myDropdown');
+  //   if (dropdown) {
+  //     dropdown.classList.toggle('show');
+  //   }
+  // };
 
-  const function_2 = () => {
-    const dropdown = document.getElementById('myDropdown2');
-    if (dropdown) {
-      dropdown.classList.toggle('show');
-    }
-  };
+  // const function_2 = () => {
+  //   const dropdown = document.getElementById('myDropdown2');
+  //   if (dropdown) {
+  //     dropdown.classList.toggle('show');
+  //   }
+  // };
 
-  const function_3 = () => {
-    const dropdown = document.getElementById('myDropdown3');
-    if (dropdown) {
-      dropdown.classList.toggle('show');
-    }
-  };
+  // const function_3 = () => {
+  //   const dropdown = document.getElementById('myDropdown3');
+  //   if (dropdown) {
+  //     dropdown.classList.toggle('show');
+  //   }
+  // };
 
   return (
     <div className="hero-section">
       <h1>Find Best Car & Limousine</h1>
       <h6>From as low as $10 per day with limited time offer discounts</h6>
-      <div className="search-fields">
+      {/* <div className="search-fields">
         <div className="search-col">
           <div className="dropdown">
             <button className="dropbtn" onClick={function_1}>
@@ -80,7 +80,7 @@ const Hero: React.FC<HeroProps> = () => {
         <div className="search-col">
           <button className="search-btn">Search</button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

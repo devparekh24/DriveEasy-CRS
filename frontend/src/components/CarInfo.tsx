@@ -3,7 +3,7 @@ import React from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import { PiBagLight } from "react-icons/pi";
 import { VscSettings } from "react-icons/vsc";
-import { AiOutlineCar, AiOutlineCheck } from "react-icons/ai";
+import { AiOutlineCar } from "react-icons/ai";
 import { carsForBooking } from "../data/cars";
 import { useLocation, useParams } from "react-router-dom";
 import { useFormik } from "formik";
@@ -126,7 +126,7 @@ const CarInfo: React.FC = () => {
               <p>Doors</p>
             </div>
           </div>
-          <h2>Refueling</h2>
+          {/* <h2>Refueling</h2>
           <p>
             Meh synth Schlitz, tempor duis single-origin coffee ea next level
             ethnic fingerstache fanny pack nostrud. Photo booth anim 8-bit
@@ -204,7 +204,7 @@ const CarInfo: React.FC = () => {
                 {find_car?.excluded[1]}
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="car-info-form-col">
           <form onSubmit={formik.handleSubmit}>

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import { useAppDispatch, useAppSelector } from "../hooks/hooks";
 import { logout, setUserLogin } from "../slices/authSlice";
+import Avatar from '@mui/material/Avatar';
 
 const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
@@ -24,7 +25,7 @@ const Navbar = () => {
             dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role }));
         }
     }, [dispatch]);
-    
+
     return (
         <div>
             <header>
@@ -35,7 +36,14 @@ const Navbar = () => {
                     {/* <Link to="/Booking">Booking</Link> */}
                     <Link to="/contact">Contact</Link>
                     {
-                        isLogin ? <Link to="/" onClick={() => dispatch(logout())}>Logout</Link> : <Link to="/login">Login</Link>
+                        isLogin ? (
+                            <>
+                                <Link to="/" onClick={() => dispatch(logout())}>Logout</Link>
+                                <Link to="/my-profile">
+                                    <Avatar src="/broken-image.jpg" />
+                                </Link>
+                            </>
+                        ) : (<Link to="/login">Login</Link>)
                     }
                     <button className="nav-btn nav-close-btn" onClick={showNavbar}>
                         {/* <i className="bi bi-x"></i> */}

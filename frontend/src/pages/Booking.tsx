@@ -1,5 +1,5 @@
 import React from 'react';
-import CarCarousel from '../components/CarCarousel';
+// import CarCarousel from '../components/CarCarousel';
 import CarInfo from '../components/CarInfo';
 
 // const slideImages = [
@@ -20,7 +20,7 @@ import CarInfo from '../components/CarInfo';
 const Booking: React.FC = ({ slideImages }: any) => {
   return (
     <div>
-      <CarCarousel slideImages={slideImages} />
+      {/* <CarCarousel slideImages={slideImages} /> */}
       <CarInfo />
     </div>
   );
