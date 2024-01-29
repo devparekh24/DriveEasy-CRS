@@ -5,12 +5,12 @@ import Booking from "./pages/Booking";
 import Contact from "./pages/Contact";
 // import CarDetails from "./pages/CarDetails"; 
 import CarType from "./pages/CarType";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
-import ForgotPassword from "./components/ForgotPassword";
+import Login from "./components/Auth/Login";
+import Signup from "./components/Auth/Signup";
+import ForgotPassword from "./components/Auth/ForgotPassword";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { MyProfile } from "./components/MyProfile";
+import { MyProfile } from "./components/MyProfile/MyProfile";
 
 const AppRouting = () => {
     return (

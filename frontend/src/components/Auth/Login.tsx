@@ -1,10 +1,10 @@
-import '../styles/login.css'
+import './auth.css'
 import React, { useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../hooks/hooks'
-import { useLoginMutation } from '../services/authApi'
+import { useAppDispatch } from '../../hooks/hooks'
+import { useLoginMutation } from '../../services/authApi'
 import { toast } from 'react-toastify'
-import { setUserLogin } from '../slices/authSlice'
+import { setUserLogin } from '../../slices/authSlice'
 
 const Login = () => {
 

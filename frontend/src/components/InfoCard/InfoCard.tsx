@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/InfoCard.css";
+import "./InfoCard.css";
 
 interface InfoCardProps {
     stepNumber: number;

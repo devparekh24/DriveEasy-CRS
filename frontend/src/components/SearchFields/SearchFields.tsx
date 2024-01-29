@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/SearchFields.css';
+import './SearchFields.css';
 
 const SearchFields: React.FC = () => {
   return (

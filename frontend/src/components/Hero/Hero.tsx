@@ -1,7 +1,7 @@
 import React from 'react';
 // import { MdOutlineExpandMore } from 'react-icons/md';
 // import { BsArrowDownUp } from 'react-icons/bs';
-import '../styles/Hero.css';
+import './Hero.css';
 
 interface HeroProps { }
 

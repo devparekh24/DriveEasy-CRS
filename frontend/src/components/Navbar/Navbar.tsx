@@ -2,9 +2,9 @@ import { useEffect, useRef } from "react";
 import { IoMenu } from "react-icons/io5";
 import { GrFormClose } from "react-icons/gr";
 import { Link } from "react-router-dom";
-import "../styles/Navbar.css";
-import { useAppDispatch, useAppSelector } from "../hooks/hooks";
-import { logout, setUserLogin } from "../slices/authSlice";
+import "./Navbar.css";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { logout, setUserLogin } from "../../slices/authSlice";
 import Avatar from '@mui/material/Avatar';
 
 const Navbar = () => {

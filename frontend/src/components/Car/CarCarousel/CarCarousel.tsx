@@ -1,9 +1,9 @@
-import "../styles/CarCarousel.css";
+import "./CarCarousel.css";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Fade, Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
-import { carsForBooking } from "../data/cars";
+import { carsForBooking } from "../../../data/cars";
 
 const spanStyle: React.CSSProperties = {
   padding: "20px",

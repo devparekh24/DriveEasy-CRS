@@ -1,7 +1,7 @@
 import React from 'react';
-import CommonHeader from '../components/CommonHeader';
+import CommonHeader from '../components/CommonHeader/CommonHeader';
 // import SearchFields from '../components/SearchFields';
-import CarsShowcase from '../components/CarsShowcase';
+import CarsShowcase from '../components/Car/CarShowcase/CarsShowcase';
 
 const Cars: React.FC = () => {
   return (

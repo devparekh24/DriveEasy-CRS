@@ -1,7 +1,7 @@
 import { HiOutlineDevicePhoneMobile } from "react-icons/hi2";
 import { IoLocationOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import "../styles/Footer.css";
+import "./Footer.css";
 
 const Footer = () => {
     return (

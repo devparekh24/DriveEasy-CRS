@@ -1,6 +1,6 @@
 import React from 'react';
-import CommonHeader from '../components/CommonHeader';
-import ContactComponent from '../components/ContactComponent';
+import CommonHeader from '../components/CommonHeader/CommonHeader';
+import ContactComponent from '../components/ContactComponent/ContactComponent';
 
 const Contact: React.FC = () => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react';
-import InfoCard from './InfoCard';
-import '../styles/HowItWorks.css';
+import InfoCard from '../InfoCard/InfoCard';
+import './HowItWorks.css';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 // import EditNoteIcon from '@mui/icons-material/EditNote';

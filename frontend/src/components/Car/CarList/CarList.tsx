@@ -1,5 +1,5 @@
-import "../styles/CarList.css";
-import { cars, carType } from "../data/cars";
+import "./CarList.css";
+import { cars, carType } from "../../../data/cars";
 import { useNavigate } from "react-router-dom";
 
 interface Car {

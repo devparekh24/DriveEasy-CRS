@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/HomeContactSection.css';
+import './HomeContactSection.css';
 import { BiCar } from 'react-icons/bi';
 import { BsEmojiSmile } from 'react-icons/bs';
 import { AiOutlineHeart } from 'react-icons/ai';

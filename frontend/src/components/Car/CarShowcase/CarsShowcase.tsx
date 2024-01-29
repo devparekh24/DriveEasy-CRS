@@ -1,6 +1,6 @@
-import { carsForBooking } from "../data/cars";
-import "../styles/CarsShowcase.css";
-import CarDetailsCard from "./CarDetailsCard";
+import { carsForBooking } from "../../../data/cars";
+import "./CarsShowcase.css";
+import CarDetailsCard from "../CarDetailsCard/CarDetailsCard";
 
 interface CarDetails {
   id: number | string;

@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
-import { carsByType } from "../data/cars";
-import CarDetailsCard from "./CarDetailsCard";
+import { carsByType } from "../../../data/cars";
+import CarDetailsCard from "../CarDetailsCard/CarDetailsCard";
 
 interface CarDetails {
   id: number | string;

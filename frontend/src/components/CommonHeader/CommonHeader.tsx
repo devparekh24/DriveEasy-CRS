@@ -1,4 +1,4 @@
-import "../styles/CommonHeader.css";
+import "./CommonHeader.css";
 
 interface CommonHeaderProps {
   heading: string;

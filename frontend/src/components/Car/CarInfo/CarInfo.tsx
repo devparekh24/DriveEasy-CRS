@@ -1,10 +1,10 @@
-import "../styles/CarInfo.css";
+import "./CarInfo.css";
 import React from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import { PiBagLight } from "react-icons/pi";
 import { VscSettings } from "react-icons/vsc";
 import { AiOutlineCar } from "react-icons/ai";
-import { carsForBooking } from "../data/cars";
+import { carsForBooking } from "../../../data/cars";
 import { useLocation, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 

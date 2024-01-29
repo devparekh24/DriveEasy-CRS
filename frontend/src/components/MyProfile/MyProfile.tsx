@@ -1,4 +1,4 @@
-import CommonHeader from "./CommonHeader"
+import CommonHeader from "../CommonHeader/CommonHeader"
 import { MyProfileComponent } from "./MyProfileComponent"
 
 export const MyProfile = () => {

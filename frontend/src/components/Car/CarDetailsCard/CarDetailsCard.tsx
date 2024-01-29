@@ -1,4 +1,4 @@
-import "../styles/CarDetailsCard.css";
+import "./CarDetailsCard.css";
 import React from "react";
 import { AiOutlineStar } from "react-icons/ai";
 import { MdPersonOutline } from "react-icons/md";

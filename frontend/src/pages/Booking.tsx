@@ -1,6 +1,6 @@
 import React from 'react';
 // import CarCarousel from '../components/CarCarousel';
-import CarInfo from '../components/CarInfo';
+import CarInfo from '../components/Car/CarInfo/CarInfo';
 
 // const slideImages = [
 //   {

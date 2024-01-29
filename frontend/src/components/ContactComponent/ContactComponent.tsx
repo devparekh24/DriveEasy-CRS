@@ -1,4 +1,4 @@
-import "../styles/ContactComponent.css";
+import "./ContactComponent.css";
 import { IoCall, IoLocation } from "react-icons/io5";
 import { RiHomeOfficeFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
@@ -37,7 +37,7 @@ export default function ContactComponent() {
               <input type="email" id="email" name="email" placeholder="Email" required />
             </div>
             <div className="input-group">
-              <textarea id="message" name="message" placeholder="Write Your Message" cols={30} rows={5} style={{ width: '100%', border: '1px solid rgb(207, 204, 204)', fontSize:'16px' }} required />
+              <textarea id="message" name="message" placeholder="Write Your Message" cols={30} rows={5} style={{ width: '100%', border: '1px solid rgb(207, 204, 204)', fontSize: '16px' }} required />
             </div>
             <button type="submit">Send Message</button>
           </form>
