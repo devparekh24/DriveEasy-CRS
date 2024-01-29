@@ -16,14 +16,14 @@ export interface User {
 export interface AuthState {
     name: string | null;
     token: string | null;
-    // user: User | null;
+    user: User | null;
     isLoggedIn: boolean;
     isAdmin: boolean;
 }
 const initialState: AuthState = {
     name: null,
     token: null,
-    // user: null,
+    user: null,
     isLoggedIn: false,
     isAdmin: false
 }
@@ -44,7 +44,9 @@ const authSlice = createSlice({
                 state.isAdmin = true;
             }
         },
-
+        setUserSignup(state, action: PayloadAction<{ name: string, email: string, password: string, confirmPassword: string, user: User }>) {
+            state.user = action.payload.user;
+        },
         logout(state) {
             localStorage.removeItem('user');
             state.name = null;
@@ -57,5 +59,5 @@ const authSlice = createSlice({
 })
 
 export const selectAuth = (state: RootState) => state.auth
-export const { setUserLogin, logout } = authSlice.actions;
+export const { setUserLogin, setUserSignup, logout } = authSlice.actions;
 export default authSlice.reducer;

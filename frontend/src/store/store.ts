@@ -2,13 +2,17 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 import authReducer from "../slices/authSlice";
 import { authApi } from "../services/authApi";
+import carReducer from "../slices/carSlice";
+import { carApi } from "../services/carApi";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        [authApi.reducerPath]: authApi.reducer
+        [authApi.reducerPath]: authApi.reducer,
+        car: carReducer,
+        [carApi.reducerPath]: carApi.reducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware, carApi.middleware)
 })
 
 export type AppDispatch = typeof store.dispatch;
