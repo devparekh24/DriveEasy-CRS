@@ -4,6 +4,8 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import { Button } from 'antd';
+// import '@esri/leaflet';
+// import '@esri/esri-leaflet-geocoder';
 
 interface Coordinates {
     latitude: number;
@@ -30,6 +32,28 @@ const Map: React.FC<MapProps> = ({ center }) => {
         }).addTo(map);
 
         const marker = L.marker([center.latitude, center.longitude]).addTo(map);
+
+        // L.control.scale().addTo(map);
+
+        // // Control 3: This add a Search bar
+        // var searchControl = new L.esri.Controls.Geosearch().addTo(map);
+
+        // var results = new L.LayerGroup().addTo(map);
+
+        // searchControl.on('results', function (data) {
+        //     results.clearLayers();
+        //     for (var i = data.results.length - 1; i >= 0; i--) {
+        //         results.addLayer(L.marker(data.results[i].latlng));
+        //     }
+        // });
+
+        // // Add the Esri Leaflet Geocoder control
+        // const geocoder = L?.esri.Geocoding.geosearch().addTo(map);
+
+        // // Listen for the 'results' event and do something with the results
+        // geocoder.on('results', function (data) {
+        //     console.log(data.results);
+        // });
 
         // Get the user's current location using the browser's geolocation API
         const getUserLocation = () => {
