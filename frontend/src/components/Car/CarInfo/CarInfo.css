@@ -47,6 +47,10 @@
   font-size: 1.5rem;
 }
 
+.car-route-map {
+  position: sticky;
+}
+
 /* include */
 .include {
   width: 100%;

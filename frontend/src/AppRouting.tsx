@@ -12,10 +12,24 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MyProfile } from "./components/MyProfile/MyProfile";
 import { useAppSelector } from "./hooks/hooks";
+import { useEffect, useRef } from "react";
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
-
     const isAuthenticated = useAppSelector(state => state.auth.isLoggedIn);
+    // const isFirstRender = useRef(true);
+
+    useEffect(() => {
+        // if (!isFirstRender.current && !isAuthenticated) {
+        //     toast.error('You have to Login First!', {
+        //         autoClose: 2000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //     });
+        // }
+        // isFirstRender.current = false;
+    }, [isAuthenticated])
 
     return isAuthenticated ? (
         <>{element}</>
