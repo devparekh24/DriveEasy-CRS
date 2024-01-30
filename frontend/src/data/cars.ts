@@ -346,17 +346,6 @@ export const carType: CarType[] = [
 
 export const carsForBooking: CarForBooking[] = [
   {
-    id: 1,
-    name: "Alto k10",
-    image: altok10,
-    ratePerDay: "29",
-    reviews: "4",
-    seats: "4",
-    gearType: "Manual",
-    luggage: "2",
-    doors: "4",
-  },
-  {
     id: 2,
     name: "Baleno",
     image: baleno,
@@ -509,7 +498,18 @@ export const carsForBooking: CarForBooking[] = [
     gearType: "Auto",
     luggage: "3",
     doors: "4",
-  }
+  },
+  {
+    id: 1,
+    name: "Alto k10",
+    image: altok10,
+    ratePerDay: "29",
+    reviews: "4",
+    seats: "4",
+    gearType: "Manual",
+    luggage: "2",
+    doors: "4",
+  },
 ];
 
 export const carsByType: CarByType[] = [
