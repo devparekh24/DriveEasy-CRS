@@ -177,9 +177,11 @@ const Map: React.FC<MapProps> = ({ center }) => {
         // onMapClick();
         return () => {
             map.off('click', getUserLocation);
-            map.remove();
+            map.off('geosearch/showlocation', handleLocationSelected);
+            map.off('geosearch/cancel', handleSearchBoxCancel);
             map.removeControl(startingPointSearchControl);
             map.removeControl(destinationPointSearchControl);
+            map.remove();
         };
 
     }, [center]);

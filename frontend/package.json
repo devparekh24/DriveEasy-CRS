@@ -17,7 +17,6 @@
     "antd": "^5.13.3",
     "esri-leaflet": "^3.0.12",
     "esri-leaflet-geocoder": "^3.1.4",
-    "formik": "^2.4.5",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^2.4.0",
     "leaflet-geosearch": "^3.11.0",

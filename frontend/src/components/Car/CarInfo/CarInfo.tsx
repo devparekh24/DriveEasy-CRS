@@ -1,12 +1,11 @@
 import "./CarInfo.css";
-import React from "react";
+import React, { useState } from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import { PiBagLight } from "react-icons/pi";
 import { VscSettings } from "react-icons/vsc";
 import { AiOutlineCar } from "react-icons/ai";
 import { carsForBooking } from "../../../data/cars";
 import { useLocation, useParams } from "react-router-dom";
-import { useFormik } from "formik";
 import LeafletMap from "../../Map/LeafletMap";
 
 interface FormValues {
@@ -14,66 +13,12 @@ interface FormValues {
   emailAddress: string;
   phoneNo: string;
   pickupAddress: string;
-  pickupDate: string; 
+  pickupDate: string;
   pickupTime: string;
   dropOffAddress: string;
   dropOffDate: string;
   dropOffTime: string;
 }
-
-const validate = (values: FormValues) => {
-  const errors: Partial<FormValues> = {};
-
-  if (!values.fullName) {
-    errors.fullName = "Required";
-  } else if (values.fullName.length > 15) {
-    errors.fullName = "Must be 15 characters or less";
-  }
-
-  if (!values.phoneNo) {
-    errors.phoneNo = "Required";
-  } else if (values.phoneNo.length < 11) {
-    errors.phoneNo = "Must be 11 digits";
-  }
-
-  if (!values.emailAddress) {
-    errors.emailAddress = "Required";
-  } else if (
-    !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.emailAddress)
-  ) {
-    errors.emailAddress = "Invalid email address";
-  }
-
-  if (!values.pickupAddress) {
-    errors.pickupAddress = "Required";
-  } else if (values.pickupAddress.length < 11) {
-    errors.pickupAddress = "Must be 11 characters";
-  }
-
-  if (!values.pickupDate) {
-    errors.pickupDate = "Required";
-  }
-
-  if (!values.pickupTime) {
-    errors.pickupTime = "Required";
-  }
-
-  if (!values.dropOffAddress) {
-    errors.dropOffAddress = "Required";
-  } else if (values.dropOffAddress.length < 11) {
-    errors.dropOffAddress = "Must be 11 digits";
-  }
-
-  if (!values.dropOffDate) {
-    errors.dropOffDate = "Required";
-  }
-
-  if (!values.dropOffTime) {
-    errors.dropOffTime = "Required";
-  }
-
-  return errors;
-};
 
 const CarInfo: React.FC = () => {
   const location = useLocation();
@@ -82,23 +27,47 @@ const CarInfo: React.FC = () => {
     return c.id == params.id;
   });
 
-  const formik = useFormik({
-    initialValues: {
-      fullName: "",
-      emailAddress: "",
-      phoneNo: "",
-      pickupAddress: "",
-      pickupDate: "",
-      pickupTime: "",
-      dropOffAddress: "",
-      dropOffDate: "",
-      dropOffTime: "",
-    },
-    validate,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
+  const [bookingFormData, setBookingFormData] = useState<FormValues>({
+    fullName: "",
+    emailAddress: "",
+    phoneNo: "",
+    pickupAddress: "",
+    pickupDate: "",
+    pickupTime: "",
+    dropOffAddress: "",
+    dropOffDate: "",
+    dropOffTime: "",
+  })
+
+  // const formik = useFormik({
+  //   initialValues: {
+  //     fullName: "",
+  //     emailAddress: "",
+  //     phoneNo: "",
+  //     pickupAddress: "",
+  //     pickupDate: "",
+  //     pickupTime: "",
+  //     dropOffAddress: "",
+  //     dropOffDate: "",
+  //     dropOffTime: "",
+  //   },
+  //   validate,
+  //   onSubmit: (values) => {
+  //     alert(JSON.stringify(values, null, 2));
+  //   },
+  // });
+
+  const handleSubmitBookingForm = (event: any) => {
+    event.preventDefault();
+    console.log(bookingFormData)
+  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setBookingFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
 
   return (
     <>
@@ -136,7 +105,7 @@ const CarInfo: React.FC = () => {
             </div>
           </div>
           <div className="car-info-form-col">
-            <form onSubmit={formik.handleSubmit}>
+            <form onSubmit={handleSubmitBookingForm}>
               <h2>
                 ${find_car?.ratePerDay} <span>Per Day</span>
               </h2>
@@ -144,124 +113,97 @@ const CarInfo: React.FC = () => {
                 <label htmlFor="fullName">Full Name</label>
                 <input
                   type="text"
-                  placeholder="John Doe"
+                  placeholder="Enter Full Name"
                   name="fullName"
                   id="fullName"
-                  onChange={formik.handleChange}
-                  value={formik.values.fullName}
+                  onChange={handleChange}
+                  value={bookingFormData.fullName}
                 />
               </div>
-              {formik.errors.fullName ? (
-                <div className="error">{formik.errors.fullName}</div>
-              ) : null}
               <div>
                 <label htmlFor="emailAddress">Email Address</label>
                 <input
                   type="email"
-                  placeholder="JohnDoe@gmail.com"
+                  placeholder="Enter Email"
                   name="emailAddress"
                   id="emailAddress"
-                  onChange={formik.handleChange}
-                  value={formik.values.emailAddress}
+                  onChange={handleChange}
+                  value={bookingFormData.emailAddress}
                 />
               </div>
-              {formik.errors.emailAddress ? (
-                <div className="error">{formik.errors.emailAddress}</div>
-              ) : null}
               <div>
                 <label htmlFor="phoneNo">Phone Number</label>
                 <input
                   type="text"
-                  placeholder="+000-000-0000-000"
+                  placeholder="Enter Contact Number"
                   name="phoneNo"
                   id="phoneNo"
-                  onChange={formik.handleChange}
-                  value={formik.values.phoneNo}
+                  onChange={handleChange}
+                  value={bookingFormData.phoneNo}
                 />
               </div>
-              {formik.errors.phoneNo ? (
-                <div className="error">{formik.errors.phoneNo}</div>
-              ) : null}
               <div>
                 <label htmlFor="pickupAddress">Pickup Address</label>
                 <input
                   type="text"
-                  placeholder="34 Mainfield Road"
+                  placeholder="Enter Pick-up Address"
                   name="pickupAddress"
                   id="pickupAddress"
-                  onChange={formik.handleChange}
-                  value={formik.values.pickupAddress}
+                  onChange={handleChange}
+                  value={bookingFormData.pickupAddress}
                 />
               </div>
-              {formik.errors.pickupAddress ? (
-                <div className="error">{formik.errors.pickupAddress}</div>
-              ) : null}
               <div>
                 <label htmlFor="pickupDate">Pickup Date</label>
                 <input
                   type="date"
                   name="pickupDate"
                   id="pickupDate"
-                  onChange={formik.handleChange}
-                  value={formik.values.pickupDate}
+                  onChange={handleChange}
+                  value={bookingFormData.pickupDate}
                 />
               </div>
-              {formik.errors.pickupDate ? (
-                <div className="error">{formik.errors.pickupDate}</div>
-              ) : null}
               <div>
                 <label htmlFor="pickupTime">Pickup Time</label>
                 <input
                   type="time"
                   name="pickupTime"
                   id="pickupTime"
-                  onChange={formik.handleChange}
-                  value={formik.values.pickupTime}
+                  onChange={handleChange}
+                  value={bookingFormData.pickupTime}
                 />
               </div>
-              {formik.errors.pickupTime ? (
-                <div className="error">{formik.errors.pickupTime}</div>
-              ) : null}
               <div>
                 <label htmlFor="dropOffAddress">Drop Off Address</label>
                 <input
                   type="text"
-                  placeholder="34 Mainfield Road"
+                  placeholder="Enter Drop-off Address"
                   name="dropOffAddress"
                   id="dropOffAddress"
-                  onChange={formik.handleChange}
-                  value={formik.values.dropOffAddress}
+                  onChange={handleChange}
+                  value={bookingFormData.dropOffAddress}
                 />
               </div>
-              {formik.errors.dropOffAddress ? (
-                <div className="error">{formik.errors.dropOffAddress}</div>
-              ) : null}
               <div>
                 <label htmlFor="dropOffDate">Drop Off Date</label>
                 <input
                   type="date"
                   name="dropOffDate"
                   id="dropOffDate"
-                  onChange={formik.handleChange}
-                  value={formik.values.dropOffDate}
+                  onChange={handleChange}
+                  value={bookingFormData.dropOffDate}
                 />
               </div>
-              {formik.errors.dropOffDate ? (
-                <div className="error">{formik.errors.dropOffDate}</div>
-              ) : null}
               <div>
                 <label htmlFor="dropOffTime">Drop Off Time</label>
                 <input
                   type="time"
                   name="dropOffTime"
                   id="dropOffTime"
-                  onChange={formik.handleChange}
-                  value={formik.values.dropOffTime}
+                  onChange={handleChange}
+                  value={bookingFormData.dropOffTime}
                 />
               </div>
-              {formik.errors.dropOffTime ? (
-                <div className="error">{formik.errors.dropOffTime}</div>
-              ) : null}
               <div>
                 <button className="booking-btn" type="submit">
                   Book Instantly
