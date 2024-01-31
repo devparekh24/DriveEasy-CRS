@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import 'leaflet-geosearch/dist/geosearch.css';
 import { Button } from 'antd';
-// import '@esri/leaflet';
-// import '@esri/esri-leaflet-geocoder';
 
 interface Coordinates {
     latitude: number;
@@ -18,6 +18,7 @@ interface MapProps {
 
 const Map: React.FC<MapProps> = ({ center }) => {
 
+    const mapRef = useRef<L.Map | null>(null);
     let startMarker: any, endMarker: any;
     // let map = L.map('map').setView([center.latitude, center.longitude], 13);
 
@@ -33,27 +34,33 @@ const Map: React.FC<MapProps> = ({ center }) => {
 
         const marker = L.marker([center.latitude, center.longitude]).addTo(map);
 
-        // L.control.scale().addTo(map);
+        // Save map reference to the useRef
+        mapRef.current = map;
 
-        // // Control 3: This add a Search bar
-        // var searchControl = new L.esri.Controls.Geosearch().addTo(map);
+        // Add search control
+        const startingPointSearchControl = GeoSearchControl({
+            provider: new OpenStreetMapProvider(),
+            showMarker: true,
+            showPopup: true,
+            marker: {
+                icon: new L.Icon.Default(),
+                draggable: false,
+            },
+        });
 
-        // var results = new L.LayerGroup().addTo(map);
+        const destinationPointSearchControl = GeoSearchControl({
+            provider: new OpenStreetMapProvider(),
+            showMarker: true,
+            showPopup: true,
+            marker: {
+                icon: new L.Icon.Default(),
+                draggable: false,
+            },
+        });
 
-        // searchControl.on('results', function (data) {
-        //     results.clearLayers();
-        //     for (var i = data.results.length - 1; i >= 0; i--) {
-        //         results.addLayer(L.marker(data.results[i].latlng));
-        //     }
-        // });
-
-        // // Add the Esri Leaflet Geocoder control
-        // const geocoder = L?.esri.Geocoding.geosearch().addTo(map);
-
-        // // Listen for the 'results' event and do something with the results
-        // geocoder.on('results', function (data) {
-        //     console.log(data.results);
-        // });
+        // Add search control to the map
+        map.addControl(startingPointSearchControl);
+        map.addControl(destinationPointSearchControl);
 
         // Get the user's current location using the browser's geolocation API
         const getUserLocation = () => {
@@ -91,8 +98,20 @@ const Map: React.FC<MapProps> = ({ center }) => {
             }).addTo(map);
         }
 
-        map.on('click', (e: L.LeafletMouseEvent) => {
-            const { lat, lng } = e.latlng;
+
+        // Event listener for search results
+        const handleLocationSelected = (event: any) => {
+            const { x, y, label } = event.location;
+            // const selectedLocation = L.latLng(y, x);
+
+            // Create a marker for the selected location
+            // const selectedMarker = L.marker(selectedLocation).addTo(map).bindPopup(label).openPopup();
+
+            // You can save the selectedLocation and selectedMarker in your state or perform any other logic here
+            // For example, you can use the useState hook to manage the state.
+
+            // console.log(`Location found at (${x}, ${y})`);
+
             // Remove existing markers
             if (startMarker) {
                 map.removeLayer(startMarker);
@@ -103,14 +122,52 @@ const Map: React.FC<MapProps> = ({ center }) => {
             }
             // Add new marker
             if (!startMarker) {
-                startMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Starting Point!').openPopup();
+                startMarker = L.marker([y, x]).addTo(map).bindPopup(`Pick up Point! ${label}`).openPopup();
             } else if (!endMarker) {
-                endMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Ending Point!').openPopup();
+                endMarker = L.marker([y, x]).addTo(map).bindPopup(`Drop off Point! ${label}`).openPopup();
 
                 // Calculate and display the route
                 calculateRoute(startMarker.getLatLng(), endMarker.getLatLng());
             }
-        });
+        };
+
+        const handleSearchBoxCancel = () => {
+            // Clear any existing markers or perform any cleanup logic
+            if (startMarker) {
+                map.removeLayer(startMarker);
+                startMarker = null;
+            }
+
+            if (endMarker) {
+                map.removeLayer(endMarker);
+                endMarker = null;
+            }
+        };
+
+
+        // map.on('click', (e: L.LeafletMouseEvent) => {
+        //     const { lat, lng } = e.latlng;
+        //     // Remove existing markers
+        //     if (startMarker) {
+        //         map.removeLayer(startMarker);
+        //     }
+
+        //     if (endMarker) {
+        //         map.removeLayer(endMarker);
+        //     }
+        //     // Add new marker
+        //     if (!startMarker) {
+        //         startMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Starting Point!').openPopup();
+        //     } else if (!endMarker) {
+        //         endMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Ending Point!').openPopup();
+
+        //         // Calculate and display the route
+        //         calculateRoute(startMarker.getLatLng(), endMarker.getLatLng());
+        //     }
+        // });
+
+        map.on('geosearch/showlocation', handleLocationSelected);
+        map.on('geosearch/cancel', handleSearchBoxCancel);
 
         // Initial call to get user's location
         getUserLocation();
@@ -121,6 +178,8 @@ const Map: React.FC<MapProps> = ({ center }) => {
         return () => {
             map.off('click', getUserLocation);
             map.remove();
+            map.removeControl(startingPointSearchControl);
+            map.removeControl(destinationPointSearchControl);
         };
 
     }, [center]);
