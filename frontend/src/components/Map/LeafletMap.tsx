@@ -23,7 +23,7 @@ const Map: React.FC<MapProps> = ({ center }) => {
     // let map = L.map('map').setView([center.latitude, center.longitude], 13);
 
     useEffect(() => {
-
+        console.log('useEffect....')
         // Create a Leaflet map centered at a default location
         let map = L.map('map').setView([center.latitude, center.longitude], 13);
 
@@ -197,7 +197,7 @@ const Map: React.FC<MapProps> = ({ center }) => {
 };
 
 const LeafletMap = () => {
-
+    console.log("object")
     const defaultLocation: Coordinates = { latitude: 21.1453459, longitude: 72.7541851 };
 
     return (

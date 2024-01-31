@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { IoMenu } from "react-icons/io5";
 import { GrFormClose } from "react-icons/gr";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "./Navbar.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logout, setUserLogin } from "../../slices/authSlice";
@@ -31,19 +31,19 @@ const Navbar = () => {
             <header>
                 <h3>CarRental</h3>
                 <nav ref={navRef}>
-                    <Link to="/">Home</Link>
-                    <Link to="/cars">Cars</Link>
-                    {/* <Link to="/Booking">Booking</Link> */}
-                    <Link to="/contact">Contact</Link>
+                    <NavLink to="/">Home</NavLink>
+                    <NavLink to="/cars">Cars</NavLink>
+                    {/* <NavLink to="/Booking">Booking</NavLink> */}
+                    <NavLink to="/contact">Contact</NavLink>
                     {
                         isLogin ? (
                             <>
-                                <Link to="/" onClick={() => dispatch(logout())}>Logout</Link>
+                                <NavLink to="/logout" onClick={() => dispatch(logout())}>Logout</NavLink>
                                 <Link to="/my-profile">
                                     <Avatar src="/broken-image.jpg" />
                                 </Link>
                             </>
-                        ) : (<Link to="/login">Login</Link>)
+                        ) : (<NavLink to="/login">Login</NavLink>)
                     }
                     <button className="nav-btn nav-close-btn" onClick={showNavbar}>
                         {/* <i className="bi bi-x"></i> */}
