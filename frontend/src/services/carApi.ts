@@ -1,10 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Car } from "../slices/carSlice";
 
+
+const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+
 export const carApi = createApi({
     reducerPath: 'carApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8000'
+        baseUrl: 'http://localhost:8000',
+        prepareHeaders: (headers) => {
+            const authToken = getAuthToken();
+            if (authToken) {
+                headers.set('Authorization', `Bearer ${authToken}`);
+            }
+            return headers;
+        },
     }),
 
     endpoints: (builder) => ({

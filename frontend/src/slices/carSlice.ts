@@ -6,7 +6,7 @@ export interface Car {
     carName: string;
     carType: string;
     companyName: string;
-    model: string;
+    mileage: number;
     year: string;
     capacity: number;
     color: string;

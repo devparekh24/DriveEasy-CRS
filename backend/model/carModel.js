@@ -5,7 +5,7 @@ const carSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Car must has a name']
     },
-    carType: {
+    transmission: {
         type: String,
         enum: ['Automatic', 'Manual', 'Hybride']
     },
@@ -13,12 +13,12 @@ const carSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Car must has a maker name']
     },
-    model: {
-        type: String,
-        required: [true, 'Car must has a model name']
-    },
+    // model: {
+    //     type: String,
+    //     required: [true, 'Car must has a model name']
+    // },
     year: {
-        type: Date,
+        type: String,
         required: [true, 'Car must has a manufacturing year']
     },
     mileage: {
@@ -37,6 +37,7 @@ const carSchema = new mongoose.Schema({
     },
     rentPrice: {
         type: Number,
+        required: [true, 'Car must has rental price']
     },
     image: {
         type: String,
@@ -44,10 +45,10 @@ const carSchema = new mongoose.Schema({
     },
     fule: {
         type: String,
-        enum: ['Petrol', 'Diesel','EV','CNG'],
+        enum: ['Petrol', 'Diesel', 'EV', 'CNG'],
         default: 'Petrol'
     }
-},{
+}, {
     timestamps: true
 })
 

@@ -1,9 +1,24 @@
 const express = require('express')
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
 const carController = require('../controller/carController')
 const authController = require('./../controller/authController')
+const multer = require('multer')
+const storage = multer.diskStorage({})
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+        cb(null, true)
+    }
+    else {
+        cb('invalid image file', false)
+    }
+};
+
+const uploads = multer({ storage, fileFilter })
 
 router.use(authController.protectedRoute)
+
+router.post('/:id/img-upload', authController.restrictTo('admin'), uploads.single('image'), carController.uploadImage)
 
 router
     .route('/')
