@@ -1,35 +1,24 @@
 import "./CarInfo.css";
 import React, { useEffect, useState } from "react";
 import { IoPersonOutline } from "react-icons/io5";
-import { PiBagLight } from "react-icons/pi";
-import { VscSettings } from "react-icons/vsc";
-import { AiOutlineCar } from "react-icons/ai";
-import { carsForBooking } from "../../../data/cars";
 import { useLocation, useParams } from "react-router-dom";
 import LeafletMap from "../../Map/LeafletMap";
 import CarBookingForm from "../CarBookingForm/CarBookingFormByDay";
-import { useGetAllCarsQuery } from "../../../services/carApi";
-import { useAppDispatch } from "../../../hooks/hooks";
-import { setCars } from "../../../slices/carSlice";
+import { useAppSelector } from "../../../hooks/hooks";
+import { SiSpeedtest } from "react-icons/si";
+import { TbManualGearbox } from "react-icons/tb";
+import { BiSolidCarMechanic } from "react-icons/bi";
 
 const CarInfo: React.FC = () => {
   // const location = useLocation();
   // const { data, isError, isLoading, error } = useGetAllCarsQuery();
   // const dispatch = useAppDispatch();
   const params = useParams<{ id: string }>();
-  const find_car = carsForBooking.find((c: any) => {
-    return c.id == params.id;
+  const cars = useAppSelector(state => state.car.cars)
+  const find_car = cars.find((c: any) => {
+    return c._id == params.id;
   });
 
-  // useEffect(() => {
-  //   if (isLoading) console.log('loading...')
-  //   if (isError) {
-  //     console.log(error)
-  //   }
-  //   if (data) {
-  //     dispatch(setCars(data!))
-  //   }
-  // }, [dispatch, data])
   return (
     <>
       <div className="car-info">
@@ -38,27 +27,26 @@ const CarInfo: React.FC = () => {
             <div className="car-image">
               <img src={find_car?.image} alt={find_car?.image} />
             </div>
-            <h1>{find_car?.name}</h1>
-            <p>reviews</p>
+            <h1>{find_car?.carName} - {find_car?.companyName}</h1>
+            {/* <p>reviews</p> */}
             <div className="car-interior-info">
               <div>
                 <IoPersonOutline className="car-info-icon" />
-                <span>{find_car?.seats}</span>
+                <span>{find_car?.capacity}</span>
                 <p>Passengers</p>
               </div>
               <div>
-                <PiBagLight className="car-info-icon" />
-                <span>{find_car?.luggage}</span>
-                <p>Luggages</p>
+                <SiSpeedtest className="car-info-icon" />
+                <span>{find_car?.mileage}</span>
+                <p>KMPL</p>
               </div>
               <div>
-                <VscSettings className="car-info-icon" />
-                <p className="auto">{find_car?.gearType}</p>
+                <TbManualGearbox className="car-info-icon" />
+                <p className="auto">{find_car?.transmission}</p>
               </div>
               <div>
-                <AiOutlineCar className="car-info-icon" />
-                <span>{find_car?.doors}</span>
-                <p>Doors</p>
+                <BiSolidCarMechanic className="car-info-icon" />
+                <span>{find_car?.year} (Manufacturing year)</span>
               </div>
             </div>
             <div className="car-route-map">

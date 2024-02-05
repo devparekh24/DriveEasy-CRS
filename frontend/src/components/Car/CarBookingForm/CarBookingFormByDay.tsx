@@ -1,7 +1,7 @@
 // import "./CarInfo.css";
 import React, { useState } from "react";
-import { carsForBooking } from "../../../data/cars";
 import { useParams } from "react-router-dom";
+import { useAppSelector } from "../../../hooks/hooks";
 
 interface FormValues {
   fullName: string;
@@ -17,8 +17,12 @@ interface FormValues {
 
 const CarBookingForm = () => {
   const params = useParams<{ id: string }>();
-  const find_car = carsForBooking.find((c: any) => {
-    return c.id == params.id;
+  const cars = useAppSelector(state => state.car.cars)
+  const pickupAdd = useAppSelector(state => state.address.pickupAddress)
+  const dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
+
+  const find_car = cars.find((c: any) => {
+    return c._id == params.id;
   });
 
   const [bookingFormData, setBookingFormData] = useState<FormValues>({
@@ -50,7 +54,7 @@ const CarBookingForm = () => {
     <div>
       <form onSubmit={handleSubmitBookingForm}>
         <h2>
-          ${find_car?.ratePerDay} <span>Per Day</span>
+          ${find_car?.rentPrice} <span>Per Day</span>
         </h2>
         <div>
           <label htmlFor="fullName">Full Name</label>
@@ -93,7 +97,7 @@ const CarBookingForm = () => {
             name="pickupAddress"
             id="pickupAddress"
             onChange={handleChange}
-            value={bookingFormData.pickupAddress}
+            value={pickupAdd}
           />
         </div>
         <div>
@@ -124,7 +128,7 @@ const CarBookingForm = () => {
             name="dropOffAddress"
             id="dropOffAddress"
             onChange={handleChange}
-            value={bookingFormData.dropOffAddress}
+            value={dropoffAdd}
           />
         </div>
         <div>

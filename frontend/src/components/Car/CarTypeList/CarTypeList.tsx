@@ -29,7 +29,7 @@ export default function CarTypeList() {
                 key={car.id}
                 id={String(car.id)}
                 carName={car.name}
-                carImg={car.image}
+                image={car.image}
                 seats={car.seats}
                 gear={car.gearType}
                 luggage={car.luggage}

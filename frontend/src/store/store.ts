@@ -4,6 +4,7 @@ import authReducer from "../slices/authSlice";
 import { authApi } from "../services/authApi";
 import carReducer from "../slices/carSlice";
 import { carApi } from "../services/carApi";
+import addressReducer from "../slices/addressSlice";
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         [authApi.reducerPath]: authApi.reducer,
         car: carReducer,
         [carApi.reducerPath]: carApi.reducer,
+        address: addressReducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware, carApi.middleware)
 })

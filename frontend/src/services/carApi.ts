@@ -16,18 +16,20 @@ export const carApi = createApi({
             return headers;
         },
     }),
-
+    tagTypes: ['Car'],
     endpoints: (builder) => ({
 
         getAllCars: builder.query<Car[], void>({
             query: () => ({
                 url: '/cars'
             }),
+            providesTags: ['Car']
         }),
         getCar: builder.query<Car, string>({
             query: (carId) => ({
                 url: `/cars/${carId}`
             }),
+            providesTags: ['Car']
         }),
         addCar: builder.mutation<Car, Partial<Car>>({
             query: (newCar) => ({
@@ -35,6 +37,7 @@ export const carApi = createApi({
                 method: 'POST',
                 body: newCar,
             }),
+            invalidatesTags: ['Car']
         }),
         updateCar: builder.mutation<Car, { carId: string; updatedCar: Partial<Car> }>({
             query: ({ carId, updatedCar }) => ({
@@ -42,12 +45,14 @@ export const carApi = createApi({
                 method: 'PATCH',
                 body: updatedCar
             }),
+            invalidatesTags: ['Car']
         }),
         removeCar: builder.mutation<void, string>({
             query: (carId) => ({
                 url: `/cars/${carId}`,
                 method: 'DELETE',
             }),
+            invalidatesTags: ['Car']
         }),
     })
 })

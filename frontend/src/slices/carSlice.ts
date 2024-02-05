@@ -14,6 +14,7 @@ export interface Car {
     rentPrice: number;
     image: string;
     fule: string;
+    transmission: string;
 }
 
 export interface CarState {
@@ -26,8 +27,8 @@ const carSlice = createSlice({
     name: 'car',
     initialState,
     reducers: {
-        setCars: (state, action: PayloadAction<Car[]>) => {
-            state.cars = action.payload;
+        setCars: (state, action: PayloadAction<{ data: Car[] }>) => {
+            state.cars = action.payload.data;
         },
         addCar: (state, action: PayloadAction<Car>) => {
             state.cars.push(action.payload);
