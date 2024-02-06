@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Cars from "./pages/Cars";
 import Booking from "./pages/Booking";
@@ -15,27 +15,48 @@ import { useAppSelector } from "./hooks/hooks";
 import { useEffect, useRef } from "react";
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
+
+    const navigate = useNavigate()
     const isAuthenticated = useAppSelector(state => state.auth.isLoggedIn);
-    // const isFirstRender = useRef(true);
+    const userId = useAppSelector(state => state.auth.userId)
 
     useEffect(() => {
-        // if (!isFirstRender.current && !isAuthenticated) {
-        //     toast.error('You have to Login First!', {
-        //         autoClose: 2000,
-        //         hideProgressBar: false,
-        //         closeOnClick: true,
-        //         pauseOnHover: true,
-        //         draggable: true,
-        //     });
-        // }
-        // isFirstRender.current = false;
-    }, [isAuthenticated])
+
+        const checkAuthentication = async () => {
+            try {
+                const storedUserIdToken = await JSON.parse(localStorage.getItem('user')!).userId;
+                if (storedUserIdToken && storedUserIdToken !== userId) {
+                    // toast.success('Welcome back!', {
+                    //     autoClose: 2000,
+                    //     hideProgressBar: false,
+                    //     closeOnClick: true,
+                    //     pauseOnHover: true,
+                    //     draggable: true,
+                    // });
+                }
+
+                else if (!isAuthenticated) {
+                    toast.error('You have to Login First!', {
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    })
+                    navigate('/login');
+                }
+            } catch (error) {
+                console.error("Error checking authentication:", error);
+            }
+        }
+        checkAuthentication();
+    }, [isAuthenticated, userId])
 
     return isAuthenticated ? (
         <>{element}</>
     ) : (
         <>
-            {
+            {/* {
                 toast.error('You have to Login First!', {
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -43,8 +64,8 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
                     pauseOnHover: true,
                     draggable: true,
                 })
-            }
-            < Navigate to="/login" replace={true} />
+            } */}
+            {/* < Navigate to="/login" replace={true} /> */}
         </>
     );
 };

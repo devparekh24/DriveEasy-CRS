@@ -14,6 +14,7 @@
     "@reduxjs/toolkit": "^2.1.0",
     "@types/geojson": "^7946.0.13",
     "@types/leaflet": "^1.9.8",
+    "@types/redux-persist": "^4.3.1",
     "antd": "^5.13.3",
     "aos": "^2.3.4",
     "esri-leaflet": "^3.0.12",
@@ -29,7 +30,8 @@
     "react-router-dom": "^6.21.3",
     "react-slideshow-image": "^4.3.0",
     "react-toastify": "^10.0.4",
-    "redux": "^5.0.1"
+    "redux": "^5.0.1",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@types/aos": "^3.0.7",

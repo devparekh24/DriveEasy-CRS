@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { setCars } from "../../../slices/carSlice";
 import { useGetAllCarsQuery } from "../../../services/carApi";
 import { toast } from "react-toastify";
+import Loader from "../../Loader/Loader";
 
 export interface CarDetails {
   _id: string;
@@ -31,7 +32,7 @@ const CarsShowcase = () => {
 
   const carData = async () => {
     try {
-      if (isLoading) console.log('loading...')
+      // if (isLoading) console.log('loading...')
       if (isError) {
         throw error
       }
@@ -56,27 +57,30 @@ const CarsShowcase = () => {
   }, [dispatch, isSuccess, carData])
 
   return (
-    <div className="cars-showcase">
-      <div className="list-row">
-        {cars.map((car: CarDetails) => (
-          <CarDetailsCard
-            key={car._id}
-            id={car._id}
-            carName={car.carName}
-            image={car.image}
-            capacity={car.capacity}
-            transmission={car.transmission}
-            rentPrice={car.rentPrice}
-            availability={car.availability}
-            color={car.color}
-            companyName={car.companyName}
-            fule={car.fule}
-            mileage={car.mileage}
-            year={car.year}
-          />
-        ))}
-      </div>
-    </div>
+    isLoading ? (<Loader />) :
+      (
+        <div className="cars-showcase">
+          <div className="list-row">
+            {cars.map((car: CarDetails) => (
+              <CarDetailsCard
+                key={car._id}
+                id={car._id}
+                carName={car.carName}
+                image={car.image}
+                capacity={car.capacity}
+                transmission={car.transmission}
+                rentPrice={car.rentPrice}
+                availability={car.availability}
+                color={car.color}
+                companyName={car.companyName}
+                fule={car.fule}
+                mileage={car.mileage}
+                year={car.year}
+              />
+            ))}
+          </div>
+        </div>
+      )
   )
 }
 
