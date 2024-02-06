@@ -1,14 +1,16 @@
 const express = require('express')
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
 const orderController = require('../controller/orderController')
 const authController = require('./../controller/authController')
 
 router.use(authController.protectedRoute)
 
+router.route('/mybookings').get(authController.restrictTo('user'), orderController.getUserOrders);
+
 router
     .route('/')
     .get(authController.restrictTo('admin'), orderController.getAllOrders)
-    .post(orderController.createOrder)
+    .post(authController.restrictTo('user'), orderController.setUserId, orderController.createOrder)
 
 router
     .route('/:id')

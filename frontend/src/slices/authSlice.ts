@@ -17,6 +17,7 @@ export interface AuthState {
     name: string | null;
     token: string | null;
     user: User | null;
+    userId: string | null;
     isLoggedIn: boolean;
     isAdmin: boolean;
 }
@@ -24,6 +25,7 @@ const initialState: AuthState = {
     name: null,
     token: null,
     user: null,
+    userId: null,
     isLoggedIn: false,
     isAdmin: false
 }
@@ -31,14 +33,16 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setUserLogin(state, action: PayloadAction<{ name: string, token: string, role: string }>) {
+        setUserLogin(state, action: PayloadAction<{ name: string, token: string, role: string, userId: string }>) {
             localStorage.setItem('user', JSON.stringify({
                 name: action.payload.name,
                 token: action.payload.token,
-                role: action.payload.role
+                role: action.payload.role,
+                userId: action.payload.userId
             }))
             state.name = action.payload.name;
             state.token = action.payload.token;
+            state.userId = action.payload.userId;
             state.isLoggedIn = true;
             if (action.payload.role === 'admin') {
                 state.isAdmin = true;

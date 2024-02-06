@@ -2,7 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Order } from "../slices/orderSlice";
 
 
-const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token;
+const getUserId = () => JSON.parse(localStorage.getItem('user')!).id;
 
 export const orderApi = createApi({
     reducerPath: 'orderApi',
@@ -12,6 +13,10 @@ export const orderApi = createApi({
             const authToken = getAuthToken();
             if (authToken) {
                 headers.set('Authorization', `Bearer ${authToken}`);
+                const userId = getUserId();
+                if (userId) {
+                    headers.set('X-User-Id', userId);
+                }
             }
             return headers;
         },
@@ -29,6 +34,15 @@ export const orderApi = createApi({
             query: (orderId) => ({
                 url: `/orders/${orderId}`
             }),
+            providesTags: ['Order']
+        }),
+        getUserOrders: builder.query<Order[], void>({
+            query: () => {
+                const userId = getUserId();
+                return {
+                    url: `/users/${userId}/orders`,
+                };
+            },
             providesTags: ['Order']
         }),
         addOrder: builder.mutation<Order, Partial<Order>>({
@@ -60,6 +74,7 @@ export const orderApi = createApi({
 export const {
     useGetAllOrdersQuery,
     useGetOrderQuery,
+    useGetUserOrdersQuery,
     useUpdateOrderMutation,
     useAddOrderMutation,
     useRemoveOrderMutation } = orderApi

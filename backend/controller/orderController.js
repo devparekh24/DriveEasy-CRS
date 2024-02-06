@@ -6,3 +6,28 @@ exports.getOrder = mainController.getOne(Order)
 exports.createOrder = mainController.createOne(Order)
 exports.updateOrder = mainController.updateOne(Order)
 exports.deleteOrder = mainController.deleteOne(Order)
+
+exports.setUserId = (req, res, next) => {
+
+    // allowed nested routes
+    if (!req.body.user) req.body.user = req.params.userId
+    if (!req.body.user) req.body.user = req.user.id
+    next()
+}
+
+// Get orders to the specific user
+exports.getUserOrders = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const orders = await Order.find({ user: userId });
+
+        res.status(200).json({
+            status: 'success',
+            data: {
+                orders,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};

@@ -2,7 +2,10 @@ const express = require('express')
 const router = express.Router()
 const userController = require('./../controller/userController')
 const authController = require('./../controller/authController')
+const orderRouter = require('./orderRoutes')
 
+//nested route
+router.use('/:userId/orders', orderRouter)
 router.use(authController.protectedRoute)
 
 router.patch('/updateMyPassword', authController.updatePassword)
