@@ -14,6 +14,14 @@ import { MyProfile } from "./components/MyProfile/MyProfile";
 import { useAppSelector } from "./hooks/hooks";
 import { useEffect, useRef } from "react";
 
+import HomeAdmin from './admin/components/HomeAdmin';
+import Car from "./admin/components/Car";
+import OrdersComponent from "./admin/components/Order";
+import UsersComponent from "./admin/components/User";
+import DamageReportingComponent from "./admin/components/DamageReport";
+import { Chat } from "@mui/icons-material";
+import LeafletMap from "./admin/components/LeafletMap";
+
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
 
     const navigate = useNavigate()
@@ -71,21 +79,38 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
 };
 
 const AppRouting = () => {
+    const isAdmin = useAppSelector(state => state.auth.isAdmin)
+    console.log(isAdmin)
     return (
         <>
             <ToastContainer />
             <Routes>
-                <Route path="/" element={< Home />} />
-                <Route path="/cars" element={<ProtectedRoute element={< Cars />} />} />
-                <Route path="/:type" element={<ProtectedRoute element={< CarType />} />} />
-                <Route path="/cars/:carName/:id" element={<ProtectedRoute element={< Booking />} />} />
-                <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< Booking />} />} />
-                <Route path="/contact" element={< Contact />} />
-                <Route path="/my-profile" element={<ProtectedRoute element={< MyProfile />} />} />
-                <Route path="/login" element={< Login />} />
-                <Route path="/signup" element={< Signup />} />
-                <Route path="/forgot-password" element={< ForgotPassword />} />
-                {/* <Route path="/cars/:carName/:id" element={<CarDetails />} /> */}
+                {isAdmin ?
+                    (<>
+                        <Route path='/' element={<Navigate to='/admin' replace={true} />} />
+                        <Route path='/admin' element={<HomeAdmin />} />
+                        <Route path='/cars' element={<Car />} />
+                        <Route path='/orders' element={<OrdersComponent />} />
+                        <Route path='/users' element={<UsersComponent />} />
+                        <Route path='/damage-reports' element={<DamageReportingComponent />} />
+                        <Route path='/chats' element={<Chat />} />
+                        <Route path='/maps' element={<LeafletMap />} />
+                    </>) :
+                    (<>
+                        <Route path="/" element={< Home />} />
+                        <Route path="/cars" element={<ProtectedRoute element={< Cars />} />} />
+                        <Route path="/:type" element={<ProtectedRoute element={< CarType />} />} />
+                        <Route path="/cars/:carName/:id" element={<ProtectedRoute element={< Booking />} />} />
+                        <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< Booking />} />} />
+                        <Route path="/contact" element={< Contact />} />
+                        <Route path="/my-profile" element={<ProtectedRoute element={< MyProfile />} />} />
+                        <Route path="/login" element={< Login />} />
+                        <Route path="/signup" element={< Signup />} />
+                        <Route path="/forgot-password" element={< ForgotPassword />} />
+                        {/* <Route path="/cars/:carName/:id" element={<CarDetails />} /> */}
+
+                    </>)}
+
             </Routes>
 
         </>
