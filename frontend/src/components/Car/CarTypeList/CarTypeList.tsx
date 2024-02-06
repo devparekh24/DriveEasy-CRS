@@ -38,7 +38,7 @@ export default function CarTypeList() {
             ))}
           </>
         ) : (
-          <h3>No Cars of this Type</h3>
+          <h3>You haven't booked any car, yet!</h3>
         )}
       </div>
     </div>

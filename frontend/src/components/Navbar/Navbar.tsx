@@ -33,7 +33,7 @@ const Navbar = () => {
                 <nav ref={navRef}>
                     <NavLink to="/">Home</NavLink>
                     <NavLink to="/cars">Cars</NavLink>
-                    {/* <NavLink to="/Booking">Booking</NavLink> */}
+                    <NavLink to="/booking">Booking</NavLink>
                     <NavLink to="/contact">Contact</NavLink>
                     {
                         isLogin ? (

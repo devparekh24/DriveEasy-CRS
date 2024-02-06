@@ -5,6 +5,8 @@ import { authApi } from "../services/authApi";
 import carReducer from "../slices/carSlice";
 import { carApi } from "../services/carApi";
 import addressReducer from "../slices/addressSlice";
+import orderReducer from "../slices/orderSlice";
+import { orderApi } from "../services/orderApi";
 
 export const store = configureStore({
     reducer: {
@@ -12,9 +14,11 @@ export const store = configureStore({
         [authApi.reducerPath]: authApi.reducer,
         car: carReducer,
         [carApi.reducerPath]: carApi.reducer,
-        address: addressReducer
+        address: addressReducer,
+        order: orderReducer,
+        [orderApi.reducerPath]: orderApi.reducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware, carApi.middleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware, carApi.middleware, orderApi.middleware)
 })
 
 export type AppDispatch = typeof store.dispatch;

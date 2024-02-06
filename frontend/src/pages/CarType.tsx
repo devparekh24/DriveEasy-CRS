@@ -6,7 +6,7 @@ import CarTypeList from '../components/Car/CarTypeList/CarTypeList';
 const CarType: React.FC = () => {
   return (
     <div>
-      <CommonHeader heading={'Car Type'} />
+      <CommonHeader heading={'My Bookings'} />
       {/* <SearchFields /> */}
       <CarTypeList />
     </div>
