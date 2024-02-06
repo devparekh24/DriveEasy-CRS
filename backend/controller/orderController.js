@@ -1,5 +1,6 @@
 const mainController = require('./mainController')
 const Order = require('../model/orderModel')
+const catchAsyncErr = require('../utils/catchAsyncErr')
 
 exports.getAllOrders = mainController.getAll(Order)
 exports.getOrder = mainController.getOne(Order)
@@ -16,18 +17,15 @@ exports.setUserId = (req, res, next) => {
 }
 
 // Get orders to the specific user
-exports.getUserOrders = async (req, res, next) => {
-    try {
-        const userId = req.user.id;
-        const orders = await Order.find({ user: userId });
+exports.getUserOrders = catchAsyncErr(async (req, res, next) => {
+    const userId = req.user.id;
+    const orders = await Order.find({ user: userId });
 
-        res.status(200).json({
-            status: 'success',
-            data: {
-                orders,
-            },
-        });
-    } catch (error) {
-        next(error);
-    }
-};
+    res.status(200).json({
+        status: 'success',
+        resutls: orders.length,
+        data: {
+            orders,
+        },
+    });
+});

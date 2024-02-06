@@ -22,7 +22,7 @@ const Navbar = () => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             const user = JSON.parse(storedUser);
-            dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role }));
+            dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId }));
         }
     }, [dispatch]);
 

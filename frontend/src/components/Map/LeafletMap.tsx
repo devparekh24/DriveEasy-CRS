@@ -171,6 +171,8 @@ const Map: React.FC<MapProps> = ({ center }) => {
             provider: new OpenStreetMapProvider(),
             showMarker: true,
             showPopup: true,
+            keepResult: true,
+            searchLabel: "Enter Your Pick up Address",
             marker: {
                 icon: new L.Icon.Default(),
                 draggable: false,
@@ -181,6 +183,8 @@ const Map: React.FC<MapProps> = ({ center }) => {
             provider: new OpenStreetMapProvider(),
             showMarker: true,
             showPopup: true,
+            keepResult: true,
+            searchLabel: "Enter Your Drop off Address",
             marker: {
                 icon: new L.Icon.Default(),
                 draggable: false,
