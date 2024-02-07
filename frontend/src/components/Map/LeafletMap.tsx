@@ -154,7 +154,9 @@ const Map: React.FC<MapProps> = ({ center }) => {
     useEffect(() => {
         console.log('useEffect....')
         // Create a Leaflet map centered at a default location
-        let map = L.map('map').setView([center.latitude, center.longitude], 13);
+        let map = L.map('map',{
+            scrollWheelZoom: false
+        }).setView([center.latitude, center.longitude], 13);
 
         // Add a Tile Layer
         L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {

@@ -28,6 +28,6 @@ const addressSlice = createSlice({
     }
 })
 
-export const selectCar = (state: RootState) => state.address
-export const { setPickupAddress, setDropoffAddress,clearRoute } = addressSlice.actions;
+export const selectAddress = (state: RootState) => state.address
+export const { setPickupAddress, setDropoffAddress, clearRoute } = addressSlice.actions;
 export default addressSlice.reducer;

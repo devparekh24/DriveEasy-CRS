@@ -42,6 +42,6 @@ const orderSlice = createSlice({
     }
 })
 
-export const selectCar = (state: RootState) => state.order
+export const selectOrder = (state: RootState) => state.order
 export const { setOrders, addOrder, updateOrder, removeOrder } = orderSlice.actions;
 export default orderSlice.reducer;
