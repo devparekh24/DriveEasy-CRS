@@ -165,7 +165,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     );
 };
 
-const FinalTable = () => {
+const FinalTable = ({ headers }: any) => {
 
     const [form] = Form.useForm();
     const [data, setData] = useState(originData);
@@ -230,133 +230,141 @@ const FinalTable = () => {
     //     console.log(e);
     //     message.success('Click on Yes');
     // };
-    const columns: TableColumnsType<Item> = [
-        {
-            title: 'Full Name',
-            width: 100,
-            dataIndex: 'name',
-            key: 'name',
-            // fixed: 'left',
-            editable: true
-        },
-        {
-            title: 'Age',
-            width: 100,
-            dataIndex: 'age',
-            key: 'age',
-            // fixed: 'left',
-            editable: true
-        },
-        {
-            title: 'Column 1',
-            dataIndex: 'address',
-            key: '1',
-            width: 150,
-            editable: true
-        },
-        {
-            title: 'Column 2',
-            dataIndex: 'address',
-            key: '2',
-            width: 150,
-            editable: true
+    console.log(headers)
+    const columns: TableColumnsType<Item> = headers.map((header: any) => ({
+        title: header,
+        dataIndex: header,
+        key: header,
+        editable: true,
+        // Add any other properties you want for each column
+    }));
+    // const columns: TableColumnsType<Item> = [
+    //     {
+    //         title: 'Full Name',
+    //         width: 100,
+    //         dataIndex: 'name',
+    //         key: 'name',
+    //         // fixed: 'left',
+    //         editable: true
+    //     },
+    //     {
+    //         title: 'Age',
+    //         width: 100,
+    //         dataIndex: 'age',
+    //         key: 'age',
+    //         // fixed: 'left',
+    //         editable: true
+    //     },
+    //     {
+    //         title: 'Column 1',
+    //         dataIndex: 'address',
+    //         key: '1',
+    //         width: 150,
+    //         editable: true
+    //     },
+    //     {
+    //         title: 'Column 2',
+    //         dataIndex: 'address',
+    //         key: '2',
+    //         width: 150,
+    //         editable: true
 
-        },
-        {
-            title: 'Column 3',
-            dataIndex: 'address',
-            key: '3',
-            width: 150,
-            editable: true
+    //     },
+    //     {
+    //         title: 'Column 3',
+    //         dataIndex: 'address',
+    //         key: '3',
+    //         width: 150,
+    //         editable: true
 
-        },
-        {
-            title: 'Column 4',
-            dataIndex: 'address',
-            key: '4',
-            width: 150,
-            editable: true
+    //     },
+    //     {
+    //         title: 'Column 4',
+    //         dataIndex: 'address',
+    //         key: '4',
+    //         width: 150,
+    //         editable: true
 
-        },
-        {
-            title: 'Column 5',
-            dataIndex: 'address',
-            key: '5',
-            width: 150,
-            editable: true
+    //     },
+    //     {
+    //         title: 'Column 5',
+    //         dataIndex: 'address',
+    //         key: '5',
+    //         width: 150,
+    //         editable: true
 
-        },
-        {
-            title: 'Column 6',
-            dataIndex: 'address',
-            key: '6',
-            width: 150,
-            editable: true
+    //     },
+    //     {
+    //         title: 'Column 6',
+    //         dataIndex: 'address',
+    //         key: '6',
+    //         width: 150,
+    //         editable: true
 
-        },
-        {
-            title: 'Column 7',
-            dataIndex: 'address',
-            key: '7',
-            width: 150,
-            editable: true
+    //     },
+    //     {
+    //         title: 'Column 7',
+    //         dataIndex: 'address',
+    //         key: '7',
+    //         width: 150,
+    //         editable: true
 
-        },
-        {
-            title: 'Column 8', dataIndex: 'address', key: '8',
-            editable: true
+    //     },
+    //     {
+    //         title: 'Column 8', dataIndex: 'address', key: '8',
+    //         editable: true
 
-        },
-        {
-            title: 'Action',
-            key: 'operation',
-            fixed: 'right',
-            width: 110,
-            render: (_: any, record: Item) => {
-                const editable = isEditing(record);
-                return editable ? (
-                    <span>
-                        <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
-                            {/* <Popconfirm title="Are you sure to Save Changes?" onConfirm={() => confirmSave(record.key)}> */}
-                            Save
-                            {/* </Popconfirm> */}
-                        </Typography.Link>
-                        <Popconfirm title="Are you sure to cancel, Your Changes cannot be Saved?" onConfirm={cancel}>
-                            <a>Cancel</a>
-                        </Popconfirm>
-                    </span>
-                ) : (
-                    // <div style={{ display: 'grid', gridGap: 10 }} >
-                    <div style={{ display: 'flex', justifyContent: 'space-around' }} >
+    //     },
+    //     {
+    //         title: 'Action',
+    //         key: 'operation',
+    //         fixed: 'right',
+    //         width: 110,
+    //         render: (_: any, record: Item) => {
+    //             const editable = isEditing(record);
+    //             return editable ? (
+    //                 <span>
+    //                     <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
+    //                         {/* <Popconfirm title="Are you sure to Save Changes?" onConfirm={() => confirmSave(record.key)}> */}
+    //                         Save
+    //                         {/* </Popconfirm> */}
+    //                     </Typography.Link>
+    //                     <Popconfirm title="Are you sure to cancel, Your Changes cannot be Saved?" onConfirm={cancel}>
+    //                         <a>Cancel</a>
+    //                     </Popconfirm>
+    //                 </span>
+    //             ) : (
+    //                 // <div style={{ display: 'grid', gridGap: 10 }} >
+    //                 <div style={{ display: 'flex', justifyContent: 'space-around' }} >
 
-                        {/* <Typography style={{ display: 'flex', justifyContent: 'space-between' }}> */}
-                        {/* <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}> */}
-                        {/* < Button type='primary' ghost disabled={editingKey !== ''} onClick={() => edit(record)}> Edit</Button > */}
-                        <EditOutlined disabled={editingKey !== ''} onClick={() => edit(record)} color='primary' />
-                        {/* Edit */}
-                        {/* </Typography.Link> */}
-                        {/* <Typography.Link > */}
-                        < Popconfirm
-                            title="Delete the task"
-                            description="Are you sure to delete ?"
-                            icon={< QuestionCircleOutlined style={{ color: 'red' }} />}
-                            onConfirm={() => handleDelete(record.key)}
-                            okText="Yes"
-                            cancelText="No"
-                        >
-                            {/* <Button danger disabled={editingKey !== ''}>Delete</Button> */}
-                            <DeleteOutlined disabled={editingKey !== ''} color='red' />
-                        </Popconfirm >
-                        {/* <Popconfirm title="Are you sure to delete?" onConfirm={() => handleDelete(record.key)}>
-                                    <a style={{ color: 'red' }} disabled={editingKey !== ''}>Delete</a>
-                                </Popconfirm> */}
-                        {/* </Typography.Link> */}
-                        {/* </Typography> */}
-                    </div >
-                );
-            },
-        }
-    ];
+    //                     {/* <Typography style={{ display: 'flex', justifyContent: 'space-between' }}> */}
+    //                     {/* <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}> */}
+    //                     {/* < Button type='primary' ghost disabled={editingKey !== ''} onClick={() => edit(record)}> Edit</Button > */}
+    //                     <EditOutlined disabled={editingKey !== ''} onClick={() => edit(record)} color='primary' />
+    //                     {/* Edit */}
+    //                     {/* </Typography.Link> */}
+    //                     {/* <Typography.Link > */}
+    //                     < Popconfirm
+    //                         title="Delete the task"
+    //                         description="Are you sure to delete ?"
+    //                         icon={< QuestionCircleOutlined style={{ color: 'red' }} />}
+    //                         onConfirm={() => handleDelete(record.key)}
+    //                         okText="Yes"
+    //                         cancelText="No"
+    //                     >
+    //                         {/* <Button danger disabled={editingKey !== ''}>Delete</Button> */}
+    //                         <DeleteOutlined disabled={editingKey !== ''} color='red' />
+    //                     </Popconfirm >
+    //                     {/* <Popconfirm title="Are you sure to delete?" onConfirm={() => handleDelete(record.key)}>
+    //                                 <a style={{ color: 'red' }} disabled={editingKey !== ''}>Delete</a>
+    //                             </Popconfirm> */}
+    //                     {/* </Typography.Link> */}
+    //                     {/* </Typography> */}
+    //                 </div >
+    //             );
+    //         },
+    //     }
+    // ];
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;

@@ -2,10 +2,12 @@ const express = require('express')
 const router = express.Router({ mergeParams: true })
 const orderController = require('../controller/orderController')
 const authController = require('./../controller/authController')
+const paymentController = require('./../controller/paymentController')
 
 router.use(authController.protectedRoute)
 
 router.route('/mybookings').get(authController.restrictTo('user'), orderController.getUserOrders);
+router.route('/bookCar/:carId').post(paymentController.createBooking);
 
 router
     .route('/')

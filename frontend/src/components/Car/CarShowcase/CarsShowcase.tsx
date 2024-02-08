@@ -39,7 +39,7 @@ const CarsShowcase = () => {
       await data
     }
     catch (error: any) {
-      toast.error(error.data.message, {
+      toast.error(error?.data?.message, {
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,

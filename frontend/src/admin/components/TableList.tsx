@@ -16,7 +16,7 @@ const columns: TableColumnsType<DataType> = [
         dataIndex: 'name',
         key: 'name',
         fixed: 'left',
-        
+
     },
     {
         title: 'Age',

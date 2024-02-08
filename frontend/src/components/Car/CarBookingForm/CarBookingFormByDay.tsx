@@ -1,5 +1,5 @@
 import './CarBookingForm.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setBookingData, BookingState, initialState } from "../../../slices/bookingSlice";
@@ -7,7 +7,7 @@ import { DatePicker } from 'antd';
 import type { DatePickerProps, GetProps } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { toast } from 'react-toastify';
+import { useBookCarMutation } from '../../../services/bookingApi';
 
 dayjs.extend(customParseFormat);
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
@@ -30,18 +30,21 @@ const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate
 };
 
 const CarBookingForm = () => {
+
   const params = useParams<{ id: string }>();
   const cars = useAppSelector(state => state.car.cars)
   const pickupAdd = useAppSelector(state => state.address.pickupAddress)
   const dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
-  const formData = useAppSelector(state => state.booking)
+  const bookingFormData = useAppSelector(state => state.booking)
+
   const find_car = cars.find((c: any) => {
     return c._id == params.id;
   });
 
   const dispatch = useAppDispatch()
+  const [bookCar, { data: bookCarData, error: bookCarError, isLoading: bookCarLoading, isSuccess: bookCarSuccess }] = useBookCarMutation();
 
-  const [bookingFormData, setBookingFormData] = useState<BookingState>(initialState)
+  const [formData, setFormData] = useState<BookingState>(initialState)
 
   const onChange = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
@@ -54,7 +57,7 @@ const CarBookingForm = () => {
       const [pickupDate, dropOffDate] = dateString.map(item => item.split(' ')[0]);
       const [pickupTime, dropOffTime] = dateString.map(item => item.split(' ')[1]);
 
-      setBookingFormData(prevData => ({
+      setFormData(prevData => ({
         ...prevData,
         pickupDate,
         dropOffDate,
@@ -97,26 +100,42 @@ const CarBookingForm = () => {
     //   })
     // }
   };
-  const handleSubmitBookingForm = (event: any) => {
+  const handleSubmitBookingForm = async (event: any) => {
     event.preventDefault();
-    console.log(bookingFormData)
-    dispatch(setBookingData(bookingFormData))
-    setBookingFormData(initialState)
+
+    console.log(formData)
+    dispatch(setBookingData(formData))
+    setFormData(initialState)
+    // Use the API mutation to book the car
+    try {
+      const response = await bookCar({ carId: find_car!._id, bookingData: bookingFormData });
+      console.log('Booking successful:', response);
+      // Handle the successful booking (e.g., show a success message, redirect, etc.)
+    } catch (error) {
+      console.error('Error booking the car:', error);
+      // Handle the error (e.g., show an error message)
+    }
   }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setBookingFormData((prevData) => ({
+    setFormData((prevData) => ({
       ...prevData,
       [name]: value
     }))
     if (name === "pickupDate" || name === "dropOffDate") {
-      const totalAmount = calculateTotalAmount(find_car!.rentPrice, bookingFormData.pickupDate, bookingFormData.dropOffDate)
-      setBookingFormData((prevData) => ({
+      const totalAmount = calculateTotalAmount(find_car!.rentPrice, formData.pickupDate, formData.dropOffDate)
+      setFormData((prevData) => ({
         ...prevData,
         totalAmount,
       }))
     }
   }
+
+  useEffect(() => {
+    if (bookCarSuccess) {
+      console.log(bookCarData)
+    }
+  }, [bookCarSuccess])
   return (
     <div>
       <form onSubmit={handleSubmitBookingForm}>
@@ -131,7 +150,7 @@ const CarBookingForm = () => {
             name="fullName"
             id="fullName"
             onChange={handleChange}
-            value={bookingFormData.fullName}
+            value={formData.fullName}
             required
           />
         </div>
@@ -143,7 +162,7 @@ const CarBookingForm = () => {
             name="emailAddress"
             id="emailAddress"
             onChange={handleChange}
-            value={bookingFormData.emailAddress}
+            value={formData.emailAddress}
           />
         </div>
         <div>
@@ -154,7 +173,7 @@ const CarBookingForm = () => {
             name="phoneNo"
             id="phoneNo"
             onChange={handleChange}
-            value={bookingFormData.phoneNo}
+            value={formData.phoneNo}
             required
           />
         </div>
@@ -179,7 +198,7 @@ const CarBookingForm = () => {
             name="pickupAddress"
             id="pickupAddress"
             onChange={handleChange}
-            value={bookingFormData.pickupAddress}
+            value={formData.pickupAddress}
             required
           />
         </div>
@@ -191,14 +210,14 @@ const CarBookingForm = () => {
             name="dropOffAddress"
             id="dropOffAddress"
             onChange={handleChange}
-            value={bookingFormData.dropOffAddress}
+            value={formData.dropOffAddress}
             required
           />
         </div>
         <div>
           <h3>
-            {/* Total Amount: ${bookingFormData.totalAmount} */}
-            Total Amount: {find_car!.rentPrice > bookingFormData.totalAmount ? find_car!.rentPrice : bookingFormData.totalAmount}
+            {/* Total Amount: ${formData.totalAmount} */}
+            Total Amount: {find_car!.rentPrice > formData.totalAmount ? find_car!.rentPrice : formData.totalAmount}
           </h3>
         </div>
         <div>

@@ -8,6 +8,7 @@ import addressReducer from "../slices/addressSlice";
 import orderReducer from "../slices/orderSlice";
 import { orderApi } from "../services/orderApi";
 import bookingReducer from "../slices/bookingSlice";
+import { bookingApi } from "../services/bookingApi";
 // import { persistStore, persistReducer } from "redux-persist";
 // import storage from "redux-persist/lib/storage";
 
@@ -31,8 +32,9 @@ export const store = configureStore({
         order: orderReducer,
         [orderApi.reducerPath]: orderApi.reducer,
         booking: bookingReducer,
+        [bookingApi.reducerPath]: bookingApi.reducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware, carApi.middleware, orderApi.middleware)
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware, carApi.middleware, orderApi.middleware, bookingApi.middleware)
 })
 
 // export const persistor = persistStore(store);

@@ -29,7 +29,7 @@ export const initialState: BookingState = {
 
 const bookingSlice = createSlice({
     name: 'booking',
-    initialState,
+    initialState: {} as BookingState,
     reducers: {
         setBookingData: (state, action: PayloadAction<Partial<BookingState>>) => {
             return {
