@@ -1,10 +1,8 @@
-import CommonHeader from "../CommonHeader/CommonHeader"
 import { MyProfileComponent } from "./MyProfileComponent"
-
+import './MyProfile.css'
 export const MyProfile = () => {
     return (
         <div>
-            <CommonHeader heading={'My Profile'} />
             <MyProfileComponent />
         </div>
     )

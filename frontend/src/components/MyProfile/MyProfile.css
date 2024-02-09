@@ -1,0 +1,94 @@
+.myprofile-header {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.myprofile-form-container {
+    border: 1px solid rgb(207, 204, 204);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+    background-color: white;
+}
+
+.input-group #firstname {
+    margin-bottom: 20px;
+}
+
+.input-group #email,
+input {
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    width: 100%;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.input-group #email:focus,
+input:focus {
+    border-color: #000000;
+    outline: none;
+}
+
+.input-group #message {
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    width: 100%;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.myprofile-component {
+    width: 100%;
+    min-height: 50vh;
+    padding: 8rem 3rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    background-image: url('../../assets//3254317.jpg');
+}
+
+.myprofile-component .myprofile-box {
+    width: 28%;
+    height: 200px;
+    border: 1px solid rgb(207, 204, 204);
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+    position: relative;
+}
+
+.number {
+    margin: 0.5rem 0rem 0.5rem 0rem;
+}
+
+.contact-component .contact-box p {
+    font-size: 0.9rem;
+    display: block;
+}
+
+.icon {
+    font-size: 1rem;
+    margin: 0rem 0.3rem -0.2rem 0rem;
+}
+
+@media screen and (max-width: 720px) {
+    .myprofile-component {
+        flex-direction: column;
+        padding: 3rem 2rem;
+    }
+
+    .myprofile-component .myprofile-box {
+        width: 90%;
+        margin-top: 50px;
+    }
+}

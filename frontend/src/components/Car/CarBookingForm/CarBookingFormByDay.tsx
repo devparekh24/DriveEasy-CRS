@@ -8,6 +8,8 @@ import type { DatePickerProps, GetProps } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useBookCarMutation } from '../../../services/bookingApi';
+// import Razorpay from 'razorpay';
+import useRazorpay from "react-razorpay";
 
 dayjs.extend(customParseFormat);
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
@@ -40,7 +42,8 @@ const CarBookingForm = () => {
   const find_car = cars.find((c: any) => {
     return c._id == params.id;
   });
-
+  const [Razorpay] = useRazorpay();
+  console.log('rzp', Razorpay)
   const dispatch = useAppDispatch()
   const [bookCar, { data: bookCarData, error: bookCarError, isLoading: bookCarLoading, isSuccess: bookCarSuccess }] = useBookCarMutation();
 
@@ -76,31 +79,10 @@ const CarBookingForm = () => {
 
   const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
     console.log('onOk: ', value!);
-
-    // if (value[0]!) {
-    //   const { $d } = value[0]!
-    //   console.log($d)
-    //   toast.info(`Your Pick up Date! ${$d}`, {
-    //     autoClose: 3000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //   })
-    // }
-    // if (value[1]!) {
-    //   const { $d } = value[1]!
-    //   console.log($d)
-    //   toast.info(`Your Drop off Date! ${$d}`, {
-    //     autoClose: 3000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //   })
-    // }
   };
+
   const handleSubmitBookingForm = async (event: any) => {
+
     event.preventDefault();
 
     console.log(formData)
@@ -115,7 +97,124 @@ const CarBookingForm = () => {
       console.error('Error booking the car:', error);
       // Handle the error (e.g., show an error message)
     }
-  }
+
+    //razorpay instance
+    // const options = {
+    //   key: "rzp_test_rj5Bthp9EwXcYE",
+    //   amount: 1000 * 100,
+    //   name: "DriveEasy CRS",
+    //   description: "Booking Charges",
+    //   handler: function (response: any) {
+    //     if (response.razorpay_payment_id) {
+    //       {
+    //         alert("your payment done successfully..")
+    //         // setPaymentId(response.razorpay_payment_id);
+    //       }
+    //     } else {
+    //       alert("Payment Not Successful");
+    //     }
+    //   },
+    //   prefill: {
+    //     name: "TESTUSER",
+    //     email: "19bmiit090@gmail.com",
+    //   },
+    //   theme: {
+    //     color: "#F37254",
+    //   }
+    // };
+    // const options = {
+    //   key_id: 'rzp_test_rj5Bthp9EwXcYE',
+    //   amount: 50000, // example amount in paise (50 INR)
+    //   name: 'Your Company Name',
+    //   description: 'Purchase Description',
+    //   image: 'your_logo_url',
+    //   handler: function (response: any) {
+    //     console.log(response);
+    //   },
+    //   prefill: {
+    //     name: 'John Doe',
+    //     email: 'john@example.com',
+    //     contact: '9876543210',
+    //   },
+    //   notes: {
+    //     address: 'Razorpay Corporate Office',
+    //   },
+    //   theme: {
+    //     color: '#F37254',
+    //   },
+    // };
+    // // const razorpay = new Razorpay({
+    // //   key_id: 'rzp_test_rj5Bthp9EwXcYE',
+    // //   key_secret: 'pMo3KuwRRjE9BIXotdMJ9Fxg',
+    // // },)
+    // // Wait for Razorpay to be available
+    // const waitForRazorpay = (): Promise<void> => {
+    //   return new Promise((resolve) => {
+    //     const checkRazorpay = () => {
+    //       if (Razorpay) {
+    //         resolve();
+    //       } else {
+    //         setTimeout(checkRazorpay, 100);
+    //       }
+    //     };
+
+    //     checkRazorpay();
+    //   });
+    // };
+
+    // // Call this function before using Razorpay
+    // await waitForRazorpay();
+
+    // // Now instantiate Razorpay
+    // const rzp1: Razorpay = new Razorpay(options);
+    // rzp1?.open();
+    handlePayment()
+
+  };
+  const handlePayment = async () => {
+    // const order = await createOrder(params); //  Create order on your backend
+
+    const options = {
+      key: "rzp_test_rj5Bthp9EwXcYE", // Enter the Key ID generated from the Dashboard
+      amount: "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: "INR",
+      name: "Acme Corp",
+      description: "Test Transaction",
+      image: "https://example.com/your_logo",
+      order_id: "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of createOrder().
+      handler: function (response: any) {
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature);
+      },
+      prefill: {
+        name: "Piyush Garg",
+        email: "youremail@example.com",
+        contact: "9999999999",
+      },
+      notes: {
+        address: "Razorpay Corporate Office",
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+
+    const rzp1 = new Razorpay(options);
+
+    rzp1.on("payment.failed", function (response: any) {
+      alert(response.error.code);
+      alert(response.error.description);
+      alert(response.error.source);
+      alert(response.error.step);
+      alert(response.error.reason);
+      alert(response.error.metadata.order_id);
+      alert(response.error.metadata.payment_id);
+    });
+
+    rzp1.open();
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -131,11 +230,14 @@ const CarBookingForm = () => {
     }
   }
 
+
   useEffect(() => {
     if (bookCarSuccess) {
       console.log(bookCarData)
     }
   }, [bookCarSuccess])
+
+
   return (
     <div>
       <form onSubmit={handleSubmitBookingForm}>

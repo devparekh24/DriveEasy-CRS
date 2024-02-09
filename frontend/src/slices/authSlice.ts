@@ -10,6 +10,7 @@ export interface User {
     passwordResetToken: string;
     role: string;
     updatedAt: string;
+    image: string;
     __v: number;
 }
 
@@ -33,7 +34,7 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setUserLogin(state, action: PayloadAction<{ name: string, token: string, role: string, userId: string }>) {
+        setUserLogin(state, action: PayloadAction<{ name: string, token: string, role: string, userId: string, user: User }>) {
             localStorage.setItem('user', JSON.stringify({
                 name: action.payload.name,
                 token: action.payload.token,
@@ -43,6 +44,7 @@ const authSlice = createSlice({
             state.name = action.payload.name;
             state.token = action.payload.token;
             state.userId = action.payload.userId;
+            state.user = action.payload.user
             state.isLoggedIn = true;
             if (action.payload.role === 'admin') {
                 state.isAdmin = true;

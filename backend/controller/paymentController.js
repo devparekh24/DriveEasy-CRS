@@ -10,9 +10,11 @@ const razorpay = new Razorpay({
 
 
 exports.createBooking = catchAsyncErr(async (req, res, next) => {
-    const { find_car, bookingFormData } = req.body; // Assuming find_car and bookingFormData are available in the request
+    // const { find_car, bookingFormData } = req.body; // Assuming find_car and bookingFormData are available in the request
     const { carId } = req.params; // Assuming find_car and bookingFormData are available in the request
-    console.log(find_car)
+    // console.log(find_car)
+    console.log(carId)
+    // console.log(bookingFormData)
     // Create a Razorpay order
     const order = await razorpay.orders.create({
         amount: 1000, // amount in paisa, multiply by 100 for rupees
@@ -56,12 +58,16 @@ exports.createBooking = catchAsyncErr(async (req, res, next) => {
             color: '#2300a3',
         },
     };
-    const paymentObject = new razorpay(options);
-    paymentObject.open();
 
-    // res.status(200).json({
-    //     status: 'success',
-    //     orderId: order.id, // You might want to send the order ID to the client for future reference
-    // });
+    const paymentObject = new Razorpay({
+        key_id: process.env.RZP_ID,
+        key_secret: process.env.RZP_SECRET,
+    }, options);
+    console.log(paymentObject)
+
+    res.status(200).json({
+        status: 'success',
+        orderId: order.id, // You might want to send the order ID to the client for future reference
+    });
 });
 

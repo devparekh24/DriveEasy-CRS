@@ -9,16 +9,53 @@ import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 // import AddCardIcon from '@mui/icons-material/AddCard';
 // import PaymentIcon from '@mui/icons-material/Payment';
 // import 'ionicons';
+
 const HowItWorks: React.FC = () => {
+    const steps = [
+        {
+            stepNumber: 1,
+            icon: <PersonAddIcon style={{ fontSize: 42 }} />,
+            type: 'free',
+            heading: 'Create a Profile',
+            description: 'Begin your journey by setting up a personalized profile. Your profile helps us tailor our services.',
+        },
+        {
+            stepNumber: 2,
+            icon: <DirectionsCarIcon style={{ fontSize: 42 }} />,
+            type: 'basic',
+            heading: 'Select a Car',
+            description: 'Explore our diverse fleet of vehicles and choose the one that suits your style and needs. find the perfect ride for your journey.',
+        },
+        {
+            stepNumber: 3,
+            icon: <TextSnippetIcon style={{ fontSize: 42 }} />,
+            type: 'medium',
+            heading: 'Fill up Booking Form',
+            description: 'Complete a simple booking form to provide us the details of your travel dates, pickup location, and any additional preferences.',
+        },
+        {
+            stepNumber: 4,
+            icon: <AccountBalanceWalletIcon style={{ fontSize: 42 }} />,
+            type: 'pro',
+            heading: 'Payment',
+            description: 'Finalize your booking by securely making the payment. We offer flexible payment options to accommodate your preferences.',
+        },
+    ];
     return (
         <div className='step-list'>
             <h1><strong>How it works?</strong></h1>
             <h5>Easy steps to get you started</h5>
             <div className="card-container">
-                <InfoCard stepNumber={1} image={<PersonAddIcon style={{ fontSize: 42 }} />} type='free' heading='Create a Profile' description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, laboriosam!' />
-                <InfoCard stepNumber={2} image={<DirectionsCarIcon style={{ fontSize: 42 }} />} type='basic' heading='Select a car' description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, laboriosam!' />
-                <InfoCard stepNumber={3} image={<TextSnippetIcon style={{ fontSize: 42 }} />} type='medium' heading='Fill up Booking form' description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, laboriosam!' />
-                <InfoCard stepNumber={4} image={<AccountBalanceWalletIcon style={{ fontSize: 42 }} />} type='pro' heading='Payment' description='Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero, laboriosam!' />
+                {steps.map((step, index) => (
+                    <InfoCard
+                        key={index}
+                        stepNumber={step.stepNumber}
+                        image={step.icon}
+                        type={step.type}
+                        heading={step.heading}
+                        description={step.description}
+                    />
+                ))}
             </div>
         </div>
     );

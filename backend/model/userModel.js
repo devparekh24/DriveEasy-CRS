@@ -8,6 +8,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'User must has a name']
     },
+    image: {
+        type: String,
+        default: '/broken-image.jpg'
+    },
     email: {
         type: String,
         required: [true, 'User must has a email'],
@@ -23,7 +27,7 @@ const userSchema = new mongoose.Schema({
     },
     confirmPassword: {
         type: String,
-        required: [true, 'Please confirm your password'],
+        // required: [true, 'Please confirm your password'],
         validate: {
             validator: function (pwd) {
                 return pwd === this.password
@@ -33,7 +37,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'admin','collaborator'],
+        enum: ['user', 'admin', 'collaborator'],
         default: 'user'
     },
     active: {

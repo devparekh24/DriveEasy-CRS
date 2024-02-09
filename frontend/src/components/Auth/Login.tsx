@@ -48,7 +48,7 @@ const Login = () => {
                 draggable: true,
             })
             console.log(LoginData)
-            dispatch(setUserLogin({ name: LoginData.data.user.name, token: LoginData.token, role: LoginData.data.user.role, userId: LoginData.data.user._id }))
+            dispatch(setUserLogin({ name: LoginData.data.user.name, token: LoginData.token, role: LoginData.data.user.role, userId: LoginData.data.user._id, user: LoginData.data.user }))
             navigate('/')
         }
 

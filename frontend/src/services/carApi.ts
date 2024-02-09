@@ -54,6 +54,13 @@ export const carApi = createApi({
             }),
             invalidatesTags: ['Car']
         }),
+        updateMe: builder.mutation({
+            query: (body: { name: string, email: string, currentPassword: string, password: string, confirmPassword: string }) => ({
+                url: 'users/updateMe',
+                method: 'PATCH',
+                body,
+            })
+        })
     })
 })
 
@@ -62,4 +69,6 @@ export const {
     useGetCarQuery,
     useAddCarMutation,
     useUpdateCarMutation,
-    useRemoveCarMutation } = carApi
+    useRemoveCarMutation,
+    useUpdateMeMutation
+} = carApi

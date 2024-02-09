@@ -8,7 +8,7 @@ const orderRouter = require('./orderRoutes')
 router.use('/:userId/orders', orderRouter)
 router.use(authController.protectedRoute)
 
-router.patch('/updateMyPassword', authController.updatePassword)
+router.patch('/updateMe', authController.updateMe)
 
 router.get('/logout', authController.logout)
 

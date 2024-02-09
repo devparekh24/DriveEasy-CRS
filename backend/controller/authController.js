@@ -217,18 +217,32 @@ exports.resetPassword = catchAsyncErr(async (req, res, next) => {
     createSendToken(user, 200, res);
 })
 
-exports.updatePassword = catchAsyncErr(async (req, res, next) => {
+exports.updateMe = catchAsyncErr(async (req, res, next) => {
     //1. get user from collection
     const user = await User.findById(req.user.id).select('+password')
 
-    //2. check if posted currentpassword is correct 
-    if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
-        return next(new AppError('Your current Password is Wrong!', 401))
+    //3. if so then update profile
+    if (req.body.name) {
+        user.name = req.body.name;
     }
 
-    //3. if so then update password
-    user.password = req.body.password;
-    user.confirmPassword = req.body.confirmPassword;
+    if (req.body.email) {
+        user.email = req.body.email;
+    }
+
+    if (req.body.password && req.body.confirmPassword) {
+
+        //2. check if posted currentpassword is correct 
+        if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
+            return next(new AppError('Your current Password is Wrong!', 401))
+        }
+
+        user.password = req.body.password;
+        user.confirmPassword = req.body.confirmPassword;
+    }
+
+    // user.password = req.body.password;
+    // user.confirmPassword = req.body.confirmPassword;
     await user.save();
 
     //4. log user in, send JWT
