@@ -10,6 +10,7 @@ interface BookingData {
     dropOffAddress: string;
     dropOffDate: string;
     dropOffTime: string;
+    totalAmount: number;
 }
 
 const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token

@@ -8,8 +8,8 @@ import type { DatePickerProps, GetProps } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useBookCarMutation } from '../../../services/bookingApi';
-// import Razorpay from 'razorpay';
 import useRazorpay from "react-razorpay";
+import { addOrder } from '../../../slices/orderSlice';
 
 dayjs.extend(customParseFormat);
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
@@ -23,11 +23,21 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 
 const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number => {
   const pricePerDay = basePrice;
-  const pickupDateTime = +new Date(pickupDate);
-  console.log(pickupDate)
-  const dropOffDateTime = +new Date(dropOffDate);
-  console.log(dropOffDate)
-  const totalDays = Math.ceil((dropOffDateTime - pickupDateTime) / (24 * 60 * 60 * 1000));
+  // Parse input dates
+  const pickupDateTime = Date.parse(pickupDate);
+  const dropOffDateTime = Date.parse(dropOffDate);
+  // Check if the date parsing was successful
+  if (isNaN(pickupDateTime) || isNaN(dropOffDateTime)) {
+    // console.error("Invalid date format");
+    return 0; // Or handle the error in a way suitable for your application
+  }
+  const totalDays = Math.ceil(((dropOffDateTime - pickupDateTime) + 1) / (24 * 60 * 60 * 1000));
+
+  if (totalDays <= 0) {
+    // console.error("Invalid date range");
+    return 0; // Or handle the error in a way suitable for your application
+  }
+
   return pricePerDay * totalDays;
 };
 
@@ -35,19 +45,28 @@ const CarBookingForm = () => {
 
   const params = useParams<{ id: string }>();
   const cars = useAppSelector(state => state.car.cars)
-  const pickupAdd = useAppSelector(state => state.address.pickupAddress)
-  const dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
+  // const pickupAdd = useAppSelector(state => state.address.pickupAddress)
+  // const dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
   const bookingFormData = useAppSelector(state => state.booking)
 
   const find_car = cars.find((c: any) => {
     return c._id == params.id;
   });
+
   const [Razorpay] = useRazorpay();
-  console.log('rzp', Razorpay)
+  // console.log('rzp', Razorpay)
   const dispatch = useAppDispatch()
+
   const [bookCar, { data: bookCarData, error: bookCarError, isLoading: bookCarLoading, isSuccess: bookCarSuccess }] = useBookCarMutation();
 
   const [formData, setFormData] = useState<BookingState>(initialState)
+
+
+
+  const calculateAndSetTotalAmount = () => {
+    const totalAmount = calculateTotalAmount(find_car!.rentPrice, formData.pickupDate, formData.dropOffDate);
+    setFormData(prevData => ({ ...prevData, totalAmount }));
+  };
 
   const onChange = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
@@ -67,13 +86,7 @@ const CarBookingForm = () => {
         pickupTime,
         dropOffTime,
       }));
-
-      dispatch(setBookingData({
-        pickupDate,
-        dropOffDate,
-        pickupTime,
-        dropOffTime,
-      }));
+      calculateAndSetTotalAmount();
     }
   };
 
@@ -81,102 +94,36 @@ const CarBookingForm = () => {
     console.log('onOk: ', value!);
   };
 
+
   const handleSubmitBookingForm = async (event: any) => {
 
     event.preventDefault();
 
-    console.log(formData)
-    dispatch(setBookingData(formData))
+
+    dispatch(setBookingData(formData));
     setFormData(initialState)
+
     // Use the API mutation to book the car
     try {
-      const response = await bookCar({ carId: find_car!._id, bookingData: bookingFormData });
+      const response = await bookCar({ carId: find_car!._id, bookingData: bookingFormData })
       console.log('Booking successful:', response);
       // Handle the successful booking (e.g., show a success message, redirect, etc.)
+      handlePayment(bookingFormData)
+
     } catch (error) {
       console.error('Error booking the car:', error);
       // Handle the error (e.g., show an error message)
     }
 
-    //razorpay instance
-    // const options = {
-    //   key: "rzp_test_rj5Bthp9EwXcYE",
-    //   amount: 1000 * 100,
-    //   name: "DriveEasy CRS",
-    //   description: "Booking Charges",
-    //   handler: function (response: any) {
-    //     if (response.razorpay_payment_id) {
-    //       {
-    //         alert("your payment done successfully..")
-    //         // setPaymentId(response.razorpay_payment_id);
-    //       }
-    //     } else {
-    //       alert("Payment Not Successful");
-    //     }
-    //   },
-    //   prefill: {
-    //     name: "TESTUSER",
-    //     email: "19bmiit090@gmail.com",
-    //   },
-    //   theme: {
-    //     color: "#F37254",
-    //   }
-    // };
-    // const options = {
-    //   key_id: 'rzp_test_rj5Bthp9EwXcYE',
-    //   amount: 50000, // example amount in paise (50 INR)
-    //   name: 'Your Company Name',
-    //   description: 'Purchase Description',
-    //   image: 'your_logo_url',
-    //   handler: function (response: any) {
-    //     console.log(response);
-    //   },
-    //   prefill: {
-    //     name: 'John Doe',
-    //     email: 'john@example.com',
-    //     contact: '9876543210',
-    //   },
-    //   notes: {
-    //     address: 'Razorpay Corporate Office',
-    //   },
-    //   theme: {
-    //     color: '#F37254',
-    //   },
-    // };
-    // // const razorpay = new Razorpay({
-    // //   key_id: 'rzp_test_rj5Bthp9EwXcYE',
-    // //   key_secret: 'pMo3KuwRRjE9BIXotdMJ9Fxg',
-    // // },)
-    // // Wait for Razorpay to be available
-    // const waitForRazorpay = (): Promise<void> => {
-    //   return new Promise((resolve) => {
-    //     const checkRazorpay = () => {
-    //       if (Razorpay) {
-    //         resolve();
-    //       } else {
-    //         setTimeout(checkRazorpay, 100);
-    //       }
-    //     };
-
-    //     checkRazorpay();
-    //   });
-    // };
-
-    // // Call this function before using Razorpay
-    // await waitForRazorpay();
-
-    // // Now instantiate Razorpay
-    // const rzp1: Razorpay = new Razorpay(options);
-    // rzp1?.open();
-    handlePayment()
-
   };
-  const handlePayment = async () => {
-    // const order = await createOrder(params); //  Create order on your backend
+
+  const handlePayment = async (bookingData: any) => {
+    const order = await addOrder(bookingData); //  Create order on your backend
+    console.log(order)
 
     const options = {
       key: "rzp_test_rj5Bthp9EwXcYE", // Enter the Key ID generated from the Dashboard
-      amount: "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      amount: 500 * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
       currency: "INR",
       name: "Acme Corp",
       description: "Test Transaction",
@@ -222,18 +169,19 @@ const CarBookingForm = () => {
       [name]: value
     }))
     if (name === "pickupDate" || name === "dropOffDate") {
-      const totalAmount = calculateTotalAmount(find_car!.rentPrice, formData.pickupDate, formData.dropOffDate)
-      setFormData((prevData) => ({
-        ...prevData,
-        totalAmount,
-      }))
+      calculateAndSetTotalAmount();
     }
   }
 
 
   useEffect(() => {
+    calculateAndSetTotalAmount();
+  }, [find_car, formData.pickupDate, formData.dropOffDate])
+
+  useEffect(() => {
     if (bookCarSuccess) {
       console.log(bookCarData)
+      // setFormData(initialState)
     }
   }, [bookCarSuccess])
 
@@ -287,7 +235,7 @@ const CarBookingForm = () => {
               hideDisabledOptions: true,
               defaultValue: [dayjs('08:00', 'HH:mm'), dayjs('20:00', 'HH:mm')],
             }}
-            format="DD-MM-YYYY HH:mm"
+            format="YYYY-MM-DD HH:mm"
             onChange={onChange}
             onOk={onOk}
           />
@@ -317,10 +265,9 @@ const CarBookingForm = () => {
           />
         </div>
         <div>
-          <h3>
-            {/* Total Amount: ${formData.totalAmount} */}
-            Total Amount: {find_car!.rentPrice > formData.totalAmount ? find_car!.rentPrice : formData.totalAmount}
-          </h3>
+          <h2>
+            Total Amount: ${calculateTotalAmount(find_car!.rentPrice, formData.pickupDate, formData.dropOffDate)}
+          </h2>
         </div>
         <div>
           <button className="booking-btn" type="submit">

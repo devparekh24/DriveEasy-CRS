@@ -10,14 +10,15 @@ const razorpay = new Razorpay({
 
 
 exports.createBooking = catchAsyncErr(async (req, res, next) => {
-    // const { find_car, bookingFormData } = req.body; // Assuming find_car and bookingFormData are available in the request
+    const { find_car, bookingFormData } = req.body; // Assuming find_car and bookingFormData are available in the request
     const { carId } = req.params; // Assuming find_car and bookingFormData are available in the request
     // console.log(find_car)
     console.log(carId)
-    // console.log(bookingFormData)
+    console.log(bookingFormData)
     // Create a Razorpay order
+
     const order = await razorpay.orders.create({
-        amount: 1000, // amount in paisa, multiply by 100 for rupees
+        amount: 5000 * 100, // amount in paisa, multiply by 100 for rupees
         currency: 'INR', // change according to your currency
         receipt: 'order_receipt_' + Date.now(),
     });
@@ -42,12 +43,17 @@ exports.createBooking = catchAsyncErr(async (req, res, next) => {
     const options = {
         key: RZP_ID, // replace with your Razorpay key id
         // order_id: order.id, // Use the order ID obtained from the response
-        amount: 1000 * 100,
+        amount: 5000 * 100,
         currency: 'INR',
         image: 'https://dummyimage.com/600x400/000/fff',
         handler: function (response) {
-            alert('Payment Succeeded');
+            alert('Payment Succeeded', response);
             // window.open("/", "_self");
+            res.status(200).json({
+                status: 'success',
+                message: 'Payment succeeded',
+                paymentResponse: response,
+            });
         },
         // prefill: {
         //     name: bookingFormData.fullName,
@@ -63,6 +69,8 @@ exports.createBooking = catchAsyncErr(async (req, res, next) => {
         key_id: process.env.RZP_ID,
         key_secret: process.env.RZP_SECRET,
     }, options);
+
+    // paymentObject.open(options);
     console.log(paymentObject)
 
     res.status(200).json({
