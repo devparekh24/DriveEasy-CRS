@@ -52,7 +52,7 @@ const CarDetailsCard: React.FC<CarDetailsCardProps> = ({
       <div className="car-details-text">
         <h3>{carName}</h3>
         <h3 className="price">
-          ${rentPrice} <span>Per Day</span>
+          ₹{rentPrice} <span>Per Day</span>
         </h3>
         <p className="rating">
           <span className="rating-icon">

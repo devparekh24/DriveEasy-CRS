@@ -190,7 +190,7 @@ const CarBookingForm = () => {
     <div>
       <form onSubmit={handleSubmitBookingForm}>
         <h2>
-          ${find_car?.rentPrice} <span>Per Day</span>
+          ₹{find_car?.rentPrice} <span>Per Day</span>
         </h2>
         <div>
           <label htmlFor="fullName">Full Name</label>
@@ -266,7 +266,7 @@ const CarBookingForm = () => {
         </div>
         <div>
           <h2>
-            Total Amount: ${calculateTotalAmount(find_car!.rentPrice, formData.pickupDate, formData.dropOffDate)}
+            Total Amount: ₹{calculateTotalAmount(find_car!.rentPrice, formData.pickupDate, formData.dropOffDate)}
           </h2>
         </div>
         <div>
