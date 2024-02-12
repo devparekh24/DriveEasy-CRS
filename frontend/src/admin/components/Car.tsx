@@ -11,10 +11,11 @@ import DeleteTable from './DeleteTable'
 import FinalTable from './FinalTable';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { useGetAllCarsQuery } from '../../services/carApi';
-import { setCars } from '../../slices/carSlice';
+import { Car as CarState, setCars } from '../../slices/carSlice';
 import { toast } from 'react-toastify';
+import AdminLoader from './adminLoader/adminLoader';
 
-const App: FC = ({ onCatchHeaders }: any) => {
+const AddCarModal: FC = ({ onCatchHeaders }: any) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
@@ -182,20 +183,16 @@ const Car: FC = () => {
     const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
     const dispatch = useAppDispatch();
     const carsList = useAppSelector(state => state.car.cars)
-    console.log(carsList)
+    // console.log(carsList)
+    const [headers, setHeaders] = useState<string[]>([])
+    const [tableData, setTableData] = useState<CarState[]>([]);
 
     const carData = async () => {
         try {
-            // if (isLoading) console.log('loading...')
             if (isError) {
                 throw error
             }
             await data
-            // console.log(carsList)
-            // const headers = Object.keys(carsList[0])
-            // console.log(headers)
-            // onCatchHeaders(headers)
-            // console.log(data)
         }
         catch (error: any) {
             toast.error(error.data.message, {
@@ -208,26 +205,38 @@ const Car: FC = () => {
         }
     }
 
+
+    const getHeaders = async () => {
+        const columns = await Object.keys(carsList[0]);
+        const sortedHeaders = columns
+            .filter((header) => (header !== '_id' && header !== 'carName' && header !== 'image' && header !== 'availability'))
+            .sort(); // Sort headers alphabetically
+
+        const finalHeaders = ['carName', 'image', ...sortedHeaders];
+        setHeaders(finalHeaders);
+    }
+
+
+    useEffect(() => {
+        getHeaders()
+    }, [carsList])
+
     useEffect(() => {
         carData()
         if (isSuccess) {
+            setTableData(Object.values(data?.data)[0]!)
+            // console.log()
             dispatch(setCars(data?.data))
         }
 
-    }, [dispatch, isSuccess, carData])
-
-    const [headers, setHeaders] = useState<string[]>([])
-    // const columns = Object.keys(carsList[0])
-    // setHeaders(columns)
-    // if (Array.isArray(columns)) console.log(Object.keys(carsList[0]))
-    // console.log(data)
+    }, [dispatch, isSuccess, data])
 
     return (
         <DashBoardLayout>
-            <App />
-            {/* <TableList /> */}
-            {/* <DeleteTable /> */}
-            <FinalTable headers={headers} />
+            <AddCarModal />
+            {isLoading ? (<AdminLoader />) : (
+                <FinalTable headers={headers} tableData={tableData} />
+            )}
         </DashBoardLayout>
     );
 };

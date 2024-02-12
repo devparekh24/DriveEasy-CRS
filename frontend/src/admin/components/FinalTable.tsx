@@ -2,23 +2,27 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Table, Typography, Button, message } from 'antd';
 import type { TableColumnsType, GetRef } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Car } from '../../slices/carSlice';
 
 interface Item {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    // editable: boolean;
-}
-
-const originData: Item[] = [];
-for (let i = 0; i < 100; i++) {
-    originData.push({
-        key: i.toString(),
-        name: `Edward ${i}`,
-        age: 32,
-        address: `London Park no. ${i}`
-    });
+    // key: string;
+    // name: string;
+    // age: number;
+    // address: string;
+    _id: string;
+    carName: string;
+    carType: string;
+    companyName: string;
+    mileage: number;
+    year: string;
+    capacity: number;
+    color: string;
+    availability: boolean;
+    rentPrice: number;
+    image: string;
+    fule: string;
+    transmission: string;
+    editable: boolean;
 }
 
 type InputRef = GetRef<typeof Input> | any;
@@ -113,10 +117,20 @@ const DeletableCell: React.FC<DeletableCellProps> = ({
 type DeletableTableProps = Parameters<typeof Table>[0];
 
 interface DataType {
-    key: React.Key;
-    name: string;
-    age: string;
-    address: string;
+    // key: React.Key;
+    _id: string;
+    carName: string;
+    carType: string;
+    companyName: string;
+    mileage: number;
+    year: string;
+    capacity: number;
+    color: string;
+    availability: boolean;
+    rentPrice: number;
+    image: string;
+    fule: string;
+    transmission: string;
 }
 
 type ColumnTypes = Exclude<DeletableTableProps['columns'], undefined>;
@@ -125,7 +139,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
     dataIndex: string;
     title: any;
-    inputType: 'number' | 'text';
+    inputType: 'number' | 'text' | 'image';
     record: Item;
     index: number;
     children: React.ReactNode;
@@ -141,7 +155,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
     children,
     ...restProps
 }) => {
-    const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
+    const inputNode =
+        inputType === 'number' ? (
+            <InputNumber />
+        ) : inputType === 'image' ? (
+            <Input type="file" /> // If you want to allow updating the image via file input
+        ) : (
+            <Input />
+        );
 
     return (
         <td {...restProps}>
@@ -158,6 +179,8 @@ const EditableCell: React.FC<EditableCellProps> = ({
                 >
                     {inputNode}
                 </Form.Item>
+            ) : dataIndex === 'image' ? (
+                <img src={record[dataIndex]} alt="img" style={{ width: '125px', }} />
             ) : (
                 children
             )}
@@ -165,24 +188,25 @@ const EditableCell: React.FC<EditableCellProps> = ({
     );
 };
 
-const FinalTable = ({ headers }: any) => {
+
+const FinalTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] }) => {
 
     const [form] = Form.useForm();
-    const [data, setData] = useState(originData);
+    // let [data, setData] = useState(tableData);
     const [editingKey, setEditingKey] = useState('');
-
+    // console.log(data)
 
     const handleDelete = (key: React.Key) => {
-        const newData = data.filter((item) => item.key !== key);
+        // const newData = data.filter((item) => item.key !== key);
         message.success('Item Deleted Successfully!');
-        setData(newData);
+        // setData(newData);
     };
 
-    const isEditing = (record: Item) => record.key === editingKey;
+    const isEditing = (record: Item) => record._id === editingKey;
 
-    const edit = (record: Partial<Item> & { key: React.Key }) => {
-        form.setFieldsValue({ name: '', age: '', address: '', ...record });
-        setEditingKey(record.key);
+    const edit = (record: Partial<Item> & { _id: string }) => {
+        form.setFieldsValue({ ...record });
+        setEditingKey(record._id);
     };
 
     const cancel = () => {
@@ -230,7 +254,8 @@ const FinalTable = ({ headers }: any) => {
     //     console.log(e);
     //     message.success('Click on Yes');
     // };
-    console.log(headers)
+    // console.log(headers)
+
     const columns: TableColumnsType<Item> = headers.map((header: any) => ({
         title: header,
         dataIndex: header,
@@ -238,133 +263,7 @@ const FinalTable = ({ headers }: any) => {
         editable: true,
         // Add any other properties you want for each column
     }));
-    // const columns: TableColumnsType<Item> = [
-    //     {
-    //         title: 'Full Name',
-    //         width: 100,
-    //         dataIndex: 'name',
-    //         key: 'name',
-    //         // fixed: 'left',
-    //         editable: true
-    //     },
-    //     {
-    //         title: 'Age',
-    //         width: 100,
-    //         dataIndex: 'age',
-    //         key: 'age',
-    //         // fixed: 'left',
-    //         editable: true
-    //     },
-    //     {
-    //         title: 'Column 1',
-    //         dataIndex: 'address',
-    //         key: '1',
-    //         width: 150,
-    //         editable: true
-    //     },
-    //     {
-    //         title: 'Column 2',
-    //         dataIndex: 'address',
-    //         key: '2',
-    //         width: 150,
-    //         editable: true
 
-    //     },
-    //     {
-    //         title: 'Column 3',
-    //         dataIndex: 'address',
-    //         key: '3',
-    //         width: 150,
-    //         editable: true
-
-    //     },
-    //     {
-    //         title: 'Column 4',
-    //         dataIndex: 'address',
-    //         key: '4',
-    //         width: 150,
-    //         editable: true
-
-    //     },
-    //     {
-    //         title: 'Column 5',
-    //         dataIndex: 'address',
-    //         key: '5',
-    //         width: 150,
-    //         editable: true
-
-    //     },
-    //     {
-    //         title: 'Column 6',
-    //         dataIndex: 'address',
-    //         key: '6',
-    //         width: 150,
-    //         editable: true
-
-    //     },
-    //     {
-    //         title: 'Column 7',
-    //         dataIndex: 'address',
-    //         key: '7',
-    //         width: 150,
-    //         editable: true
-
-    //     },
-    //     {
-    //         title: 'Column 8', dataIndex: 'address', key: '8',
-    //         editable: true
-
-    //     },
-    //     {
-    //         title: 'Action',
-    //         key: 'operation',
-    //         fixed: 'right',
-    //         width: 110,
-    //         render: (_: any, record: Item) => {
-    //             const editable = isEditing(record);
-    //             return editable ? (
-    //                 <span>
-    //                     <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
-    //                         {/* <Popconfirm title="Are you sure to Save Changes?" onConfirm={() => confirmSave(record.key)}> */}
-    //                         Save
-    //                         {/* </Popconfirm> */}
-    //                     </Typography.Link>
-    //                     <Popconfirm title="Are you sure to cancel, Your Changes cannot be Saved?" onConfirm={cancel}>
-    //                         <a>Cancel</a>
-    //                     </Popconfirm>
-    //                 </span>
-    //             ) : (
-    //                 // <div style={{ display: 'grid', gridGap: 10 }} >
-    //                 <div style={{ display: 'flex', justifyContent: 'space-around' }} >
-
-    //                     {/* <Typography style={{ display: 'flex', justifyContent: 'space-between' }}> */}
-    //                     {/* <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}> */}
-    //                     {/* < Button type='primary' ghost disabled={editingKey !== ''} onClick={() => edit(record)}> Edit</Button > */}
-    //                     <EditOutlined disabled={editingKey !== ''} onClick={() => edit(record)} color='primary' />
-    //                     {/* Edit */}
-    //                     {/* </Typography.Link> */}
-    //                     {/* <Typography.Link > */}
-    //                     < Popconfirm
-    //                         title="Delete the task"
-    //                         description="Are you sure to delete ?"
-    //                         icon={< QuestionCircleOutlined style={{ color: 'red' }} />}
-    //                         onConfirm={() => handleDelete(record.key)}
-    //                         okText="Yes"
-    //                         cancelText="No"
-    //                     >
-    //                         {/* <Button danger disabled={editingKey !== ''}>Delete</Button> */}
-    //                         <DeleteOutlined disabled={editingKey !== ''} color='red' />
-    //                     </Popconfirm >
-    //                     {/* <Popconfirm title="Are you sure to delete?" onConfirm={() => handleDelete(record.key)}>
-    //                                 <a style={{ color: 'red' }} disabled={editingKey !== ''}>Delete</a>
-    //                             </Popconfirm> */}
-    //                     {/* </Typography.Link> */}
-    //                     {/* </Typography> */}
-    //                 </div >
-    //             );
-    //         },
-    //     }
-    // ];
     const mergedColumns = columns.map((col) => {
         if (!col.editable) {
             return col;
@@ -378,8 +277,48 @@ const FinalTable = ({ headers }: any) => {
                 title: col.title,
                 editing: isEditing(record),
             }),
+            // Set 'left' for carName and image columns
+            fixed: col.dataIndex === 'carName' || col.dataIndex === 'image' ? 'left' : undefined,
         };
     });
+
+    // Add an additional column for Edit and Delete actions
+    mergedColumns.push(
+        {
+            title: 'Action',
+            key: 'action',
+            fixed: 'right', // Fix the Action column to the right
+            width: 80,
+            render: (_: any, record: Item) => {
+                const editable = isEditing(record);
+                return editable ? (
+                    <span>
+                        <Typography.Link onClick={() => save(record._id)} style={{ marginRight: 8 }}>
+                            Save
+                        </Typography.Link>
+                        <Popconfirm title="Are you sure to cancel? Your changes cannot be saved." onConfirm={cancel}>
+                            <a>Cancel</a>
+                        </Popconfirm>
+                    </span>
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                        <EditOutlined disabled={editingKey !== ''} onClick={() => edit(record)} color='primary' />
+                        <Popconfirm
+                            title="Delete the task"
+                            description="Are you sure to delete?"
+                            icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+                            onConfirm={() => handleDelete(record._id)}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <DeleteOutlined disabled={editingKey !== ''} color='red' />
+                        </Popconfirm>
+                    </div>
+                );
+            },
+        }
+    );
+
     return (
         <Form form={form} component={false}>
             <Table
@@ -389,13 +328,11 @@ const FinalTable = ({ headers }: any) => {
                     },
                 }}
                 bordered
-                dataSource={data}
+                dataSource={tableData}
                 columns={mergedColumns}
                 rowClassName="editable-row"
-                pagination={{
-                    onChange: cancel,
-                }}
-                scroll={{ x: 1500, y: 470 }}
+                pagination={{ pageSize: 5 }}
+                scroll={{ x: 1500, y: 460 }}
             />
         </Form>
     )
