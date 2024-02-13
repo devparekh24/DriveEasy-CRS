@@ -1,14 +1,13 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
-import { Form, Input, InputNumber, Popconfirm, Table, Typography, Button, message } from 'antd';
-import type { TableColumnsType, GetRef } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, message } from 'antd';
+import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Car } from '../../slices/carSlice';
+import { useRemoveCarMutation, useUpdateCarMutation } from '../../services/carApi';
+import AdminLoader from './adminLoader/adminLoader';
+import ImageUploader from '../../components/ImageUploader/ImageUploader';
 
 interface Item {
-    // key: string;
-    // name: string;
-    // age: number;
-    // address: string;
     _id: string;
     carName: string;
     carType: string;
@@ -24,116 +23,6 @@ interface Item {
     transmission: string;
     editable: boolean;
 }
-
-type InputRef = GetRef<typeof Input> | any;
-type FormInstance<T> = GetRef<typeof Form<T>>;
-
-const DeletableContext = React.createContext<FormInstance<any> | null>(null);
-
-interface DeletableRowProps {
-    index: number;
-}
-
-const DeletableRow: React.FC<DeletableRowProps> = ({ index, ...props }) => {
-    const [form] = Form.useForm();
-    return (
-        <Form form={form} component={false}>
-            <DeletableContext.Provider value={form}>
-                <tr {...props} />
-            </DeletableContext.Provider>
-        </Form>
-    );
-};
-
-interface DeletableCellProps {
-    title: React.ReactNode;
-    Deletable: boolean;
-    children: React.ReactNode;
-    dataIndex: keyof Item;
-    record: Item;
-    handleSave: (record: Item) => void;
-}
-const DeletableCell: React.FC<DeletableCellProps> = ({
-    title,
-    Deletable,
-    children,
-    dataIndex,
-    record,
-    handleSave,
-    ...restProps
-}) => {
-    const [deleting, setdeleting] = useState(false);
-    const inputRef = useRef<InputRef>(null);
-    const form = useContext(DeletableContext)!;
-
-    useEffect(() => {
-        if (deleting) {
-            inputRef.current!.focus();
-        }
-    }, [deleting]);
-
-    const toggleEdit = () => {
-        setdeleting(!deleting);
-        form.setFieldsValue({ [dataIndex]: record[dataIndex] });
-    };
-
-    const save = async () => {
-        try {
-            const values = await form.validateFields();
-
-            toggleEdit();
-            handleSave({ ...record, ...values });
-        } catch (errInfo) {
-            console.log('Save failed:', errInfo);
-        }
-    };
-
-    let childNode = children;
-
-    if (Deletable) {
-        childNode = deleting ? (
-            <Form.Item
-                style={{ margin: 0 }}
-                name={dataIndex}
-                rules={[
-                    {
-                        required: true,
-                        message: `${title} is required.`,
-                    },
-                ]}
-            >
-                <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-            </Form.Item>
-        ) : (
-            <div className="Deletable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
-                {children}
-            </div>
-        );
-    }
-
-    return <td {...restProps}>{childNode}</td>;
-};
-
-type DeletableTableProps = Parameters<typeof Table>[0];
-
-interface DataType {
-    // key: React.Key;
-    _id: string;
-    carName: string;
-    carType: string;
-    companyName: string;
-    mileage: number;
-    year: string;
-    capacity: number;
-    color: string;
-    availability: boolean;
-    rentPrice: number;
-    image: string;
-    fule: string;
-    transmission: string;
-}
-
-type ColumnTypes = Exclude<DeletableTableProps['columns'], undefined>;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -155,11 +44,56 @@ const EditableCell: React.FC<EditableCellProps> = ({
     children,
     ...restProps
 }) => {
+    const [form] = Form.useForm();
     const inputNode =
         inputType === 'number' ? (
             <InputNumber />
-        ) : inputType === 'image' ? (
-            <Input type="file" /> // If you want to allow updating the image via file input
+        ) : dataIndex === 'image' && editing ? (
+            <ImageUploader onUpload={(imgUrl) => form.setFieldsValue({ [dataIndex]: imgUrl })} carId={record._id} />
+        ) : dataIndex === 'fule' && editing ? (
+            <Select showSearch
+                placeholder="Select a fule type"
+                options={[
+                    {
+                        value: 'Petrol',
+                        label: 'Petrol',
+                    },
+                    {
+                        value: 'Diesel',
+                        label: 'Diesel',
+                    },
+                    {
+                        value: 'CNG',
+                        label: 'CNG',
+                    },
+                    {
+                        value: 'EV',
+                        label: 'EV',
+                    }
+                ]} />
+            // <ImageUploader onUpload={(imgUrl) => form.setFieldsValue({ [dataIndex]: imgUrl })} />
+        ) : dataIndex === 'transmission' && editing ? (
+            <Select showSearch
+                placeholder="Select a transmission"
+                options={[
+                    {
+                        value: 'Manual',
+                        label: 'Manual Transmission (MT)',
+                    },
+                    {
+                        value: 'Automatic',
+                        label: 'Automatic Transmission (AT)',
+                    },
+                    {
+                        value: 'Automated Manual',
+                        label: 'Automated Manual Transmission (AM)',
+                    },
+                    {
+                        value: 'Continuously Variable',
+                        label: 'Continuously Variable Transmission (CVT)',
+                    },
+                ]} />
+            // <ImageUploader onUpload={(imgUrl) => form.setFieldsValue({ [dataIndex]: imgUrl })} />
         ) : (
             <Input />
         );
@@ -192,15 +126,42 @@ const EditableCell: React.FC<EditableCellProps> = ({
 const FinalTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] }) => {
 
     const [form] = Form.useForm();
-    // let [data, setData] = useState(tableData);
+    let [formData, setFormData] = useState<Car[]>();
     const [editingKey, setEditingKey] = useState('');
+    const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
+
     // console.log(data)
 
-    const handleDelete = (key: React.Key) => {
-        // const newData = data.filter((item) => item.key !== key);
-        message.success('Item Deleted Successfully!');
-        // setData(newData);
+    const [removeCar, { isError: isErrorOnRemoveCar, isLoading: isLoadingOnRemoveCar, error: errorOnRemoveCar, isSuccess: isSuccessOnRemoveCar }] = useRemoveCarMutation()
+    const [updateCar, { isError: isErrorOnUpdateCar, isLoading: isLoadingOnUpdateCar, isSuccess: isSuccessOnUpdateCar, error: errorOnUpdateCar }] = useUpdateCarMutation()
+
+    const handleDelete = async (_id: string) => {
+        try {
+            if (_id) {
+                await removeCar(_id).unwrap();
+            }
+            if (isErrorOnRemoveCar) throw errorOnRemoveCar
+        }
+        catch (error) {
+            message.error(error?.data?.message);
+        }
     };
+
+    const handleUpdate = async (record: Item) => {
+        try {
+            const updatedCar = await updateCar({ carId: record._id, updatedCar: record }).unwrap();
+            // Update the table data with the new car information
+
+            const updatedData = formData?.map((item: any) => (item._id === updatedCar._id ? updatedCar : item));
+            setFormData(updatedData);
+            setEditingKey('');
+            setShouldRefresh(true);
+
+            if (isErrorOnUpdateCar) throw errorOnUpdateCar
+        } catch (error) {
+            message.error(error?.data?.message);
+        }
+    }
 
     const isEditing = (record: Item) => record._id === editingKey;
 
@@ -215,64 +176,38 @@ const FinalTable = ({ headers, tableData }: { headers: string[]; tableData: Car[
 
     const save = async (key: React.Key) => {
         try {
-            const row = (await form.validateFields()) as Item;
+            const row = await (await form.validateFields()) as Item;
+            const updatedData = formData?.map((item: any) => (item._id === key ? { ...item, ...row } : item));
 
-            const newData = [...data];
-            const index = newData.findIndex((item) => key === item.key);
-            if (index > -1) {
-                const item = newData[index];
-                newData.splice(index, 1, {
-                    ...item,
-                    ...row,
-                });
-                // confirmSave(key)
-                setData(newData);
-                setEditingKey('');
-            } else {
-                newData.push(row);
-                // confirmSave(key)
-                setData(newData);
-                setEditingKey('');
-            }
+            setFormData(updatedData);
+            setEditingKey('');
+            // Call the update function here
+            const updatedRow = { ...row, _id: key };
+            handleUpdate(updatedRow);
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
         }
     };
-
-    // const confirmSave = (key: React.Key) => {
-    //     // You can customize the confirmation message here
-    //     Modal.confirm({
-    //         title: 'Confirm Save',
-    //         content: 'Are you sure you want to save changes?',
-    //         okText: 'Yes',
-    //         cancelText: 'No',
-    //         onOk: () => save(key),
-    //     });
-    // };
-
-    // const confirm = (e: React.MouseEvent<HTMLElement>) => {
-    //     console.log(e);
-    //     message.success('Click on Yes');
-    // };
-    // console.log(headers)
 
     const columns: TableColumnsType<Item> = headers.map((header: any) => ({
         title: header,
         dataIndex: header,
         key: header,
         editable: true,
-        // Add any other properties you want for each column
     }));
 
     const mergedColumns = columns.map((col) => {
-        if (!col.editable) {
+        if (!col.editable || col.dataIndex === '_id') {
             return col;
         }
         return {
             ...col,
             onCell: (record: Item) => ({
                 record,
-                inputType: col.dataIndex === 'age' ? 'number' : 'text',
+                inputType: (col.dataIndex === 'mileage' ||
+                    col.dataIndex === 'capacity' ||
+                    col.dataIndex === 'rentPrice' ||
+                    col.dataIndex === 'year') ? 'number' : 'text',
                 dataIndex: col.dataIndex,
                 title: col.title,
                 editing: isEditing(record),
@@ -304,7 +239,7 @@ const FinalTable = ({ headers, tableData }: { headers: string[]; tableData: Car[
                     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                         <EditOutlined disabled={editingKey !== ''} onClick={() => edit(record)} color='primary' />
                         <Popconfirm
-                            title="Delete the task"
+                            title="Delete the Car!"
                             description="Are you sure to delete?"
                             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                             onConfirm={() => handleDelete(record._id)}
@@ -319,21 +254,44 @@ const FinalTable = ({ headers, tableData }: { headers: string[]; tableData: Car[
         }
     );
 
+    useEffect(() => {
+        setTimeout(() => {
+            if (isSuccessOnRemoveCar)
+                message.success('Car Deleted Successfully!');
+        }, 1500)
+    }, [isSuccessOnRemoveCar])
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (isSuccessOnUpdateCar)
+                message.success('Car Updated Successfully!');
+        }, 1500)
+        if (shouldRefresh) {
+            setShouldRefresh(false);
+        }
+    }, [isSuccessOnUpdateCar])
+
     return (
         <Form form={form} component={false}>
-            <Table
-                components={{
-                    body: {
-                        cell: EditableCell,
-                    },
-                }}
-                bordered
-                dataSource={tableData}
-                columns={mergedColumns}
-                rowClassName="editable-row"
-                pagination={{ pageSize: 5 }}
-                scroll={{ x: 1500, y: 460 }}
-            />
+            {
+                isLoadingOnRemoveCar || isLoadingOnUpdateCar ? (
+                    <AdminLoader />
+                ) : (
+                    <Table
+                        components={{
+                            body: {
+                                cell: EditableCell,
+                            },
+                        }}
+                        bordered
+                        dataSource={tableData}
+                        columns={mergedColumns}
+                        rowClassName="editable-row"
+                        pagination={{ pageSize: 5 }}
+                        scroll={{ x: 1500, y: 460 }}
+                    />
+                )
+            }
         </Form>
     )
 }

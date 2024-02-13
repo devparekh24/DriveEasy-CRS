@@ -7,7 +7,7 @@ const carSchema = new mongoose.Schema({
     },
     transmission: {
         type: String,
-        enum: ['Automatic', 'Manual', 'Hybride']
+        enum: ['Automatic', 'Manual', 'Automated Manual', 'Continuously Variable']
     },
     companyName: {
         type: String,
@@ -41,7 +41,7 @@ const carSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: [true, 'Car must has an image']
+        // required: [true, 'Car must has an image']
     },
     fule: {
         type: String,

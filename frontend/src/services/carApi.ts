@@ -56,11 +56,20 @@ export const carApi = createApi({
         }),
         updateMe: builder.mutation({
             query: (body: { name: string, email: string, currentPassword: string, password: string, confirmPassword: string }) => ({
-                url: 'users/updateMe',
+                url: '/users/updateMe',
                 method: 'PATCH',
                 body,
             })
-        })
+        }),
+        uploadCarImage: builder.mutation<Car, { carId: string; file: File }>({
+            query: ({ carId, file }) => ({
+                url: `/cars/${carId}/img-upload`,
+                method: 'PUT',
+                body: file
+            }),
+            invalidatesTags: ['Car']
+        }),
+
     })
 })
 
@@ -70,5 +79,6 @@ export const {
     useAddCarMutation,
     useUpdateCarMutation,
     useRemoveCarMutation,
-    useUpdateMeMutation
+    useUpdateMeMutation,
+    useUploadCarImageMutation
 } = carApi

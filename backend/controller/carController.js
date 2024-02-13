@@ -24,7 +24,7 @@ exports.uploadImage = catchAsyncErr(async (req, res, next) => {
         // crop: 'fill'
     })
 
-    const updateCarImg = await Car.findByIdAndUpdate(id, { image: carImg.url })
+    const updateCarImg = await Car.findByIdAndUpdate(id, { $set: { image: carImg.url } }, { new: true })
     if (!updateCarImg) {
         return next(new AppError('No Car Found!', 404))
     }

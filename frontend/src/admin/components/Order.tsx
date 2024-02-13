@@ -44,13 +44,13 @@ const App: FC = () => {
         setFileList(fileList);
     };
 
-    const onChange = (value: string) => {
-        console.log(`selected ${value}`);
-    };
+    // const onChange = (value: string) => {
+    //     console.log(`selected ${value}`);
+    // };
 
-    const onSearch = (value: string) => {
-        console.log('search:', value);
-    };
+    // const onSearch = (value: string) => {
+    //     console.log('search:', value);
+    // };
 
     // Filter `option.label` match the user type `input`
     const filterOption = (input: string, option?: { label: string; value: string }) =>
@@ -89,8 +89,8 @@ const App: FC = () => {
                     <Form.Item label="Transmission" name="transmission" rules={[{ required: true, message: 'Please enter the car transmission' }]}>
                         <Select showSearch
                             placeholder="Select a transmission"
-                            onChange={onChange}
-                            onSearch={onSearch}
+                            // onChange={onChange}
+                            // onSearch={onSearch}
                             filterOption={filterOption}
                             options={[
                                 {
@@ -102,7 +102,7 @@ const App: FC = () => {
                                     label: 'Automatic Transmission (AT)',
                                 },
                                 {
-                                    value: 'Automated Manual ',
+                                    value: 'Automated Manual',
                                     label: 'Automated Manual Transmission (AM)',
                                 },
                                 {
@@ -123,8 +123,8 @@ const App: FC = () => {
                     <Form.Item label="Fule Type" name="fuleType" rules={[{ required: true, message: 'Please enter the fule Type of car' }]}>
                         <Select showSearch
                             placeholder="Select a fule type"
-                            onChange={onChange}
-                            onSearch={onSearch}
+                            // onChange={onChange}
+                            // onSearch={onSearch}
                             filterOption={filterOption}
                             options={[
                                 {

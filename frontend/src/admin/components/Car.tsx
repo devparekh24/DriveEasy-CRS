@@ -10,13 +10,14 @@ import { DatePicker, Space } from 'antd';
 import DeleteTable from './DeleteTable'
 import FinalTable from './FinalTable';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { useGetAllCarsQuery } from '../../services/carApi';
+import { useAddCarMutation, useGetAllCarsQuery } from '../../services/carApi';
 import { Car as CarState, setCars } from '../../slices/carSlice';
 import { toast } from 'react-toastify';
 import AdminLoader from './adminLoader/adminLoader';
 
-const AddCarModal: FC = ({ onCatchHeaders }: any) => {
+const AddCarModal: FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [addCar, { data: addCarData, isError: isErrorOnAddCar, isSuccess: isSuccessOnAddCar, error: errorOnAddCar }] = useAddCarMutation()
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -33,34 +34,46 @@ const AddCarModal: FC = ({ onCatchHeaders }: any) => {
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState<any[]>([]);
 
-    const onFinish = (values: any) => {
+    const onFinish = async (values: any) => {
         // Perform CRUD operation (e.g., send data to server)
+        // values.carImage = fileList[0].thumbUrl
         console.log('Form values:', values);
+        try {
+            if (values) {
+                await addCar(values).unwrap();
+            }
+            if (isErrorOnAddCar) throw errorOnAddCar
+        } catch (error) {
+            message.error(error?.data?.message);
+        }
+
         console.log('Uploaded files:', fileList);
-        message.success('Car details submitted successfully!');
+
         form.resetFields();
         setFileList([]);
     };
 
     const onFileChange = ({ fileList }: any) => {
+        console.log(fileList)
         setFileList(fileList);
-    };
-
-    const onChange = (value: string) => {
-        console.log(`selected ${value}`);
-    };
-
-    const onSearch = (value: string) => {
-        console.log('search:', value);
     };
 
     // Filter `option.label` match the user type `input`
     const filterOption = (input: string, option?: { label: string; value: string }) =>
         (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
-    const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
-        console.log(date, dateString);
-    };
+    // const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    //     console.log(date, dateString);
+    // };
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (isSuccessOnAddCar) {
+                console.log(addCarData)
+                message.success('Car details submitted successfully!');
+            }
+        }, 2000)
+    }, [isSuccessOnAddCar])
 
     return (
         <>
@@ -81,10 +94,10 @@ const AddCarModal: FC = ({ onCatchHeaders }: any) => {
                         </Form.Item>
 
                         <Form.Item label="Year" name="year" rules={[{ required: true, message: "Please enter the car's manufacturing year" }]}>
-                            <Space direction="vertical">
+                            {/* <Space direction="vertical">
                                 <DatePicker onChange={onDateChange} picker="year" />
-                            </Space>
-                            {/* <InputNumber type='number' min={new Date().getFullYear() - 50} max={new Date().getFullYear() + 10} defaultValue={new Date().getFullYear()} /> */}
+                            </Space> */}
+                            <InputNumber type='number' min={new Date().getFullYear() - 50} max={new Date().getFullYear() + 10} defaultValue={new Date().getFullYear()} />
                         </Form.Item>
 
                         <Form.Item label="Rent Price" name="rentPrice" rules={[{ required: true, message: 'Please enter the rent price of car' }]}>
@@ -98,8 +111,6 @@ const AddCarModal: FC = ({ onCatchHeaders }: any) => {
                         <Form.Item label="Transmission" name="transmission" rules={[{ required: true, message: 'Please enter the car transmission' }]}>
                             <Select showSearch
                                 placeholder="Select a transmission"
-                                onChange={onChange}
-                                onSearch={onSearch}
                                 filterOption={filterOption}
                                 options={[
                                     {
@@ -111,7 +122,7 @@ const AddCarModal: FC = ({ onCatchHeaders }: any) => {
                                         label: 'Automatic Transmission (AT)',
                                     },
                                     {
-                                        value: 'Automated Manual ',
+                                        value: 'Automated Manual',
                                         label: 'Automated Manual Transmission (AM)',
                                     },
                                     {
@@ -125,15 +136,13 @@ const AddCarModal: FC = ({ onCatchHeaders }: any) => {
                             <InputNumber type='number' min={0} max={15} />
                         </Form.Item>
 
-                        <Form.Item label="Color" name="color" rules={[{ required: true, message: 'Please enter the car color' }]}>
+                        <Form.Item label="Color" name="color" >
                             <ColorPicker allowClear />
                         </Form.Item>
 
                         <Form.Item label="Fule Type" name="fuleType" rules={[{ required: true, message: 'Please enter the fule Type of car' }]}>
                             <Select showSearch
                                 placeholder="Select a fule type"
-                                onChange={onChange}
-                                onSearch={onSearch}
                                 filterOption={filterOption}
                                 options={[
                                     {
@@ -207,12 +216,12 @@ const Car: FC = () => {
 
 
     const getHeaders = async () => {
-        const columns = await Object.keys(carsList[0]);
+        const columns = await Object.keys(carsList[0]!);
         const sortedHeaders = columns
             .filter((header) => (header !== '_id' && header !== 'carName' && header !== 'image' && header !== 'availability'))
             .sort(); // Sort headers alphabetically
 
-        const finalHeaders = ['carName', 'image', ...sortedHeaders];
+        const finalHeaders = ['carName', 'image', '_id', ...sortedHeaders];
         setHeaders(finalHeaders);
     }
 
