@@ -4,7 +4,7 @@ import Cars from "./pages/Cars";
 import Booking from "./pages/Booking";
 import Contact from "./pages/Contact";
 // import CarDetails from "./pages/CarDetails"; 
-import CarType from "./pages/CarType";
+import CarType from "./pages/MyBooking";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
 import ForgotPassword from "./components/Auth/ForgotPassword";
@@ -101,7 +101,7 @@ const AppRouting = () => {
                         <Route path="/cars" element={<ProtectedRoute element={< Cars />} />} />
                         <Route path="/:type" element={<ProtectedRoute element={< CarType />} />} />
                         <Route path="/cars/:id" element={<ProtectedRoute element={< Booking />} />} />
-                        {/* <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< Booking />} />} /> */}
+                        <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< Booking />} />} />
                         <Route path="/contact" element={< Contact />} />
                         <Route path="/my-profile" element={<ProtectedRoute element={< MyProfile />} />} />
                         <Route path="/login" element={< Login />} />

@@ -37,12 +37,10 @@ export const orderApi = createApi({
             providesTags: ['Order']
         }),
         getUserOrders: builder.query<Order[], void>({
-            query: () => {
-                const userId = getUserId();
-                return {
-                    url: `/users/${userId}/orders`,
-                };
-            },
+            query: () => ({
+                url: `/orders/mybookings`,
+                method: 'GET'
+            }),
             providesTags: ['Order']
         }),
         addOrder: builder.mutation<Order, { carId: string, newOrder: Partial<Order> }>({

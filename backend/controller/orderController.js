@@ -2,7 +2,7 @@ const mainController = require('./mainController')
 const Order = require('../model/orderModel')
 const catchAsyncErr = require('../utils/catchAsyncErr')
 
-exports.getAllOrders = mainController.getAll(Order)
+exports.getAllOrders = mainController.getAll(Order, ['car', 'user'])
 exports.getOrder = mainController.getOne(Order)
 exports.createOrder = mainController.createOne(Order)
 exports.updateOrder = mainController.updateOne(Order)
@@ -23,7 +23,7 @@ exports.getUserOrders = catchAsyncErr(async (req, res, next) => {
 
     res.status(200).json({
         status: 'success',
-        resutls: orders.length,
+        results: orders.length,
         data: {
             orders,
         },

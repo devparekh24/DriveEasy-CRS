@@ -6,7 +6,7 @@ const paymentController = require('./../controller/paymentController')
 
 router.use(authController.protectedRoute)
 
-router.route('/mybookings').get(authController.restrictTo('user'), orderController.getUserOrders);
+router.route('/mybookings').get(orderController.getUserOrders);
 router.route('/bookCar/:carId').post(paymentController.createBooking);
 
 router
@@ -18,6 +18,6 @@ router
     .route('/:id')
     .get(authController.restrictTo('admin'), orderController.getOrder)
     .patch(authController.restrictTo('admin'), orderController.updateOrder)
-    .delete(orderController.deleteOrder)
+    .delete(authController.restrictTo('admin'),orderController.deleteOrder)
 
 module.exports = router
