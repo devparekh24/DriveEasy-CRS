@@ -103,7 +103,7 @@ const CarBookingFormByDay = () => {
       console.log(formData)
 
       // Create order on your backend
-      const order = await addOrder(formData).unwrap();
+      const order = await addOrder({ carId: find_car!._id, newOrder: formData }).unwrap();
 
       console.log(formData.totalAmount)
       const options = {

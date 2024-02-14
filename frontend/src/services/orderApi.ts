@@ -45,11 +45,14 @@ export const orderApi = createApi({
             },
             providesTags: ['Order']
         }),
-        addOrder: builder.mutation<Order, Partial<Order>>({
-            query: (newOrder) => ({
+        addOrder: builder.mutation<Order, { carId: string, newOrder: Partial<Order> }>({
+            query: ({ carId, newOrder }) => ({
                 url: '/orders',
                 method: 'POST',
-                body: newOrder,
+                body: {
+                    car: carId,
+                    ...newOrder
+                },
             }),
             invalidatesTags: ['Order']
         }),

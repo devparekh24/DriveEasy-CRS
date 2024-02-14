@@ -23,7 +23,14 @@ export default function ContactComponent() {
       <div className="contact-header">
         <div>
           <h1>Contact Us Or Use This Form To Rent A Car</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo assumenda, dolorum necessitatibus eius earum voluptates sed!</p>
+          <p>
+            Get in touch with us to rent a car! Whether you have questions, need assistance, we're here to help.
+            <p>
+              Reach out to us using the form below, and we'll get back to you as soon as possible. Your satisfaction is our priority.
+            </p>
+            <p>
+              Feel free to contact us regarding any inquiries about our car rental services. Thank you for considering us for your next journey.</p>
+          </p>
         </div>
       </div>
       <div className="contact-component">

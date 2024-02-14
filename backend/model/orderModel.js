@@ -4,29 +4,42 @@ const orderSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        // required: true
+        required: true
     },
     car: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Car',
-        // required: true
+        required: true
     },
-    rentalStartDate: {
-        type: Date,
-        // required: true
+    fullName: {
+        type: String
     },
-    rentalEndDate: {
-        type: Date,
-        // required: true
-    },
-    totalCost: {
-        type: Number,
-        // required: true
-    },
-    status: {
+    emailAddress: {
         type: String,
-        enum: ['pending', 'active', 'completed', 'canceled'],
-        // default: 'pending'
+    },
+    phoneNo: {
+        type: String,
+    },
+    pickupAddress: {
+        type: String,
+    },
+    pickupDate: {
+        type: String,
+    },
+    pickupTime: {
+        type: String,
+    },
+    dropOffAddress: {
+        type: String,
+    },
+    dropOffDate: {
+        type: String,
+    },
+    dropOffTime: {
+        type: String,
+    },
+    totalAmount: {
+        type: Number,
     },
 });
 
