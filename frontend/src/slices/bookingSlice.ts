@@ -28,7 +28,7 @@ const bookingSlice = createSlice({
     name: 'booking',
     initialState,
     reducers: {
-        setBookingData: (state, action: PayloadAction<{ data,o: BookingState[] }>) => {
+        setBookingData: (state, action: PayloadAction<{ data: BookingState[] }>) => {
             state.bookings = action.payload.data;
         },
     }

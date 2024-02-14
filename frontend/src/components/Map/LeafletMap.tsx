@@ -326,20 +326,20 @@ const Map: React.FC<MapProps> = ({ center }) => {
 
     }, [center]);
 
-    const handleClearRoute = () => {
-        dispatch(clearRoute())
-        // map.removeLayer(startMarker)
-        // map.removeLayer(endMarker)
-        startMarker = null
-        endMarker = null
-    }
+    // const handleClearRoute = () => {
+    //     dispatch(clearRoute())
+    //     // map.removeLayer(startMarker)
+    //     // map.removeLayer(endMarker)
+    //     startMarker = null
+    //     endMarker = null
+    // }
 
     return (
         <>
             <div id="map" style={{ height: '550px' }} />
-            <div className="clear-btn" style={{ marginTop: 8, display: 'flex', justifyContent: 'end' }}>
+            {/* <div className="clear-btn" style={{ marginTop: 8, display: 'flex', justifyContent: 'end' }}>
                 <Button type="primary" onClick={handleClearRoute} >Clear Route (Enter Location Manually)</Button>
-            </div>
+            </div> */}
         </>
     );
 };
