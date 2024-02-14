@@ -122,9 +122,9 @@ const Map: React.FC<MapProps> = ({ center }) => {
     return (
         <>
             <div id="map" style={{ height: '550px' }} />
-            <div className="clear-btn" style={{ marginTop: 8, display: 'flex', justifyContent: 'end' }}>
+            {/* <div className="clear-btn" style={{ marginTop: 8, display: 'flex', justifyContent: 'end' }}>
                 <Button type="primary" onClick={() => console.log('clear')} >Clear Route</Button>
-            </div>
+            </div> */}
         </>
     );
 };

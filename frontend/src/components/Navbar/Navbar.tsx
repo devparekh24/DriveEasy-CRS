@@ -30,7 +30,7 @@ const Navbar = () => {
     return (
         <div>
             <header>
-                <h3>CarRental</h3>
+                <h3>DriveEasy</h3>
                 <nav ref={navRef}>
                     <NavLink to="/">Home</NavLink>
                     <NavLink to="/cars">Cars</NavLink>

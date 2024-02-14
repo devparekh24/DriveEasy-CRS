@@ -56,10 +56,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                     <Menu.Item key="5" icon={<FileTextOutlined />}>
                         <NavLink to="/damage-reports">Damage Reports</NavLink>
                     </Menu.Item>
-                    <Menu.Item key="6" icon={<MessageOutlined />}>
-                        <NavLink to="/chats">Chat</NavLink>
-                    </Menu.Item>
-                    <Menu.Item key="7" icon={<EnvironmentOutlined />}>
+                    <Menu.Item key="6" icon={<EnvironmentOutlined />}>
                         <NavLink to="/maps">Map</NavLink>
                     </Menu.Item>
                 </Menu>
@@ -93,7 +90,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>
-                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                    DriveEasy ©{new Date().getFullYear()}. All Rights Reserved.
                 </Footer>
             </Layout>
         </Layout >

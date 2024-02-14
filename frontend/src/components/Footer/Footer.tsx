@@ -13,7 +13,7 @@ const Footer = () => {
                         Getting dressed up and traveling with good friends makes for a
                         shared, unforgettable experience.
                     </p>
-                    <h2>CarRental</h2>
+                    <h2>DriveEasy</h2>
                     <h1>Drive Easy</h1>
                 </div>
                 <div className="footer-col">
@@ -66,7 +66,7 @@ const Footer = () => {
                 </div> */}
             </div>
             <div className="footer-row-2">
-                <p>©{new Date().getFullYear()} Car Rental. All Rights Reserved.</p>
+                <p> DriveEasy ©{new Date().getFullYear()}. All Rights Reserved.</p>
                 <ul>
                     <li>
                         <Link to="/">Home</Link>
