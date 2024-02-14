@@ -2,7 +2,7 @@ import './CarBookingForm.css';
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
-import { setBookingData, BookingState, initialState } from "../../../slices/bookingSlice";
+import { setBookingData, BookingState } from "../../../slices/bookingSlice";
 import { DatePicker } from 'antd';
 import type { DatePickerProps, GetProps } from 'antd';
 import dayjs from 'dayjs';
@@ -12,6 +12,32 @@ import useRazorpay from "react-razorpay";
 // import { addOrder } from '../../../slices/orderSlice';
 import razorpayImg from '../../../assets/logo.svg';
 import { useAddOrderMutation } from '../../../services/orderApi';
+import { toast } from 'react-toastify';
+
+interface initialState {
+  fullName: string;
+  emailAddress: string;
+  phoneNo: string;
+  pickupAddress: string;
+  pickupDate: string;
+  pickupTime: string;
+  dropOffAddress: string;
+  dropOffDate: string;
+  dropOffTime: string;
+  totalAmount: number;
+}
+const initialState: initialState = {
+  fullName: '',
+  emailAddress: '',
+  phoneNo: '',
+  pickupAddress: '',
+  pickupDate: '',
+  pickupTime: '',
+  dropOffAddress: '',
+  dropOffDate: '',
+  dropOffTime: '',
+  totalAmount: 0
+}
 
 dayjs.extend(customParseFormat);
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
@@ -49,7 +75,7 @@ const CarBookingFormByDay = () => {
   const cars = useAppSelector(state => state.car.cars)
   // const pickupAdd = useAppSelector(state => state.address.pickupAddress)
   // const dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
-  const bookingFormData = useAppSelector(state => state.booking)
+  // const bookingFormData = useAppSelector(state => state.booking)
 
   const find_car = cars.find((c: any) => {
     return c._id == params.id;
@@ -60,7 +86,7 @@ const CarBookingFormByDay = () => {
 
   const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
   const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
-  const [formData, setFormData] = useState<BookingState>(initialState)
+  const [formData, setFormData] = useState<initialState>(initialState)
 
 
 
@@ -120,7 +146,13 @@ const CarBookingFormByDay = () => {
           console.log(
             response.razorpay_payment_id
           )
-
+          toast.success('Car Booked Successfully!', {
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          })
           setFormData(initialState)
 
         },
