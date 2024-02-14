@@ -5,10 +5,16 @@ export interface Order {
     _id: string,
     user: string,
     car: string,
-    rentalStartDate: string,
-    rentalEndDate: string,
-    totalCost: number,
-    status: string
+    fullName: string;
+    emailAddress: string;
+    phoneNo: string;
+    pickupAddress: string;
+    pickupDate: any;
+    pickupTime: any;
+    dropOffAddress: string;
+    dropOffDate: any;
+    dropOffTime: any;
+    totalAmount: number;
 }
 
 export interface OrderState {
@@ -25,8 +31,8 @@ const orderSlice = createSlice({
         setOrders: (state, action: PayloadAction<{ data: Order[] }>) => {
             state.orders = action.payload.data;
         },
-        addOrder: (state, action: PayloadAction<Order>) => {
-            state.orders.push(action.payload);
+        addOrder: (state, action: PayloadAction<{ data: Order }>) => {
+            state.orders.push(action.payload.data);
         },
         updateOrder: (state, action: PayloadAction<{ _id: string; updatedOrder: Partial<Order> }>) => {
             const { _id, updatedOrder } = action.payload;

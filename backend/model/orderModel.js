@@ -4,29 +4,29 @@ const orderSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        // required: true
     },
     car: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Car',
-        required: true
+        // required: true
     },
     rentalStartDate: {
         type: Date,
-        required: true
+        // required: true
     },
     rentalEndDate: {
         type: Date,
-        required: true
+        // required: true
     },
     totalCost: {
         type: Number,
-        required: true
+        // required: true
     },
     status: {
         type: String,
         enum: ['pending', 'active', 'completed', 'canceled'],
-        default: 'pending'
+        // default: 'pending'
     },
 });
 

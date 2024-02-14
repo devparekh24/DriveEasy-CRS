@@ -100,8 +100,8 @@ const AppRouting = () => {
                         <Route path="/" element={< Home />} />
                         <Route path="/cars" element={<ProtectedRoute element={< Cars />} />} />
                         <Route path="/:type" element={<ProtectedRoute element={< CarType />} />} />
-                        <Route path="/cars/:carName/:id" element={<ProtectedRoute element={< Booking />} />} />
-                        <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< Booking />} />} />
+                        <Route path="/cars/:id" element={<ProtectedRoute element={< Booking />} />} />
+                        {/* <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< Booking />} />} /> */}
                         <Route path="/contact" element={< Contact />} />
                         <Route path="/my-profile" element={<ProtectedRoute element={< MyProfile />} />} />
                         <Route path="/login" element={< Login />} />

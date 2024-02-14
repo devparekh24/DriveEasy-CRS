@@ -30,7 +30,7 @@ const Hero: React.FC<HeroProps> = () => {
   return (
     <div className="hero-section">
       <h1>Find Best Car & Limousine</h1>
-      <h6>From as low as $10 per day with limited time offer discounts</h6>
+      <h6>From as low as ₹3300 per day with limited time offer discounts</h6>
       {/* <div className="search-fields">
         <div className="search-col">
           <div className="dropdown">

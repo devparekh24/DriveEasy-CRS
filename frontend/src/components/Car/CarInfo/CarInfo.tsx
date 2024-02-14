@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import LeafletMap from "../../Map/LeafletMap";
-import CarBookingForm from "../CarBookingForm/CarBookingFormByDay";
+import CarBookingFormByDay from "../CarBookingForm/CarBookingFormByDay";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { SiSpeedtest } from "react-icons/si";
 import { TbManualGearbox } from "react-icons/tb";
@@ -86,7 +86,7 @@ const CarInfo: React.FC = () => {
               </div>
             </div>
             <div className="car-info-form-col">
-              <CarBookingForm />
+              <CarBookingFormByDay />
             </div>
           </div>
         </div>

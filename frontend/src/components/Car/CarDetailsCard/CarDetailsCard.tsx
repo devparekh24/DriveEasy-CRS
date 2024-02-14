@@ -43,7 +43,7 @@ const CarDetailsCard: React.FC<CarDetailsCardProps> = ({
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate(`${carName}/${id}`);
+    navigate(`${id}`);
   };
 
   return (

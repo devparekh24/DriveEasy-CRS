@@ -11,8 +11,6 @@ const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
     const isLogin = useAppSelector(state => state.auth.isLoggedIn);
     const loginUser = useAppSelector(state => state.auth.user);
-    const loginUserImg = useAppSelector(state => state.auth.user?.image);
-
     const dispatch = useAppDispatch();
 
     const showNavbar = () => {
@@ -25,7 +23,7 @@ const Navbar = () => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             const user = JSON.parse(storedUser);
-            dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId, user: loginUser }));
+            dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId, user: loginUser! }));
         }
     }, [dispatch]);
 
@@ -43,7 +41,7 @@ const Navbar = () => {
                             <>
                                 <NavLink to="/logout" onClick={() => dispatch(logout())}>Logout</NavLink>
                                 <Link to="/my-profile">
-                                    <Avatar src={loginUserImg} />
+                                    <Avatar src={loginUser?.image} />
                                 </Link>
                             </>
                         ) : (<NavLink to="/login">Login</NavLink>)

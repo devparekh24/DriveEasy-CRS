@@ -9,7 +9,9 @@ import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useBookCarMutation } from '../../../services/bookingApi';
 import useRazorpay from "react-razorpay";
-import { addOrder } from '../../../slices/orderSlice';
+// import { addOrder } from '../../../slices/orderSlice';
+import razorpayImg from '../../../assets/logo.svg';
+import { useAddOrderMutation } from '../../../services/orderApi';
 
 dayjs.extend(customParseFormat);
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
@@ -41,7 +43,7 @@ const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate
   return pricePerDay * totalDays;
 };
 
-const CarBookingForm = () => {
+const CarBookingFormByDay = () => {
 
   const params = useParams<{ id: string }>();
   const cars = useAppSelector(state => state.car.cars)
@@ -54,11 +56,10 @@ const CarBookingForm = () => {
   });
 
   const [Razorpay] = useRazorpay();
-  // console.log('rzp', Razorpay)
   const dispatch = useAppDispatch()
 
-  const [bookCar, { data: bookCarData, error: bookCarError, isLoading: bookCarLoading, isSuccess: bookCarSuccess }] = useBookCarMutation();
-
+  const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
+  const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
   const [formData, setFormData] = useState<BookingState>(initialState)
 
 
@@ -94,72 +95,62 @@ const CarBookingForm = () => {
     console.log('onOk: ', value!);
   };
 
-
-  const handleSubmitBookingForm = async (event: any) => {
-
-    event.preventDefault();
-
-
-    dispatch(setBookingData(formData));
-    setFormData(initialState)
-
-    // Use the API mutation to book the car
+  const handlePayment = async (formData: any) => {
+    console.log(find_car!._id, formData)
     try {
-      const response = await bookCar({ carId: find_car!._id, bookingData: bookingFormData })
-      console.log('Booking successful:', response);
-      // Handle the successful booking (e.g., show a success message, redirect, etc.)
-      handlePayment(bookingFormData)
+      // const response = await bookCar({ carId: find_car!._id, bookingData: formData });
+      // console.log('Booking successful:', response);
+      console.log(formData)
 
+      // Create order on your backend
+      const order = await addOrder(formData).unwrap();
+
+      console.log(formData.totalAmount)
+      const options = {
+        key: 'rzp_test_rj5Bthp9EwXcYE', // Replace with your Razorpay key
+        amount: (formData?.totalAmount * 100).toString(), // Amount is in currency subunits. Default currency is INR.
+        currency: 'INR',
+        name: 'Drive Easy',
+        description: 'Car Rental Booking',
+        order_id: order._id, // Pass the order ID obtained from the backend response
+        image: razorpayImg,
+        handler: function (response: any) {
+          console.log('Payment Succeeded frontend:', response);
+          // Handle the successful payment response
+          console.log(
+            response.razorpay_payment_id
+          )
+
+          setFormData(initialState)
+
+        },
+        // prefill: {
+        //   name: formData.fullName,
+        //   email: formData.emailAddress,
+        //   contact: formData.phoneNo,
+        // },
+        theme: {
+          color: '#000',
+        },
+      };
+      const rzp = new Razorpay(options);
+
+      rzp.on("payment.failed", function (response: any) {
+        alert(response.error.code);
+        alert(response.error.description);
+        alert(response.error.source);
+        alert(response.error.step);
+        alert(response.error.reason);
+        alert(response.error.metadata.order_id);
+        alert(response.error.metadata.payment_id);
+      });
+
+      rzp.open();
+
+      if (isErrorOnAddOrder || isErrorOnBookCar) throw errorOnAddOrder || errorOnBookCar
     } catch (error) {
       console.error('Error booking the car:', error);
-      // Handle the error (e.g., show an error message)
     }
-
-  };
-
-  const handlePayment = async (bookingData: any) => {
-    const order = await addOrder(bookingData); //  Create order on your backend
-    console.log(order)
-
-    const options = {
-      key: "rzp_test_rj5Bthp9EwXcYE", // Enter the Key ID generated from the Dashboard
-      amount: 500 * 100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-      currency: "INR",
-      name: "Acme Corp",
-      description: "Test Transaction",
-      image: "https://example.com/your_logo",
-      order_id: "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of createOrder().
-      handler: function (response: any) {
-        alert(response.razorpay_payment_id);
-        alert(response.razorpay_order_id);
-        alert(response.razorpay_signature);
-      },
-      prefill: {
-        name: "Piyush Garg",
-        email: "youremail@example.com",
-        contact: "9999999999",
-      },
-      notes: {
-        address: "Razorpay Corporate Office",
-      },
-      theme: {
-        color: "#3399cc",
-      },
-    };
-
-    const rzp1 = new Razorpay(options);
-
-    rzp1.on("payment.failed", function (response: any) {
-      alert(response.error.code);
-      alert(response.error.description);
-      alert(response.error.source);
-      alert(response.error.step);
-      alert(response.error.reason);
-      alert(response.error.metadata.order_id);
-      alert(response.error.metadata.payment_id);
-    });
-
-    rzp1.open();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,18 +164,31 @@ const CarBookingForm = () => {
     }
   }
 
+  const handleSubmitBookingForm = async (event: any) => {
+
+    event.preventDefault();
+    // dispatch(setBookingData(formData));
+    handlePayment(formData)
+
+  };
+
 
   useEffect(() => {
     calculateAndSetTotalAmount();
   }, [find_car, formData.pickupDate, formData.dropOffDate])
 
   useEffect(() => {
-    if (bookCarSuccess) {
+    if (isSuccessOnBookCar) {
       console.log(bookCarData)
-      // setFormData(initialState)
+      setFormData(initialState)
     }
-  }, [bookCarSuccess])
+  }, [isSuccessOnBookCar])
 
+  useEffect(() => {
+    if (isSuccessOnAddOrder) {
+      console.log(addOrderData)
+    }
+  }, [isSuccessOnAddOrder])
 
   return (
     <div>
@@ -279,4 +283,4 @@ const CarBookingForm = () => {
   )
 }
 
-export default CarBookingForm
+export default CarBookingFormByDay

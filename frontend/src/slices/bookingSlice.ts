@@ -31,11 +31,17 @@ const bookingSlice = createSlice({
     name: 'booking',
     initialState: {} as BookingState,
     reducers: {
-        setBookingData: (state, action: PayloadAction<Partial<BookingState>>) => {
-            return {
-                ...state,
-                ...action.payload,
-            };
+        setBookingData: (state, action: PayloadAction<BookingState>) => {
+            state.fullName = action.payload.fullName!
+            state.emailAddress = action.payload.emailAddress!
+            state.phoneNo = action.payload.phoneNo!
+            state.pickupAddress = action.payload.pickupAddress!
+            state.pickupDate = action.payload.pickupDate!
+            state.pickupTime = action.payload.pickupTime!
+            state.dropOffAddress = action.payload.dropOffAddress!
+            state.dropOffDate = action.payload.dropOffDate!
+            state.dropOffTime = action.payload.dropOffTime!
+            state.totalAmount = action.payload.totalAmount!
         },
     }
 })
