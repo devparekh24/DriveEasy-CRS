@@ -17,7 +17,7 @@ import CarInfo from '../components/Car/CarInfo/CarInfo';
 //   },
 // ];
 
-const Booking: React.FC = ({ slideImages }: any) => {
+const CarInfoPage: React.FC = () => {
   return (
     <div>
       {/* <CarCarousel slideImages={slideImages} /> */}
@@ -26,4 +26,4 @@ const Booking: React.FC = ({ slideImages }: any) => {
   );
 };
 
-export default Booking;
+export default CarInfoPage;

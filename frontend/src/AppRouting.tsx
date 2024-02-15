@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Cars from "./pages/Cars";
-import Booking from "./pages/Booking";
+import CarInfoPage from "./pages/CarInfoPage";
 import Contact from "./pages/Contact";
 // import CarDetails from "./pages/CarDetails"; 
 import CarType from "./pages/MyBooking";
@@ -98,8 +98,8 @@ const AppRouting = () => {
                         <Route path="/" element={< Home />} />
                         <Route path="/cars" element={<ProtectedRoute element={< Cars />} />} />
                         <Route path="/:type" element={<ProtectedRoute element={< CarType />} />} />
-                        <Route path="/cars/:id" element={<ProtectedRoute element={< Booking />} />} />
-                        <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< Booking />} />} />
+                        <Route path="/cars/:id" element={<ProtectedRoute element={< CarInfoPage />} />} />
+                        <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< CarInfoPage />} />} />
                         <Route path="/contact" element={< Contact />} />
                         <Route path="/my-profile" element={<ProtectedRoute element={< MyProfile />} />} />
                         <Route path="/login" element={< Login />} />

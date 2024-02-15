@@ -4,10 +4,6 @@ import { FC, useEffect, useState } from 'react';
 import { Form, Input, Button, Upload, message, InputNumber, Select, ColorPicker, Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import DashBoardLayout from '../../pages/DashBoardLayout';
-import TableList from '../TableList';
-import type { DatePickerProps } from 'antd';
-import { DatePicker, Space } from 'antd';
-import DeleteTable from '../DeleteTable'
 import FinalTable from './FinalTable';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { useAddCarMutation, useGetAllCarsQuery } from '../../../services/carApi';
