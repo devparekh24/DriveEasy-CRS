@@ -2,6 +2,7 @@ import "./ContactComponent.css";
 import { IoCall, IoLocation } from "react-icons/io5";
 import { RiHomeOfficeFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
+import { useState } from "react";
 
 interface Office {
   title: string;
@@ -17,7 +18,31 @@ const offices: Office[] = [{
   address: "Luxuria Business Hub, Dumas Rd, Surat",
 }];
 
+interface initialState {
+  name: string;
+  contactNo: string;
+  email: string;
+  message: string;
+}
+const initialState: initialState = {
+  name: '',
+  contactNo: '',
+  email: '',
+  message: ''
+}
+
 export default function ContactComponent() {
+
+  const [formData, setFormData] = useState<initialState>(initialState)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
+
   return (
     <>
       <div className="contact-header">
@@ -37,11 +62,11 @@ export default function ContactComponent() {
         <div className="contact-form-container">
           <form className="contact-form">
             <div className="input-group">
-              <input type="text" id="firstname" name="firstname" placeholder="First Name" required />
-              <input type="text" id="lastname" name="lastname" placeholder="Last Name" required />
+              <input type="text" id="name" name="name" placeholder="Enter Name" required />
+              <input type="Number" id="contactNo" name="contactNo" placeholder="Enter Contact Number" minLength={10} maxLength={10} required />
             </div>
             <div className="input-group">
-              <input type="email" id="email" name="email" placeholder="Email" required />
+              <input type="email" id="email" name="email" placeholder="Enter Email" required />
             </div>
             <div className="input-group">
               <textarea id="message" name="message" placeholder="Write Your Message" cols={30} rows={5} style={{ width: '100%', border: '1px solid rgb(207, 204, 204)', fontSize: '16px' }} required />

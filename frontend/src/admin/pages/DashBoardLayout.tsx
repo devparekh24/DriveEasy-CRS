@@ -1,10 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
-import { FileTextOutlined, UserOutlined, CarOutlined, HomeOutlined, ShoppingCartOutlined, MessageOutlined, EnvironmentOutlined, LogoutOutlined } from '@ant-design/icons';
+import React from 'react';
+import { FileTextOutlined, UserOutlined, CarOutlined, HomeOutlined, ShoppingCartOutlined, EnvironmentOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import { NavLink } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { logout } from '../../slices/authSlice';
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 import Avatar from '@mui/material/Avatar';
 
 interface DashboardProps {
@@ -24,14 +24,7 @@ const DashBoardLayout = (props: DashboardProps) => {
             <Sider
                 style={{ borderStartEndRadius: '50px', borderBottomRightRadius: '50px' }}
                 breakpoint="lg"
-                collapsedWidth="0"
-                onBreakpoint={(broken) => {
-                    // console.log(broken);
-                }}
-                onCollapse={(collapsed, type) => {
-                    // console.log(collapsed, type);
-                }}
-            >
+                collapsedWidth="0">
                 <div className="demo-logo-vertical" style={{ margin: 55 }} >
                     <Avatar src={loginUser?.image} sx={{ width: 57, height: 57 }} />
                 </div>
@@ -62,7 +55,6 @@ const DashBoardLayout = (props: DashboardProps) => {
                 </Menu>
             </Sider>
             <Layout>
-                {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
                 <Content style={{ margin: '24px 16px 0' }}>
                     <div
                         style={{
@@ -70,8 +62,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                             height: '100%',
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
-                        }}
-                    >
+                        }}>
                         {props.children}
                     </div>
                 </Content>

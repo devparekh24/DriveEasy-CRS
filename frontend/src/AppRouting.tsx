@@ -4,7 +4,7 @@ import Cars from "./pages/Cars";
 import CarInfoPage from "./pages/CarInfoPage";
 import Contact from "./pages/Contact";
 // import CarDetails from "./pages/CarDetails"; 
-import CarType from "./pages/MyBooking";
+import MyBookingPage from "./pages/MyBookingPage";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
 import ForgotPassword from "./components/Auth/ForgotPassword";
@@ -20,6 +20,8 @@ import OrdersComponent from "./admin/components/Order/Order";
 import UsersComponent from "./admin/components/User/User";
 import DamageReportingComponent from "./admin/components/DamageReport/DamageReport";
 import LeafletMap from "./admin/components/Map/LeafletMap";
+import PageNotFound from "./pages/PageNotFound";
+import PageNotFoundOnAdmin from "./admin/pages/PageNotFoundOnAdmin";
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
 
@@ -32,15 +34,7 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
         const checkAuthentication = async () => {
             try {
                 const storedUserIdToken = await JSON.parse(localStorage.getItem('user')!).userId;
-                if (storedUserIdToken && storedUserIdToken !== userId) {
-                    // toast.success('Welcome back!', {
-                    //     autoClose: 2000,
-                    //     hideProgressBar: false,
-                    //     closeOnClick: true,
-                    //     pauseOnHover: true,
-                    //     draggable: true,
-                    // });
-                }
+                if (storedUserIdToken && storedUserIdToken !== userId) { }
 
                 else if (!isAuthenticated) {
                     toast.error('You have to Login First!', {
@@ -61,20 +55,7 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
 
     return isAuthenticated ? (
         <>{element}</>
-    ) : (
-        <>
-            {/* {
-                toast.error('You have to Login First!', {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                })
-            } */}
-            {/* < Navigate to="/login" replace={true} /> */}
-        </>
-    );
+    ) : (< Navigate to="/login" replace={true} />);
 };
 
 const AppRouting = () => {
@@ -93,11 +74,12 @@ const AppRouting = () => {
                         <Route path='/users' element={<UsersComponent />} />
                         <Route path='/damage-reports' element={<DamageReportingComponent />} />
                         <Route path='/maps' element={<LeafletMap />} />
+                        <Route path='*' element={<PageNotFoundOnAdmin />} />
                     </>) :
                     (<>
                         <Route path="/" element={< Home />} />
                         <Route path="/cars" element={<ProtectedRoute element={< Cars />} />} />
-                        <Route path="/:type" element={<ProtectedRoute element={< CarType />} />} />
+                        <Route path="/booking" element={<ProtectedRoute element={< MyBookingPage />} />} />
                         <Route path="/cars/:id" element={<ProtectedRoute element={< CarInfoPage />} />} />
                         <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< CarInfoPage />} />} />
                         <Route path="/contact" element={< Contact />} />
@@ -106,7 +88,7 @@ const AppRouting = () => {
                         <Route path="/signup" element={< Signup />} />
                         <Route path="/forgot-password" element={< ForgotPassword />} />
                         {/* <Route path="/cars/:carName/:id" element={<CarDetails />} /> */}
-
+                        <Route path='*' element={<PageNotFound />} />
                     </>)}
 
             </Routes>

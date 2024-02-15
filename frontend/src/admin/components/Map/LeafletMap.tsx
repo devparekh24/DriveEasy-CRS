@@ -16,7 +16,7 @@ interface MapProps {
 
 const Map: React.FC<MapProps> = ({ center }) => {
 
-    let startMarker: any, endMarker: any;
+    // let startMarker: any, endMarker: any;
     // let map = L.map('map').setView([center.latitude, center.longitude], 13);
 
     useEffect(() => {
@@ -75,36 +75,36 @@ const Map: React.FC<MapProps> = ({ center }) => {
 
         // let startMarker: any, endMarker: any;
 
-        function calculateRoute(startLatLng: L.LatLng, endLatLng: L.LatLng) {
-            L.Routing.control({
-                waypoints: [
-                    L.latLng(startLatLng),
-                    L.latLng(endLatLng)
-                ],
-                routeWhileDragging: true
-            }).addTo(map);
-        }
+        // function calculateRoute(startLatLng: L.LatLng, endLatLng: L.LatLng) {
+        //     L.Routing.control({
+        //         waypoints: [
+        //             L.latLng(startLatLng),
+        //             L.latLng(endLatLng)
+        //         ],
+        //         routeWhileDragging: true
+        //     }).addTo(map);
+        // }
 
-        map.on('click', (e: L.LeafletMouseEvent) => {
-            const { lat, lng } = e.latlng;
-            // Remove existing markers
-            if (startMarker) {
-                map.removeLayer(startMarker);
-            }
+        // map.on('click', (e: L.LeafletMouseEvent) => {
+        //     const { lat, lng } = e.latlng;
+        //     // Remove existing markers
+        //     if (startMarker) {
+        //         map.removeLayer(startMarker);
+        //     }
 
-            if (endMarker) {
-                map.removeLayer(endMarker);
-            }
-            // Add new marker
-            if (!startMarker) {
-                startMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Starting Point!').openPopup();
-            } else if (!endMarker) {
-                endMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Ending Point!').openPopup();
+        //     if (endMarker) {
+        //         map.removeLayer(endMarker);
+        //     }
+        //     // Add new marker
+        //     if (!startMarker) {
+        //         startMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Starting Point!').openPopup();
+        //     } else if (!endMarker) {
+        //         endMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Ending Point!').openPopup();
 
-                // Calculate and display the route
-                calculateRoute(startMarker.getLatLng(), endMarker.getLatLng());
-            }
-        });
+        //         // Calculate and display the route
+        //         calculateRoute(startMarker.getLatLng(), endMarker.getLatLng());
+        //     }
+        // });
 
         // Initial call to get user's location
         getUserLocation();

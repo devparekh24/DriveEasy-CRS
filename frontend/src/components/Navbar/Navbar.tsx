@@ -39,7 +39,7 @@ const Navbar = () => {
                     {
                         isLogin ? (
                             <>
-                                <NavLink to="/logout" onClick={() => dispatch(logout())}>Logout</NavLink>
+                                <NavLink to="/login" onClick={() => dispatch(logout())}>Logout</NavLink>
                                 <Link to="/my-profile">
                                     <Avatar src={loginUser?.image} />
                                 </Link>

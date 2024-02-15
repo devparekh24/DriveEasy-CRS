@@ -1,14 +1,19 @@
 import { Card } from 'antd';
+// import cardImg from '../../../assets/download.png'
 interface CardCompProps {
     title: string;
     totalQty: number;
 }
 const CardCom = ({ title, totalQty }: CardCompProps) => (
     <Card title={title} bordered={true} style={{ width: 250, border: '1px solid grey' }} hoverable={true} >
-        <h1>{totalQty}</h1>
-        <p>Card content</p>
-        <p>Card content</p>
-        <p>Card content</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <h1>{totalQty}</h1>
+            {/* <img src={cardImg} width={150} /> */}
+        </div>
+        {title === 'Total Cars' && <p>Total number of cars in the system.</p>}
+        {title === 'Total Orders' && <p>Total number of orders placed.</p>}
+        {title === 'Total Users' && <p>Total number of registered users.</p>}
+        {title === 'Total Damage Reports' && <p>Total number of damage reports submitted.</p>}
     </Card>
 );
 

@@ -4,20 +4,27 @@ import DashBoardLayout from "../../pages/DashBoardLayout"
 import CardCom from "./Card"
 import './card.css'
 import { message } from "antd"
+import { useGetAllUsersQuery } from "../../../services/userApi"
+import { useGetAllOrdersQuery } from "../../../services/orderApi"
 
 const Home = () => {
-    const { data, isError, error, isSuccess } = useGetAllCarsQuery()
-    let totalCars: number = data?.resutls
-    let totalOrders: number = data?.resutls
-    let totalDamageReports: number = data?.resutls
-    let totalUsers: number = data?.resutls
+    const { data: carData, isError: isErrorOnCar, error: errorOnCar, isSuccess: isSuccessOnCar } = useGetAllCarsQuery()
+    const { data: userData, isError: isErrorOnUser, error: errorOnUser, isSuccess: isSuccessOnUser } = useGetAllUsersQuery()
+    const { data: orderData, isError: isErrorOnOrder, error: errorOnOrder, isSuccess: isSuccessOnOrder } = useGetAllOrdersQuery()
+
+    let totalCars: number = carData?.resutls
+    let totalUsers: number = userData?.resutls
+    let totalOrders: number = orderData?.resutls
+    let totalDamageReports: number = carData?.resutls
 
     const getDetails = async () => {
         try {
-            if (isError) {
-                throw error
+            if (isErrorOnCar || isErrorOnUser || isErrorOnOrder) {
+                throw (errorOnCar || errorOnUser || errorOnOrder)
             }
-            await data
+            await carData
+            await userData
+            await orderData
         }
         catch (error: any) {
             message.error(error.data.message)
@@ -26,8 +33,8 @@ const Home = () => {
 
     useEffect(() => {
         getDetails()
-        if (isSuccess) console.log(data)
-    }, [isSuccess, data])
+        if (isSuccessOnCar || isSuccessOnUser || isSuccessOnOrder) console.log(carData, userData, orderData)
+    }, [isSuccessOnCar, carData, isSuccessOnUser, userData, isSuccessOnOrder, orderData])
 
     return (
         <DashBoardLayout>

@@ -3,7 +3,7 @@ import CommonHeader from '../components/CommonHeader/CommonHeader';
 // import SearchFields from '../components/SearchFields/SearchFields';
 import MyBooking from '../components/Car/MyBooking/MyBooking';
 
-const CarType: React.FC = () => {
+const MyBookingPage: React.FC = () => {
   return (
     <div>
       <CommonHeader heading={'My Bookings'} />
@@ -13,4 +13,4 @@ const CarType: React.FC = () => {
   );
 };
 
-export default CarType;
+export default MyBookingPage;
