@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { logout } from '../../slices/authSlice';
 const { Header, Content, Footer, Sider } = Layout;
+import Avatar from '@mui/material/Avatar';
 
 interface DashboardProps {
     children: React.ReactNode;
@@ -23,6 +24,8 @@ interface DashboardProps {
 const DashBoardLayout = (props: DashboardProps) => {
     // const { name, token } = useAppSelector(selectAuth)
     const dispatch = useAppDispatch()
+    const loginUser = useAppSelector(state => state.auth.user);
+
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -39,7 +42,9 @@ const DashBoardLayout = (props: DashboardProps) => {
                     // console.log(collapsed, type);
                 }}
             >
-                <div className="demo-logo-vertical" style={{ height: '100px' }} />
+                <div className="demo-logo-vertical" style={{ margin: 55 }} >
+                    <Avatar src={loginUser?.image} sx={{ width: 57, height: 57 }} />
+                </div>
                 <Menu theme="dark" mode="inline">
                     <Menu.Item key="1" icon={<HomeOutlined />}>
                         <NavLink to='/'>Dashboard</NavLink>
