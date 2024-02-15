@@ -9,11 +9,11 @@ export interface Order {
     emailAddress: string;
     phoneNo: string;
     pickupAddress: string;
-    pickupDate: any;
-    pickupTime: any;
+    pickupDate: string;
+    pickupTime: string;
     dropOffAddress: string;
-    dropOffDate: any;
-    dropOffTime: any;
+    dropOffDate: string;
+    dropOffTime: string;
     totalAmount: number;
 }
 
