@@ -44,7 +44,7 @@ const authSlice = createSlice({
             state.name = action.payload.name;
             state.token = action.payload.token;
             state.userId = action.payload.userId;
-            state.user = action.payload.user
+            state.user = action.payload.user;
             state.isLoggedIn = true;
             if (action.payload.role === 'admin') {
                 state.isAdmin = true;

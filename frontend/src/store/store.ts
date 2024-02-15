@@ -16,13 +16,17 @@ import { userApi } from "../services/userApi";
 
 // const persistConfig = {
 //     key: 'root',
+//     version: 1,
 //     storage,
+//     whitelist: ['auth'],
 // }
 
 // const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 // const persistedCarReducer = persistReducer(persistConfig, carReducer);
 // const persistedAddressReducer = persistReducer(persistConfig, addressReducer);
 // const persistedOrderReducer = persistReducer(persistConfig, orderReducer);
+// const persistedBookingReducer = persistReducer(persistConfig, bookingReducer);
+// const persistedUserReducer = persistReducer(persistConfig, userReducer);
 
 export const store = configureStore({
     reducer: {
@@ -41,6 +45,23 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) => getDefaultMiddleware()
         .concat(authApi.middleware, carApi.middleware, orderApi.middleware, bookingApi.middleware, userApi.middleware)
 })
+
+// const appReducer = combineReducers({
+//     state: (state = {}) => state,
+//     auth: authReducer,
+// })
+
+// const persistReducers = persistReducer(persistConfig, appReducer)
+// const persistedAuthApi = persistReducer(persistConfig, authApi.reducer);
+
+// export const store = configureStore({
+//     reducer: {
+//         [authApi.reducerPath]: persistedAuthApi,
+//     },
+//     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+//         serializableCheck: false,
+//     }).concat(authApi.middleware),
+// })
 
 // export const persistor = persistStore(store);
 
