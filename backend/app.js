@@ -8,6 +8,7 @@ const authRouter = require('./routes/authRoutes')
 const carRouter = require('./routes/carRoutes')
 const orderRouter = require('./routes/orderRoutes')
 const userRouter = require('./routes/userRoutes')
+const contactQueryRouter = require('./routes/contactQueryRoutes')
 
 app.use(express.json())
 app.use(cookieParser())
@@ -17,6 +18,7 @@ app.use('/', authRouter)
 app.use('/users', userRouter)
 app.use('/cars', carRouter)
 app.use('/orders', orderRouter)
+app.use('/contactQueries', contactQueryRouter)
 
 app.use(errorController)
 

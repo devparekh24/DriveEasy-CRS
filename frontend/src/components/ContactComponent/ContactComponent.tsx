@@ -66,7 +66,7 @@ export default function ContactComponent() {
               <input type="Number" id="contactNo" name="contactNo" placeholder="Enter Contact Number" minLength={10} maxLength={10} required />
             </div>
             <div className="input-group">
-              <input type="email" id="email" name="email" placeholder="Enter Email" required />
+              <input type="email" id="email" name="email" placeholder="Enter Email" />
             </div>
             <div className="input-group">
               <textarea id="message" name="message" placeholder="Write Your Message" cols={30} rows={5} style={{ width: '100%', border: '1px solid rgb(207, 204, 204)', fontSize: '16px' }} required />
