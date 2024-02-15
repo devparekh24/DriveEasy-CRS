@@ -1,8 +1,8 @@
 // DamageReportingComponent.tsx
 import { FC, useState } from 'react';
 import { Form, Input, Button, message, Modal } from 'antd';
-import DashBoardLayout from '../pages/DashBoardLayout';
-import TableList from './TableList';
+import DashBoardLayout from '../../pages/DashBoardLayout';
+// import TableList from './TableList';
 
 // interface DamageReport {
 //     id: number;
@@ -91,7 +91,7 @@ const DamageReportingComponent = () => {
     return (
         <DashBoardLayout>
             <App />
-            <TableList />
+            {/* <TableList /> */}
         </DashBoardLayout>
     );
 };

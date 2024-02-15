@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, message } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Car } from '../../slices/carSlice';
-import { useRemoveCarMutation, useUpdateCarMutation } from '../../services/carApi';
-import AdminLoader from './adminLoader/adminLoader';
-import ImageUploader from '../../components/ImageUploader/ImageUploader';
+import { Car } from '../../../slices/carSlice';
+import { useRemoveCarMutation, useUpdateCarMutation } from '../../../services/carApi';
+import AdminLoader from '../adminLoader/adminLoader';
+import ImageUploader from '../../../components/ImageUploader/ImageUploader';
 
 interface Item {
     _id: string;

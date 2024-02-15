@@ -2,8 +2,8 @@
 import { FC, useState } from 'react';
 import { Form, Input, Button, Upload, message, InputNumber, Select, ColorPicker, Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import DashBoardLayout from '../pages/DashBoardLayout';
-import TableList from './TableList';
+import DashBoardLayout from '../../pages/DashBoardLayout';
+// import TableList from '../TableList';
 
 // interface User {
 //     id: number;
@@ -178,7 +178,7 @@ const UsersComponent = () => {
     return (
         <DashBoardLayout>
             <App />
-            <TableList />
+            {/* <TableList /> */}
         </DashBoardLayout>
 
     );

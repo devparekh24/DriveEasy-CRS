@@ -3,7 +3,6 @@
     flex-wrap: wrap;
     justify-content: baseline;
     gap: 20px;
-    /* Adjust the gap between cards as needed */
 }
 
 /* Media query for small screens */

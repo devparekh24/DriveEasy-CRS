@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import DashBoardLayout from "../pages/DashBoardLayout"
+import DashBoardLayout from "../../pages/DashBoardLayout"
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';

@@ -12,15 +12,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { MyProfile } from "./components/MyProfile/MyProfile";
 import { useAppSelector } from "./hooks/hooks";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-import HomeAdmin from './admin/components/HomeAdmin';
-import Car from "./admin/components/Car";
+import HomeAdmin from './admin/components/Dashboard/HomeAdmin';
+import Car from "./admin/components/Car/Car";
 import OrdersComponent from "./admin/components/Order/Order";
-import UsersComponent from "./admin/components/User";
-import DamageReportingComponent from "./admin/components/DamageReport";
-import { Chat } from "@mui/icons-material";
-import LeafletMap from "./admin/components/LeafletMap";
+import UsersComponent from "./admin/components/User/User";
+import DamageReportingComponent from "./admin/components/DamageReport/DamageReport";
+import LeafletMap from "./admin/components/Map/LeafletMap";
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
 
@@ -93,7 +92,6 @@ const AppRouting = () => {
                         <Route path='/orders' element={<OrdersComponent />} />
                         <Route path='/users' element={<UsersComponent />} />
                         <Route path='/damage-reports' element={<DamageReportingComponent />} />
-                        <Route path='/chats' element={<Chat />} />
                         <Route path='/maps' element={<LeafletMap />} />
                     </>) :
                     (<>

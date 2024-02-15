@@ -3,17 +3,17 @@ import './car.css'
 import { FC, useEffect, useState } from 'react';
 import { Form, Input, Button, Upload, message, InputNumber, Select, ColorPicker, Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import DashBoardLayout from '../pages/DashBoardLayout';
-import TableList from './TableList';
+import DashBoardLayout from '../../pages/DashBoardLayout';
+import TableList from '../TableList';
 import type { DatePickerProps } from 'antd';
 import { DatePicker, Space } from 'antd';
-import DeleteTable from './DeleteTable'
+import DeleteTable from '../DeleteTable'
 import FinalTable from './FinalTable';
-import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { useAddCarMutation, useGetAllCarsQuery } from '../../services/carApi';
-import { Car as CarState, setCars } from '../../slices/carSlice';
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
+import { useAddCarMutation, useGetAllCarsQuery } from '../../../services/carApi';
+import { Car as CarState, setCars } from '../../../slices/carSlice';
 import { toast } from 'react-toastify';
-import AdminLoader from './adminLoader/adminLoader';
+import AdminLoader from '../adminLoader/adminLoader';
 
 const AddCarModal: FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
