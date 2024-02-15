@@ -11,16 +11,6 @@ interface DashboardProps {
     children: React.ReactNode;
 }
 
-// const items = [
-//     { key: '1', icon: <HomeOutlined />, label: <NavLink to="/">Dashboard</NavLink> },
-//     { key: '2', icon: <CarOutlined />, label: <NavLink to="/cars">Cars</NavLink> },
-//     { key: '3', icon: <ShoppingCartOutlined />, label: <NavLink to="/orders">Orders</NavLink> },
-//     { key: '4', icon: <UserOutlined />, label: <NavLink to="/users">Users</NavLink> },
-//     { key: '5', icon: <FileTextOutlined />, label: <NavLink to="/damage-reports">Damage Reports</NavLink> },
-//     { key: '6', icon: <MessageOutlined />, label: <NavLink to="/chat">Chat</NavLink> },
-// ];
-
-
 const DashBoardLayout = (props: DashboardProps) => {
     // const { name, token } = useAppSelector(selectAuth)
     const dispatch = useAppDispatch()
@@ -70,15 +60,6 @@ const DashBoardLayout = (props: DashboardProps) => {
                         <NavLink to='/login' onClick={() => dispatch(logout())}>Logout</NavLink>
                     </Menu.Item>
                 </Menu>
-                {/* <Menu theme="dark" mode="inline" selectedKeys={[activeKey]}>
-                    {
-                        items.map((item) => (
-                            <Menu.Item key={item.key} icon={item.icon} onClick={() => handleMenuClick(item.key)}>
-                                {item.label}
-                            </Menu.Item>
-                        ))
-                    }
-                </Menu> */}
             </Sider>
             <Layout>
                 {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}

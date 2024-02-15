@@ -175,7 +175,7 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
                             okText="Yes"
                             cancelText="No"
                         >
-                            <DeleteOutlined disabled={editingKey !== ''} color='red' />
+                            <DeleteOutlined disabled={editingKey !== ''} style={{ color: 'red' }} />
                         </Popconfirm>
                     </div>
                 );
