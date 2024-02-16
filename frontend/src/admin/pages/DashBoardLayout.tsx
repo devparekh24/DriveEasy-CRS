@@ -52,7 +52,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                         <NavLink to="/maps">Map</NavLink>
                     </Menu.Item>
                 </Menu>
-                <Menu theme="dark" mode="inline" style={{ marginTop: '250px' }}>
+                <Menu theme="dark" mode="inline" style={{ marginTop: '180px' }}>
                     <Menu.Item key="8" icon={<LogoutOutlined rotate={180} />}>
                         <NavLink to='/login' onClick={() => dispatch(logout())}>Logout</NavLink>
                     </Menu.Item>

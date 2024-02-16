@@ -10,7 +10,7 @@ export const contactQueryApi = createApi({
             const isAdmin = (getState() as RootState).auth.isAdmin;
             if (isAdmin) {
                 const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
-                const authToken = getAuthToken();                
+                const authToken = getAuthToken();
                 headers.set('Authorization', `Bearer ${authToken}`);
             }
             return headers;
@@ -21,19 +21,19 @@ export const contactQueryApi = createApi({
 
         getAllContactQueries: builder.query<ContactQuery[], void>({
             query: () => ({
-                url: '/contactQueries'
+                url: '/contact-queries'
             }),
             providesTags: ['ContactQuery']
         }),
         getContactQuery: builder.query<ContactQuery, string>({
             query: (cqId) => ({
-                url: `/contactQueries/${cqId}`
+                url: `/contact-queries/${cqId}`
             }),
             providesTags: ['ContactQuery']
         }),
         addContactQuery: builder.mutation<ContactQuery, Partial<ContactQuery>>({
             query: (newCQ) => ({
-                url: '/contactQueries',
+                url: '/contact-queries',
                 method: 'POST',
                 body: newCQ,
             }),
@@ -41,7 +41,7 @@ export const contactQueryApi = createApi({
         }),
         updateContactQuery: builder.mutation<ContactQuery, { cqId: string; updatedContactQuery: Partial<ContactQuery> }>({
             query: ({ cqId, updatedContactQuery }) => ({
-                url: `/contactQueries/${cqId}`,
+                url: `/contact-queries/${cqId}`,
                 method: 'PATCH',
                 body: updatedContactQuery
             }),
@@ -49,7 +49,7 @@ export const contactQueryApi = createApi({
         }),
         removeContactQuery: builder.mutation<void, string>({
             query: (cqId) => ({
-                url: `/contactQueries/${cqId}`,
+                url: `/contact-queries/${cqId}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['ContactQuery']

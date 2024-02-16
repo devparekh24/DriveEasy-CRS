@@ -1,4 +1,3 @@
-// DamageReportingComponent.tsx
 import { FC, useState } from 'react';
 import { Form, Input, Button, message, Modal } from 'antd';
 import DashBoardLayout from '../../pages/DashBoardLayout';
@@ -72,7 +71,6 @@ const App: FC = () => {
 const DamageReportingComponent = () => {
     // const [form] = Form.useForm();
     // const [damageReports, setDamageReports] = useState<DamageReport[]>([]);
-    // const [idCounter, setIdCounter] = useState<number>(1);
 
     // const onFinish = (values: any) => {
     //     const newDamageReport: DamageReport = {
