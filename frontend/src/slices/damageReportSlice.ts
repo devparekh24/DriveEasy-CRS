@@ -23,8 +23,8 @@ const damageReportSlice = createSlice({
         setDamageReports: (state, action: PayloadAction<{ data: DamageReport[] }>) => {
             state.damageReports = action.payload.data;
         },
-        addDamageReport: (state, action: PayloadAction<DamageReport>) => {
-            state.damageReports.push(action.payload);
+        addDamageReport: (state, action: PayloadAction<{ data: DamageReport }>) => {
+            state.damageReports.push(action.payload.data);
         },
         updateDamageReport: (state, action: PayloadAction<{ _id: string; updatedDamageReport: Partial<DamageReport> }>) => {
             const { _id, updatedDamageReport } = action.payload;

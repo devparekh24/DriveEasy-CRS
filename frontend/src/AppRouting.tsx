@@ -70,7 +70,7 @@ const AppRouting = () => {
                     (<>
                         <Route path='/' element={<Navigate to='/admin' replace={true} />} />
                         <Route path='/admin' element={<HomeAdmin />} />
-                        <Route path='/cars' element={<Car />} />
+                        <Route path='/cars-list' element={<Car />} />
                         <Route path='/orders' element={<OrdersComponent />} />
                         <Route path='/users' element={<UsersComponent />} />
                         <Route path='/damage-reports' element={<DamageReportingComponent />} />

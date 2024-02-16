@@ -34,7 +34,7 @@ const AddDamageReportModal: FC = () => {
     };
 
     const [form] = Form.useForm();
-    const [fileList, setFileList] = useState<any[]>([]);
+    // const [fileList, setFileList] = useState<any[]>([]);
 
     const onFinish = async (values: any) => {
         // Perform CRUD operation (e.g., send data to server)
@@ -48,9 +48,9 @@ const AddDamageReportModal: FC = () => {
         } catch (error) {
             message.error(error?.data?.message);
         }
-        console.log('Uploaded files:', fileList);
+        // console.log('Uploaded files:', fileList);
         form.resetFields();
-        setFileList([]);
+        // setFileList([]);
     };
 
     const getData = async () => {
@@ -68,11 +68,12 @@ const AddDamageReportModal: FC = () => {
 
     useEffect(() => {
         getData()
-        if (isSuccessOnGetAllCars || isSuccessOnGetAllUsers) {
-            // console.log()
-            dispatch(setCars(carsData!.data))
-            dispatch(setUsers(usersData!.data))
-        }
+        setTimeout(() => {
+            if (isSuccessOnGetAllCars || isSuccessOnGetAllUsers) {
+                dispatch(setCars(carsData!.data))
+                dispatch(setUsers(usersData!.data))
+            }
+        }, 1500)
 
     }, [dispatch, isSuccessOnGetAllCars, isSuccessOnGetAllUsers, carsData, usersData])
 
@@ -82,7 +83,7 @@ const AddDamageReportModal: FC = () => {
                 console.log(addDamageReportData)
                 message.success('Damage Report submitted successfully!');
             }
-        }, 2000)
+        }, 1500)
     }, [isSuccessOnAddDamageReport])
 
     return (
@@ -150,8 +151,6 @@ const DamageReportingComponent = () => {
 
     const { data, isError, isLoading, error, isSuccess } = useGetAllDamageReportsQuery();
     const dispatch = useAppDispatch();
-    const damageReportsList = useAppSelector(state => state.damageReport.damageReports)
-    console.log(damageReportsList)
 
     const [headers, setHeaders] = useState<string[]>([])
     const [tableData, setTableData] = useState<DamageReportState[]>([]);
@@ -168,9 +167,11 @@ const DamageReportingComponent = () => {
         }
     }
 
+    const damageReportsList = useAppSelector(state => state.damageReport.damageReports)
+    console.log(damageReportsList)
 
     const getHeaders = async () => {
-        // console.log(damageReportsList.data.data)
+        console.log(damageReportsList)
         const columns = await Object.keys(data!.data!.data[0]!);
         const sortedHeaders = columns
             .filter((header) => (header !== '_id' && header !== 'description' && header !== 'id'))
@@ -189,11 +190,11 @@ const DamageReportingComponent = () => {
         damageReportsData()
         if (isSuccess) {
             setTableData(Object.values(data?.data)[0]!)
-            // console.log()
-            dispatch(setDamageReports({ data: data }))
+            dispatch(setDamageReports(data!.data))
         }
 
     }, [dispatch, isSuccess, data])
+
     return (
         <DashBoardLayout>
             <AddDamageReportModal />

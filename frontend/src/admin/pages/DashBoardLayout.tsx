@@ -34,7 +34,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                         <NavLink to='/admin'>Dashboard</NavLink>
                     </Menu.Item>
                     <Menu.Item key="2" icon={<CarOutlined />}>
-                        <NavLink to="/cars">Cars</NavLink>
+                        <NavLink to="/cars-list">Cars</NavLink>
                     </Menu.Item>
                     <Menu.Item key="3" icon={<ShoppingCartOutlined />}>
                         <NavLink to="/orders">Orders</NavLink>
@@ -52,7 +52,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                         <NavLink to="/maps">Map</NavLink>
                     </Menu.Item>
                 </Menu>
-                <Menu theme="dark" mode="inline" style={{ marginTop: '180px' }}>
+                <Menu theme="dark" mode="inline" style={{ marginTop: '150px' }}>
                     <Menu.Item key="8" icon={<LogoutOutlined rotate={180} />}>
                         <NavLink to='/login' onClick={() => dispatch(logout())}>Logout</NavLink>
                     </Menu.Item>

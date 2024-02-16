@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Popconfirm, Table, Typography, message } from 'antd';
+import { Form, Input, Popconfirm, Select, Table, Typography, message } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import AdminLoader from '../adminLoader/adminLoader';
@@ -25,7 +25,20 @@ const EditableCell: React.FC<EditableCellProps> = ({
     children,
     ...restProps
 }) => {
-    const inputNode = (<Input />);
+    const inputNode = dataIndex === 'isDamageRepaired' && editing ? (
+        <Select showSearch
+            placeholder="Select Status"
+            options={[
+                {
+                    value: true,
+                    label: 'True',
+                },
+                {
+                    value: false,
+                    label: 'False',
+                }
+            ]} />
+    ) : (<Input />);
 
     return (
         <td {...restProps}>
@@ -53,7 +66,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableData: DamageReportState[] }) => {
 
     const [form] = Form.useForm();
-    let [formData, setFormData] = useState<DamageReport[]>();
+    const [formData, setFormData] = useState<DamageReport[]>();
     const [editingKey, setEditingKey] = useState('');
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
 
@@ -120,6 +133,12 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
         dataIndex: header,
         key: header,
         editable: true,
+        render: (text: any, record: DamageReport) => {
+            if (typeof text === 'boolean') {
+                return text.toString();
+            }
+            return text;
+        },
     }));
 
     const mergedColumns = columns.map((col) => {
@@ -177,10 +196,8 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
     );
 
     useEffect(() => {
-        setTimeout(() => {
-            if (isSuccessOnRemoveDamageReport)
-                message.success('DamageReport Deleted Successfully!');
-        }, 1500)
+        if (isSuccessOnRemoveDamageReport)
+            message.success('DamageReport Deleted Successfully!');
     }, [isSuccessOnRemoveDamageReport])
 
     useEffect(() => {
