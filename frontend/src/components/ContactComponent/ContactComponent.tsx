@@ -2,7 +2,12 @@ import "./ContactComponent.css";
 import { IoCall, IoLocation } from "react-icons/io5";
 import { RiHomeOfficeFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { useAddContactQueryMutation } from "../../services/contactQueryApi";
+import { setContactQueries } from "../../slices/contactQuerySlice";
+import { useAppDispatch } from "../../hooks/hooks";
+import Loader from "../Loader/Loader";
 
 interface Office {
   title: string;
@@ -34,8 +39,10 @@ const initialState: initialState = {
 export default function ContactComponent() {
 
   const [formData, setFormData] = useState<initialState>(initialState)
+  const [addContactQuery, { data, isLoading, isError, error, isSuccess }] = useAddContactQueryMutation()
+  const dispatch = useAppDispatch()
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
@@ -43,8 +50,61 @@ export default function ContactComponent() {
     }))
   }
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formData)
+
+    try {
+      if (formData) {
+
+        await addContactQuery(formData).unwrap();
+      }
+      else if (isError) {
+        throw error
+      }
+    }
+    catch (error: any) {
+      console.log(error)
+      if (error.data.error.code === 11000) {
+        toast.error('You have already contacted us! Please use different Contact Number!', {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+      }
+      else {
+        toast.error(error.data.error.errors.contactNo.message, {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('Thank you for contacting us! We will contact you soon...', {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+      console.log(data)
+      // dispatch(setContactQueries())
+      setFormData(initialState)
+    }
+
+  }, [isSuccess])
+
   return (
     <>
+
       <div className="contact-header">
         <div>
           <h1>Contact Us Or Use This Form To Rent A Car</h1>
@@ -60,16 +120,16 @@ export default function ContactComponent() {
       </div>
       <div className="contact-component">
         <div className="contact-form-container">
-          <form className="contact-form">
+          <form className="contact-form" onSubmit={handleSubmit}>
             <div className="input-group">
-              <input type="text" id="name" name="name" placeholder="Enter Name" required />
-              <input type="Number" id="contactNo" name="contactNo" placeholder="Enter Contact Number" minLength={10} maxLength={10} required />
+              <input type="text" id="name" name="name" placeholder="Enter Name" value={formData.name} onChange={handleChange} required />
+              <input type="Number" id="contactNo" name="contactNo" placeholder="Enter Contact Number" value={formData.contactNo} onChange={handleChange} minLength={10} maxLength={10} required />
             </div>
             <div className="input-group">
-              <input type="email" id="email" name="email" placeholder="Enter Email" />
+              <input type="email" id="email" name="email" placeholder="Enter Email" value={formData.email} onChange={handleChange} required />
             </div>
             <div className="input-group">
-              <textarea id="message" name="message" placeholder="Write Your Message" cols={30} rows={5} style={{ width: '100%', border: '1px solid rgb(207, 204, 204)', fontSize: '16px' }} required />
+              <textarea id="message" name="message" placeholder="Write Your Message" value={formData.message} onChange={handleChange} cols={30} rows={5} style={{ width: '100%', border: '1px solid rgb(207, 204, 204)', fontSize: '16px' }} required />
             </div>
             <button type="submit">Send Message</button>
           </form>

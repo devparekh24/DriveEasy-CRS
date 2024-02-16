@@ -215,7 +215,7 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 5 }}
-                        scroll={{ x: 1500, y: 460 }}
+                        scroll={{ x: 1900, y: 460 }}
                     />
                 )
             }

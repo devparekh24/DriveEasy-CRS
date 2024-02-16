@@ -38,7 +38,8 @@ const HomeContactSection: React.FC = () => {
             <FaRegHeart className="icon" />
             <h3>Awesome Customer Support</h3>
             <p>
-              Experience unparalleled customer support that goes beyond expectations. Our dedicated team is ready to assist you at every step, ensuring a seamless and enjoyable journey. Trust us to prioritize your satisfaction and address your needs promptly and effectively.
+              Experience unparalleled customer support that exceeds expectations. Our dedicated team is ready to assist you at every step, ensuring a seamless and enjoyable journey with prompt and effective solutions.
+              {/* Experience unparalleled customer support that goes beyond expectations. Our dedicated team is ready to assist you at every step, ensuring a seamless and enjoyable journey. Trust us to prioritize your satisfaction and address your needs promptly and effectively. */}
             </p>
           </div>
         </div>

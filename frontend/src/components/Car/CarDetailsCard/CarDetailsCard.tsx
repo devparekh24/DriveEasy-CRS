@@ -1,6 +1,6 @@
 import "./CarDetailsCard.css";
 import React from "react";
-import { AiOutlineStar } from "react-icons/ai";
+import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { MdPersonOutline } from "react-icons/md";
 import { PiBagLight } from "react-icons/pi";
 import { VscSettings } from "react-icons/vsc";
@@ -56,16 +56,16 @@ const CarDetailsCard: React.FC<CarDetailsCardProps> = ({
         </h3>
         <p className="rating">
           <span className="rating-icon">
-            <AiOutlineStar />
+            <AiFillStar />
           </span>
           <span className="rating-icon">
-            <AiOutlineStar />
+            <AiFillStar />
           </span>
           <span className="rating-icon">
-            <AiOutlineStar />
+            <AiFillStar />
           </span>
           <span className="rating-icon">
-            <AiOutlineStar />
+            <AiFillStar />
           </span>
           <span className="rating-icon">
             <AiOutlineStar />

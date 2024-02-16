@@ -39,7 +39,7 @@ const OrdersComponent = () => {
     const getHeaders = async () => {
         const columns = await Object.keys(data!.data.data[0]!);
         const sortedHeaders = columns
-            .filter((header) => (header !== 'fullName' && header !== 'emailAddress' && header !== '__v'))
+            .filter((header) => (header !== 'fullName' && header !== 'emailAddress' && header !== '__v' && header !== '_id'))
         // .sort(); // Sort headers alphabetically
 
         const finalHeaders = ['fullName', 'emailAddress', ...sortedHeaders];

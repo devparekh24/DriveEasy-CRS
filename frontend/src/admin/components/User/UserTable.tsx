@@ -217,7 +217,7 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 5 }}
-                        scroll={{ x: 1500, y: 460 }}
+                        scroll={{ y: 460 }}
                     />
                 )
             }

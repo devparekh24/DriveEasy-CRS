@@ -21,7 +21,7 @@ const contactQuerySchema = new mongoose.Schema({
         type: String,
         required: [true, 'Message can not empty'],
     },
-    meeting:{
+    meeting: {
         type: String,
         enum: ['pending', 'Done'],
         default: 'pending'

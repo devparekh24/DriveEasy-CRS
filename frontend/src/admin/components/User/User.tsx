@@ -33,7 +33,7 @@ const UsersComponent = () => {
         const columns = await Object.keys(data!.data.data[0]!);
         console.log(columns)
         const sortedHeaders = columns
-            .filter((header) => (header !== 'name' && header !== '__v' && header !== 'id'))
+            .filter((header) => (header !== 'name' && header !== '__v' && header !== 'id' && header !== '_id'))
             .sort(); // Sort headers alphabetically
 
         const finalHeaders = ['name', ...sortedHeaders];

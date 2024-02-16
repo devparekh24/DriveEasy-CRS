@@ -1,15 +1,16 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { ContactQuery } from "../slices/contactQuerySlice";
-
-const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+import { RootState } from "../store/store";
 
 export const contactQueryApi = createApi({
     reducerPath: 'contactQueryApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8000',
-        prepareHeaders: (headers) => {
-            const authToken = getAuthToken();
-            if (authToken) {
+        prepareHeaders: (headers, { getState }) => {
+            const isAdmin = (getState() as RootState).auth.isAdmin;
+            if (isAdmin) {
+                const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+                const authToken = getAuthToken();                
                 headers.set('Authorization', `Bearer ${authToken}`);
             }
             return headers;

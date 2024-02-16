@@ -3,7 +3,6 @@ import { Form, Input, Popconfirm, Select, Table, Typography, message } from 'ant
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import AdminLoader from '../adminLoader/adminLoader';
-import UserImageUploader from '../../../components/ImageUploader/UserImageUploader';
 import { ContactQuery, ContactQueryState } from '../../../slices/contactQuerySlice';
 import { useRemoveContactQueryMutation, useUpdateContactQueryMutation } from '../../../services/contactQueryApi';
 
@@ -223,8 +222,8 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
                         dataSource={tableData}
                         columns={mergedColumns}
                         rowClassName="editable-row"
-                        pagination={{ pageSize: 5 }}
-                        scroll={{ x: 1500, y: 460 }}
+                        pagination={{ pageSize: 10 }}
+                        scroll={{ y: 460 }}
                     />
                 )
             }
