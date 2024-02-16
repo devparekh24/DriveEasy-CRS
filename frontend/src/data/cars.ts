@@ -154,7 +154,7 @@ export const cars: Car[] = [
   },
   {
     id: 11,
-    name: "Kia",
+    name: "Sportage",
     image: kia,
     carLink: "",
   },

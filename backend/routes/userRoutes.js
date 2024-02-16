@@ -32,7 +32,7 @@ router.get('/logout', authController.logout)
 
 router.delete('/deleteMe', userController.deleteMe)
 
-router.use(authController.protectedRoute, authController.restrictTo('admin'))
+// router.use(authController.protectedRoute, authController.restrictTo('admin'))
 
 router.patch('/:id', userController.changeUserRole)
 

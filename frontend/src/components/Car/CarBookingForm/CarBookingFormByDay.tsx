@@ -222,6 +222,8 @@ const CarBookingFormByDay = () => {
     }
   }, [isSuccessOnAddOrder])
 
+  const loginUser = useAppSelector(state => state.user.users)
+
   return (
     <div>
       <form onSubmit={handleSubmitBookingForm}>
@@ -236,7 +238,7 @@ const CarBookingFormByDay = () => {
             name="fullName"
             id="fullName"
             onChange={handleChange}
-            value={formData.fullName}
+            value={loginUser?.name}
             required
           />
         </div>
@@ -248,7 +250,7 @@ const CarBookingFormByDay = () => {
             name="emailAddress"
             id="emailAddress"
             onChange={handleChange}
-            value={formData.emailAddress}
+            value={loginUser?.email}
           />
         </div>
         <div>

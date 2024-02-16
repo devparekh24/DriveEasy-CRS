@@ -7,12 +7,44 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logout, setUserLogin } from "../../slices/authSlice";
 import Avatar from '@mui/material/Avatar';
 import { SiMediamarkt } from "react-icons/si";
+import { useGetUserMutation } from "../../services/userApi";
+import { message } from "antd";
+import { setUsers } from "../../slices/userSlice";
 
 const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
     const isLogin = useAppSelector(state => state.auth.isLoggedIn);
-    const loginUser = useAppSelector(state => state.auth.user);
+    // const atuhUser = useAppSelector(state => state.auth.user);
     const dispatch = useAppDispatch();
+
+    const loginUser = useAppSelector(state => state.user.users);
+    const [getUser, { data, isError, error, isSuccess }] = useGetUserMutation()
+
+    const getCurrentUser = async () => {
+        const userId = JSON.parse(localStorage.getItem('user')!).userId
+        try {
+            if (userId) {
+                await getUser(userId).unwrap()
+            }
+            if (isError) throw error
+        }
+        catch (error: any) {
+            message.error(error.data.message)
+        }
+    }
+
+    useEffect(() => {
+        getCurrentUser()
+    }, [])
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (isSuccess) {
+                dispatch(setUsers(data!.data))
+            }
+        }, 100)
+
+    }, [dispatch, isSuccess, data])
 
     const showNavbar = () => {
         if (navRef.current) {

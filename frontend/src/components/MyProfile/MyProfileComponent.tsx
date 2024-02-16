@@ -17,7 +17,7 @@ export const MyProfileComponent = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-
+  const loginUser = useAppSelector(state => state.user.users)
   const [name, setName] = useState<string | undefined>("");
   const [email, setEmail] = useState<string | undefined>("");
 
@@ -109,16 +109,16 @@ export const MyProfileComponent = () => {
         <form className="myprofile-form">
           <div className="input-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 style={{ marginBottom: 15 }}>My Profile</h2>
-            <Avatar src={userImg}
+            <Avatar src={loginUser!.image}
               sx={{ width: 60, height: 60 }} />
           </div>
           <div className="input-group">
             <label htmlFor="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Name" value={name} ref={nameRef} onChange={(e) => setName(e.target.value)} />
+            <input type="text" id="name" name="name" placeholder="Name" value={loginUser!.name} ref={nameRef} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="input-group">
             <label htmlFor="emailAddress">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="Email" value={email} ref={emailRef} onChange={(e) => setEmail(e.target.value)} />
+            <input type="email" id="email" name="email" placeholder="Email" value={loginUser!.email} ref={emailRef} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="input-group">
             <label htmlFor="currentPassword">Current Password</label>
