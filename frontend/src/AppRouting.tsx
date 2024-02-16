@@ -56,7 +56,7 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
 
     return isAuthenticated ? (
         <>{element}</>
-    ) : (< Navigate to="/login" replace={true} />);
+    ) : (< Navigate to={window.history.back()} replace={true} />);
 };
 
 const AppRouting = () => {
