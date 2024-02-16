@@ -2,9 +2,9 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 
 export interface Order {
-    _id: string,
-    user: string,
-    car: string,
+    _id: string;
+    user: string;
+    car: string;
     fullName: string;
     emailAddress: string;
     phoneNo: string;
