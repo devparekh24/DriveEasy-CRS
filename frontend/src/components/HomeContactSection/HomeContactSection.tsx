@@ -1,8 +1,7 @@
 import React from 'react';
 import './HomeContactSection.css';
-import { BiCar } from 'react-icons/bi';
-import { BsEmojiSmile } from 'react-icons/bs';
-import { AiOutlineHeart } from 'react-icons/ai';
+import { IoCarSportOutline } from 'react-icons/io5';
+import { FaRegGrinHearts, FaRegHeart } from 'react-icons/fa';
 
 const HomeContactSection: React.FC = () => {
   return (
@@ -22,27 +21,24 @@ const HomeContactSection: React.FC = () => {
         <h6>Explore our first-class car rental services</h6>
         <div className="choose-us-container">
           <div className="choose-us-child">
-            <BiCar className="icon" />
+            <IoCarSportOutline className="icon" />
             <h3>Variety of Car Brands</h3>
             <p>
-              Lorem ipsum dolor sit amet, consectadipiscing elit. Aenean commodo
-              ligula eget dolor.
+              Discover an extensive range of top-tier car brands that cater to diverse preferences and styles. From iconic luxury manufacturers to reliable everyday vehicles, our selection ensures you find the perfect match for your driving needs.
             </p>
           </div>
           <div className="choose-us-child">
-            <BsEmojiSmile className="icon" />
+            <FaRegGrinHearts className="icon" />
             <h3>Best Rate Guarantee</h3>
             <p>
-              Lorem ipsum dolor sit amet, consectadipiscing elit. Aenean commodo
-              ligula eget dolor.
+              Rest easy with our commitment to providing you the best rates in the market. We guarantee competitive pricing, ensuring you get exceptional value for your investment. Drive with confidence knowing you've secured the most favorable deal.
             </p>
           </div>
           <div className="choose-us-child">
-            <AiOutlineHeart className="icon" />
+            <FaRegHeart className="icon" />
             <h3>Awesome Customer Support</h3>
             <p>
-              Lorem ipsum dolor sit amet, consectadipiscing elit. Aenean commodo
-              ligula eget dolor.
+              Experience unparalleled customer support that goes beyond expectations. Our dedicated team is ready to assist you at every step, ensuring a seamless and enjoyable journey. Trust us to prioritize your satisfaction and address your needs promptly and effectively.
             </p>
           </div>
         </div>

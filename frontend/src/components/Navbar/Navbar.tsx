@@ -6,6 +6,7 @@ import "./Navbar.css";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { logout, setUserLogin } from "../../slices/authSlice";
 import Avatar from '@mui/material/Avatar';
+import { SiMediamarkt } from "react-icons/si";
 
 const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
@@ -30,7 +31,12 @@ const Navbar = () => {
     return (
         <div>
             <header>
-                <h3>DriveEasy</h3>
+                <div className="title">
+                    <SiMediamarkt style={{ fontSize: 40, margin: 5 }} />
+                    <div data-aos="fade-right">
+                        <h3>DriveEasy</h3>
+                    </div>
+                </div>
                 <nav ref={navRef}>
                     <NavLink to="/">Home</NavLink>
                     <NavLink to="/cars">Cars</NavLink>

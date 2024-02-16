@@ -2,6 +2,7 @@ import { HiOutlineDevicePhoneMobile } from "react-icons/hi2";
 import { IoLocationOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import "./Footer.css";
+import { SiMediamarkt } from "react-icons/si";
 
 const Footer = () => {
     return (
@@ -13,7 +14,10 @@ const Footer = () => {
                         Getting dressed up and traveling with good friends makes for a
                         shared, unforgettable experience.
                     </p>
-                    <h2>DriveEasy</h2>
+                    <div style={{ display: 'flex' }}>
+                        <SiMediamarkt style={{ fontSize: 40, margin: 5 }} />
+                        <h2>DriveEasy</h2>
+                    </div>
                     <h1>Drive Easy</h1>
                 </div>
                 <div className="footer-col">
@@ -66,7 +70,10 @@ const Footer = () => {
                 </div> */}
             </div>
             <div className="footer-row-2">
-                <p> DriveEasy ©{new Date().getFullYear()}. All Rights Reserved.</p>
+                <div style={{ display: 'flex' }}>
+                    <SiMediamarkt style={{ fontSize: 20, margin: 1 }} />
+                    <p> DriveEasy ©{new Date().getFullYear()}. All Rights Reserved.</p>
+                </div>
                 <ul>
                     <li>
                         <Link to="/">Home</Link>

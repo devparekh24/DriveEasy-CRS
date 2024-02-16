@@ -28,7 +28,7 @@
 
 .HomeContactSection button {
   padding: 0.7rem 1rem;
-  background-color: rgb(27, 241, 170);
+  background-color: rgb(0, 0, 0);
   color: white;
   font-weight: 600;
   font-size: 1rem;
@@ -39,7 +39,8 @@
 }
 
 .HomeContactSection button:hover {
-  background-color: aquamarine;
+  background-color: rgb(255, 255, 255);
+  border: none;
   transition: 0.3s;
 }
 
@@ -79,9 +80,9 @@
   font-size: 1.5rem;
 }
 
-.icon {
-  font-size: 3rem;
-  margin-bottom: 0.6rem;
+.choose-us-container .choose-us-child .icon {
+  font-size: 50px;
+  margin: 20px;
 }
 
 @media screen and (max-width: 1024px) {

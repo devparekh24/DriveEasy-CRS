@@ -10,7 +10,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useBookCarMutation } from '../../../services/bookingApi';
 import useRazorpay from "react-razorpay";
 // import { addOrder } from '../../../slices/orderSlice';
-import razorpayImg from '../../../assets/logo.svg';
+import razorpayImg from '../../../assets/DriveEasy.png';
 import { useAddOrderMutation } from '../../../services/orderApi';
 import { toast } from 'react-toastify';
 
