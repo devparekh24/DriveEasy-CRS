@@ -1,16 +1,17 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { Form, Input, Button, message, Modal } from 'antd';
 import DashBoardLayout from '../../pages/DashBoardLayout';
-// import TableList from './TableList';
+import { useAddDamageReportMutation, useGetAllDamageReportsQuery } from '../../../services/damageReportApi';
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
+import { DamageReportState, setDamageReports } from '../../../slices/damageReportSlice';
+import { toast } from 'react-toastify';
+import AdminLoader from '../adminLoader/adminLoader';
+import DamageReportTable from './DamageReportTable';
 
-// interface DamageReport {
-//     id: number;
-//     location: string;
-//     description: string;
-// }
+const AddDamageReportModal: FC = () => {
 
-const App: FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [addDamageReport, { data: addDamageReportData, isError: isErrorOnAddDamageReport, isSuccess: isSuccessOnAddDamageReport, error: errorOnAddDamageReport }] = useAddDamageReportMutation()
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -27,14 +28,30 @@ const App: FC = () => {
     const [form] = Form.useForm();
     const [fileList, setFileList] = useState<any[]>([]);
 
-    const onFinish = (values: any) => {
+    const onFinish = async (values: any) => {
         // Perform CRUD operation (e.g., send data to server)
         console.log('Form values:', values);
+        try {
+            if (values) {
+                await addDamageReport(values).unwrap();
+            }
+            if (isErrorOnAddDamageReport) throw errorOnAddDamageReport
+        } catch (error) {
+            message.error(error?.data?.message);
+        }
         console.log('Uploaded files:', fileList);
-        message.success('Damage Report submitted successfully!');
         form.resetFields();
         setFileList([]);
     };
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (isSuccessOnAddDamageReport) {
+                console.log(addDamageReportData)
+                message.success('Damage Report submitted successfully!');
+            }
+        }, 2000)
+    }, [isSuccessOnAddDamageReport])
 
     return (
         <>
@@ -69,27 +86,64 @@ const App: FC = () => {
 
 
 const DamageReportingComponent = () => {
-    // const [form] = Form.useForm();
-    // const [damageReports, setDamageReports] = useState<DamageReport[]>([]);
 
-    // const onFinish = (values: any) => {
-    //     const newDamageReport: DamageReport = {
-    //         id: idCounter,
-    //         location: values.location,
-    //         description: values.description,
-    //     };
+    const { data, isError, isLoading, error, isSuccess } = useGetAllDamageReportsQuery();
+    const dispatch = useAppDispatch();
+    const damageReportsList = useAppSelector(state => state.damageReport.damageReports)
+    console.log(damageReportsList)
 
-    //     setDamageReports([...damageReports, newDamageReport]);
-    //     setIdCounter(idCounter + 1);
+    const [headers, setHeaders] = useState<string[]>([])
+    const [tableData, setTableData] = useState<DamageReportState[]>([]);
 
-    //     message.success('Damage report submitted successfully!');
-    //     form.resetFields();
-    // };
+    const damageReportsData = async () => {
+        try {
+            if (isError) {
+                throw error
+            }
+            await data
+        }
+        catch (error: any) {
+            toast.error(error.data.message, {
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            })
+        }
+    }
 
+
+    const getHeaders = async () => {
+        const columns = await Object.keys(damageReportsList[0]!);
+        const sortedHeaders = columns
+            .filter((header) => (header !== '_id' && header !== 'message' && header !== 'id'))
+            .sort(); // Sort headers alphabetically
+
+        const finalHeaders = ['message', ...sortedHeaders];
+        setHeaders(finalHeaders);
+    }
+
+
+    useEffect(() => {
+        getHeaders()
+    }, [damageReportsList])
+
+    useEffect(() => {
+        damageReportsData()
+        if (isSuccess) {
+            setTableData(Object.values(data?.data)[0]!)
+            // console.log()
+            dispatch(setDamageReports(data?.data))
+        }
+
+    }, [dispatch, isSuccess, data])
     return (
         <DashBoardLayout>
-            <App />
-            {/* <TableList /> */}
+            <AddDamageReportModal />
+            {isLoading ? (<AdminLoader />) : (
+                <DamageReportTable headers={headers} tableData={tableData} />
+            )}
         </DashBoardLayout>
     );
 };

@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import AdminLoader from '../adminLoader/adminLoader';
 
 const AddCarModal: FC = () => {
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [addCar, { data: addCarData, isError: isErrorOnAddCar, isSuccess: isSuccessOnAddCar, error: errorOnAddCar }] = useAddCarMutation()
 
