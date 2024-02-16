@@ -31,7 +31,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                 </div>
                 <Menu theme="dark" mode="inline">
                     <Menu.Item key="1" icon={<HomeOutlined />}>
-                        <NavLink to='/'>Dashboard</NavLink>
+                        <NavLink to='/admin'>Dashboard</NavLink>
                     </Menu.Item>
                     <Menu.Item key="2" icon={<CarOutlined />}>
                         <NavLink to="/cars">Cars</NavLink>

@@ -135,7 +135,7 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
                 title: col.title,
                 editing: isEditing(record),
             }),
-            fixed: col.dataIndex === 'message' ? 'left' : undefined,
+            fixed: col.dataIndex === 'description' ? 'left' : undefined,
         };
     });
 
