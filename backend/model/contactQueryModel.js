@@ -15,10 +15,16 @@ const contactQuerySchema = new mongoose.Schema({
         required: [true, 'User must has a contact number'],
         minlength: [10, 'Contact number must be 10 digits long'],
         maxlength: [10, 'Contact number must be 10 digits long'],
+        unique: true,
     },
     message: {
         type: String,
         required: [true, 'Message can not empty'],
+    },
+    meeting:{
+        type: String,
+        enum: ['pending', 'Done'],
+        default: 'pending'
     }
 }, {
     toJSON: { virtuals: true },

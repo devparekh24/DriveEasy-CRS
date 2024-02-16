@@ -22,6 +22,7 @@ import DamageReportingComponent from "./admin/components/DamageReport/DamageRepo
 import LeafletMap from "./admin/components/Map/LeafletMap";
 import PageNotFound from "./pages/PageNotFound";
 import PageNotFoundOnAdmin from "./admin/pages/PageNotFoundOnAdmin";
+import ContactQuery from "./admin/components/ContactQueries/ContactQuery";
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
 
@@ -74,6 +75,7 @@ const AppRouting = () => {
                         <Route path='/users' element={<UsersComponent />} />
                         <Route path='/damage-reports' element={<DamageReportingComponent />} />
                         <Route path='/maps' element={<LeafletMap />} />
+                        <Route path='/contact-queries' element={<ContactQuery />} />
                         <Route path='*' element={<PageNotFoundOnAdmin />} />
                     </>) :
                     (<>

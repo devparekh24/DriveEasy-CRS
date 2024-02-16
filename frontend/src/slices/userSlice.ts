@@ -39,6 +39,6 @@ const userSlice = createSlice({
     }
 })
 
-export const selectOrder = (state: RootState) => state.user
+export const selectUser = (state: RootState) => state.user
 export const { setUsers, addUser, updateUser, removeUser } = userSlice.actions;
 export default userSlice.reducer;

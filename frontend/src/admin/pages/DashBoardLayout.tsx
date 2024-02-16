@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { logout } from '../../slices/authSlice';
 const { Content, Footer, Sider } = Layout;
 import Avatar from '@mui/material/Avatar';
+import { MdOutlineContactPhone } from 'react-icons/md';
 
 interface DashboardProps {
     children: React.ReactNode;
@@ -44,7 +45,10 @@ const DashBoardLayout = (props: DashboardProps) => {
                     <Menu.Item key="5" icon={<FileTextOutlined />}>
                         <NavLink to="/damage-reports">Damage Reports</NavLink>
                     </Menu.Item>
-                    <Menu.Item key="6" icon={<EnvironmentOutlined />}>
+                    <Menu.Item key="6" icon={<MdOutlineContactPhone />}>
+                        <NavLink to="/contact-queries">Contact Queries</NavLink>
+                    </Menu.Item>
+                    <Menu.Item key="7" icon={<EnvironmentOutlined />}>
                         <NavLink to="/maps">Map</NavLink>
                     </Menu.Item>
                 </Menu>

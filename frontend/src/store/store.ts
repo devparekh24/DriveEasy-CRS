@@ -11,6 +11,8 @@ import bookingReducer from "../slices/bookingSlice";
 import { bookingApi } from "../services/bookingApi";
 import userReducer from "../slices/userSlice";
 import { userApi } from "../services/userApi";
+import contactQueryReducer from "../slices/contactQuerySlice";
+import { contactQueryApi } from "../services/contactQueryApi";
 // import { persistStore, persistReducer } from "redux-persist";
 // import storage from "redux-persist/lib/storage";
 
@@ -41,9 +43,11 @@ export const store = configureStore({
         [bookingApi.reducerPath]: bookingApi.reducer,
         user: userReducer,
         [userApi.reducerPath]: userApi.reducer,
+        contactQuery: contactQueryReducer,
+        [contactQueryApi.reducerPath]:contactQueryApi.reducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-        .concat(authApi.middleware, carApi.middleware, orderApi.middleware, bookingApi.middleware, userApi.middleware)
+        .concat(authApi.middleware, carApi.middleware, orderApi.middleware, bookingApi.middleware, userApi.middleware, contactQueryApi.middleware)
 })
 
 // const appReducer = combineReducers({
