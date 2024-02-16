@@ -24,11 +24,11 @@ export const userApi = createApi({
             }),
             providesTags: ['User']
         }),
-        getUser: builder.query<User, string>({
+        getUser: builder.mutation<User, string>({
             query: (userId) => ({
                 url: `/users/${userId}`
             }),
-            providesTags: ['User']
+            invalidatesTags: ['User']
         }),
         updateUser: builder.mutation<User, { userId: string; updatedUser: Partial<User> }>({
             query: ({ userId, updatedUser }) => ({
@@ -50,6 +50,6 @@ export const userApi = createApi({
 
 export const {
     useGetAllUsersQuery,
-    useGetUserQuery,
+    useGetUserMutation,
     useUpdateUserMutation,
     useRemoveUserMutation } = userApi

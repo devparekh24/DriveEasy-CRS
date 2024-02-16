@@ -5,7 +5,7 @@ export const authApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8000'
     }),
-
+    tagTypes: ['Auth'],
     endpoints: (builder) => ({
 
         login: builder.mutation({
@@ -13,7 +13,8 @@ export const authApi = createApi({
                 url: '/login',
                 method: 'POST',
                 body,
-            })
+            }),
+            invalidatesTags:['Auth']
         }),
 
         signup: builder.mutation({
@@ -21,7 +22,8 @@ export const authApi = createApi({
                 url: '/signup',
                 method: 'POST',
                 body,
-            })
+            }),
+            invalidatesTags:['Auth']
         })
     })
 })

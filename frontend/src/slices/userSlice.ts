@@ -22,6 +22,15 @@ const userSlice = createSlice({
         setUsers: (state, action: PayloadAction<{ data: User[] }>) => {
             state.users = action.payload.data;
         },
+        setSingleUser: (state: UserState, action: PayloadAction<{ data: User }>) => {
+            const { data } = action.payload;
+            const existingUserIndex = state.users.findIndex((user) => user._id === data._id);
+            if (existingUserIndex !== -1) {
+                state.users[existingUserIndex] = { ...state.users[existingUserIndex], ...data };
+            } else {
+                state.users.push(data);
+            }
+        },
         addUser: (state, action: PayloadAction<{ data: User }>) => {
             state.users.push(action.payload.data);
         },
@@ -40,5 +49,5 @@ const userSlice = createSlice({
 })
 
 export const selectUser = (state: RootState) => state.user
-export const { setUsers, addUser, updateUser, removeUser } = userSlice.actions;
+export const { setUsers, addUser, updateUser, removeUser, setSingleUser } = userSlice.actions;
 export default userSlice.reducer;
