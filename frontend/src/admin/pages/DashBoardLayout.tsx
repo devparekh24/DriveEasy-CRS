@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import { MdOutlineContactPhone } from 'react-icons/md';
 import { useGetUserMutation } from '../../services/userApi';
 import { setUsers } from '../../slices/userSlice';
-import AdminLoader from '../components/adminLoader/adminLoader';
+// import AdminLoader from '../components/adminLoader/adminLoader';
 
 interface DashboardProps {
     children: React.ReactNode;
@@ -38,7 +38,7 @@ interface DashboardProps {
 const DashBoardLayout = (props: DashboardProps) => {
 
     const loginUser = useAppSelector(state => state.user.users);
-    const [getUser, { data, isError, error, isSuccess, isLoading }] = useGetUserMutation()
+    const [getUser, { data, isError, error, isSuccess }] = useGetUserMutation()
     const dispatch = useAppDispatch()
     const userId = JSON.parse(localStorage.getItem('user')!).userId
 
@@ -129,11 +129,11 @@ const DashBoardLayout = (props: DashboardProps) => {
                                 background: colorBgContainer,
                                 borderRadius: borderRadiusLG,
                             }}>
-                            {isLoading ? (<AdminLoader />) :
-                                (<>
-                                    {props.children}
-                                </>)
-                            }
+                            {/* {isLoading ? (<AdminLoader />) :
+                                (<> */}
+                            {props.children}
+                            {/* </>)
+                            } */}
                         </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>

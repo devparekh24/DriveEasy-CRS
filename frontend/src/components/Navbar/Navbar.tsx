@@ -14,14 +14,14 @@ import { setUsers } from "../../slices/userSlice";
 const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
     const isLogin = useAppSelector(state => state.auth.isLoggedIn);
-    // const atuhUser = useAppSelector(state => state.auth.user);
+    // const authUser = useAppSelector(state => state.auth.user);
     const dispatch = useAppDispatch();
+    // const storedUser = localStorage.getItem('user');
 
-    const loginUser = useAppSelector(state => state.user.users);
     const [getUser, { data, isError, error, isSuccess }] = useGetUserMutation()
-
     const getCurrentUser = async () => {
         const userId = JSON.parse(localStorage.getItem('user')!).userId
+
         try {
             if (userId) {
                 await getUser(userId).unwrap()
@@ -42,9 +42,17 @@ const Navbar = () => {
             if (isSuccess) {
                 dispatch(setUsers(data!.data))
             }
-        }, 100)
+        }, 1500)
 
     }, [dispatch, isSuccess, data])
+
+    let loginUser = useAppSelector(state => state.user.users);
+    console.log(loginUser)
+    // const sr = JSON.parse(localStorage.getItem('user')!);
+    // console.log(sr.user)
+
+    // const user = Object.keys(loginUser).map(key => ({ id: Number(key), name: loginUser[key] }))
+    // console.log(Array.isArray(user))
 
     const showNavbar = () => {
         if (navRef.current) {
@@ -56,9 +64,13 @@ const Navbar = () => {
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             const user = JSON.parse(storedUser);
+            console.log(user)
             dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId, user: loginUser! }));
         }
-    }, [dispatch]);
+    }, [dispatch, setUserLogin]);
+    const handleLogout = () => {
+        dispatch(logout())
+    }
 
     return (
         <div>
@@ -77,7 +89,7 @@ const Navbar = () => {
                     {
                         isLogin ? (
                             <>
-                                <NavLink to="/login" onClick={() => dispatch(logout())}>Logout</NavLink>
+                                <NavLink to="/login" onClick={handleLogout}>Logout</NavLink>
                                 <Link to="/my-profile">
                                     <Avatar src={loginUser?.image} />
                                 </Link>

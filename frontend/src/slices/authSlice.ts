@@ -39,13 +39,15 @@ const authSlice = createSlice({
                 name: action.payload.name,
                 token: action.payload.token,
                 role: action.payload.role,
-                userId: action.payload.userId
+                userId: action.payload.userId,
+                user: action.payload.user
             }))
             state.name = action.payload.name;
             state.token = action.payload.token;
             state.userId = action.payload.userId;
             state.user = action.payload.user;
             state.isLoggedIn = true;
+            localStorage.setItem('isLogin', state.isLoggedIn.toString())
             if (action.payload.role === 'admin') {
                 state.isAdmin = true;
             }
@@ -55,11 +57,13 @@ const authSlice = createSlice({
         },
         logout(state) {
             localStorage.removeItem('user');
+            localStorage.removeItem('isLogin');
             state.name = null;
             state.token = null;
-            // state.user = null;
+            state.user = null;
             state.isLoggedIn = false;
             state.isAdmin = false;
+            state.userId = null;
         }
     }
 })

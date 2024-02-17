@@ -2,10 +2,10 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 
 export interface User {
-    _id: string,
-    name: string,
-    email: string,
-    image: string,
+    _id: string;
+    name: string;
+    email: string;
+    image: string;
 }
 
 export interface UserState {

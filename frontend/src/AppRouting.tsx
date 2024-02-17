@@ -27,7 +27,9 @@ import ContactQuery from "./admin/components/ContactQueries/ContactQuery";
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
 
     const navigate = useNavigate()
-    const isAuthenticated = useAppSelector(state => state.auth.isLoggedIn);
+    // const isAuthenticated = useAppSelector(state => state.auth.isLoggedIn);
+    const isAuthenticated = localStorage.getItem('isLogin')
+
     const userId = useAppSelector(state => state.auth.userId)
 
     useEffect(() => {

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
 import { toast } from "react-toastify"
 import Avatar from '@mui/material/Avatar';
 import { useUpdateMeMutation } from "../../services/carApi";
-import { logout } from "../../slices/authSlice";
+import { logout, setUserLogin } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Button, Popconfirm } from 'antd';
 
@@ -17,15 +17,15 @@ export const MyProfileComponent = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const loginUser = useAppSelector(state => state.user.users)
-  const [name, setName] = useState<string | undefined>("");
-  const [email, setEmail] = useState<string | undefined>("");
+  let [name, setName] = useState<string | undefined>("");
+  let [email, setEmail] = useState<string | undefined>("");
 
-  const userProfile = useAppSelector(state => state.auth.user)
+  const authUser = useAppSelector(state => state.auth.user)
+  console.log(authUser)
   // console.log(userProfile)
   // const name = userProfile?.name
   // const email = userProfile?.email
-  const userImg = userProfile?.image
+  // const userImg = userProfile?.image
 
   const [updateMe, { data, isError, error, isLoading, isSuccess }] = useUpdateMeMutation()
 
@@ -96,29 +96,33 @@ export const MyProfileComponent = () => {
         draggable: true,
       })
     }
-  }, [isSuccess, data])
+  }, [isSuccess, data, isLoading])
+
+  const loginUser = useAppSelector(state => state.user.users)
+  console.log(loginUser)
 
   useEffect(() => {
     // Update local state with the initial name and email from the user profile
-    setName(userProfile?.name);
-    setEmail(userProfile?.email);
-  }, [userProfile]);
+    setName(loginUser?.name);
+    setEmail(loginUser?.email);
+  }, [loginUser]);
+
   return (
     <div className="myprofile-component">
       <div className="myprofile-form-container">
         <form className="myprofile-form">
           <div className="input-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 style={{ marginBottom: 15 }}>My Profile</h2>
-            <Avatar src={loginUser!.image}
+            <Avatar src={loginUser?.image}
               sx={{ width: 60, height: 60 }} />
           </div>
           <div className="input-group">
             <label htmlFor="name">Name</label>
-            <input type="text" id="name" name="name" placeholder="Name" value={loginUser!.name} ref={nameRef} onChange={(e) => setName(e.target.value)} />
+            <input type="text" id="name" name="name" placeholder="Name" value={name} ref={nameRef} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="input-group">
             <label htmlFor="emailAddress">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="Email" value={loginUser!.email} ref={emailRef} onChange={(e) => setEmail(e.target.value)} />
+            <input type="email" id="email" name="email" placeholder="Email" value={email} ref={emailRef} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="input-group">
             <label htmlFor="currentPassword">Current Password</label>
