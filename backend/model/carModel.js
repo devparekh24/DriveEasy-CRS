@@ -13,10 +13,18 @@ const carSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Car must has a maker name']
     },
-    // model: {
-    //     type: String,
-    //     required: [true, 'Car must has a model name']
-    // },
+    carNumberPlate: {
+        type: String,
+        required: [true, 'Car must has a Number Plate'],
+        validate: {
+            validator: function (value) {
+                //regular expression for car number plate validation
+                const regex = /^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$/;
+                return regex.test(value);
+            },
+            message: 'Invalid car number plate format, Please follow this eg. MP 09 AB 1234'
+        }
+    },
     year: {
         type: String,
         required: [true, 'Car must has a manufacturing year']
@@ -35,9 +43,17 @@ const carSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    rentPrice: {
+    rentPricePerDay: {
         type: Number,
-        required: [true, 'Car must has rental price']
+        required: [true, 'Car must has rental price per day']
+    },
+    rentPricePerHour: {
+        type: Number,
+        required: [true, 'Car must has rental price per hour']
+    },
+    rentPricePerKm: {
+        type: Number,
+        required: [true, 'Car must has rental price per km']
     },
     image: {
         type: String,
@@ -47,6 +63,10 @@ const carSchema = new mongoose.Schema({
         type: String,
         enum: ['Petrol', 'Diesel', 'EV', 'CNG'],
         default: 'Petrol'
+    },
+    whenWillCarAvailable: {
+        type: String,
+        required: [true, 'You have to mention that when will car available']
     }
 }, {
     timestamps: true

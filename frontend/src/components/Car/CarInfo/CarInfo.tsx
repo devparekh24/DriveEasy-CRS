@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { useGetAllCarsQuery } from "../../../services/carApi";
 import { setCars } from "../../../slices/carSlice";
 import Loader from "../../Loader/Loader";
+import { AiOutlineCheck } from "react-icons/ai";
 
 const CarInfo: React.FC = () => {
   const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
@@ -78,9 +79,43 @@ const CarInfo: React.FC = () => {
                 </div>
                 <div>
                   <BiSolidCarMechanic className="car-info-icon" />
-                  <span>{find_car?.year} (Manufacturing year)</span>
+                  <span>{find_car?.year} (MFG)</span>
                 </div>
               </div>
+              <div className="include">
+                <div>
+                  <h3>Included</h3>
+                </div>
+                <div>
+                  <p>
+                    <AiOutlineCheck className="check-icon" />
+                    Audio input
+                  </p>
+                  <p>
+                    <AiOutlineCheck className="check-icon" />
+                    Bluetooth
+                  </p>
+                  <p>
+                    <AiOutlineCheck className="check-icon" />
+                    Heated seats
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    <AiOutlineCheck className="check-icon" />
+                    All Wheel drive
+                  </p>
+                  <p>
+                    <AiOutlineCheck className="check-icon" />
+                    USB input
+                  </p>
+                  <p>
+                    <AiOutlineCheck className="check-icon" />
+                    FM Radio
+                  </p>
+                </div>
+              </div>
+              <br />
               <div className="car-route-map">
                 <LeafletMap />
               </div>

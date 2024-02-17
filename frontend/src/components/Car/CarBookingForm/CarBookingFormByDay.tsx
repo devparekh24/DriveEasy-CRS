@@ -1,6 +1,6 @@
 import './CarBookingForm.css';
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { setBookingData, BookingState } from "../../../slices/bookingSlice";
 import { DatePicker } from 'antd';
@@ -25,6 +25,15 @@ interface initialState {
   dropOffDate: string;
   dropOffTime: string;
   totalAmount: number;
+  errors: {
+    fullName?: string;
+    emailAddress?: string;
+    phoneNo?: string;
+    pickupAddress?: string;
+    pickupDate?: string;
+    dropOffAddress?: string;
+    dropOffDate?: string;
+  };
 }
 const initialState: initialState = {
   fullName: '',
@@ -36,7 +45,8 @@ const initialState: initialState = {
   dropOffAddress: '',
   dropOffDate: '',
   dropOffTime: '',
-  totalAmount: 0
+  totalAmount: 0,
+  errors: {},
 }
 
 dayjs.extend(customParseFormat);
@@ -71,6 +81,7 @@ const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate
 
 const CarBookingFormByDay = () => {
 
+  const navigate = useNavigate()
   const params = useParams<{ id: string }>();
   const cars = useAppSelector(state => state.car.cars)
   // const pickupAdd = useAppSelector(state => state.address.pickupAddress)
@@ -83,7 +94,7 @@ const CarBookingFormByDay = () => {
 
   const [Razorpay] = useRazorpay();
   const dispatch = useAppDispatch()
-
+  const isLogin = useAppSelector(state => state.auth.isLoggedIn)
   const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
   const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
   const [formData, setFormData] = useState<initialState>(initialState)
@@ -199,9 +210,52 @@ const CarBookingFormByDay = () => {
   const handleSubmitBookingForm = async (event: any) => {
 
     event.preventDefault();
-    // dispatch(setBookingData(formData));
-    handlePayment(formData)
 
+    // Simple validation
+    const errors: initialState['errors'] = {};
+    if (!formData.fullName.trim()) {
+      errors.fullName = 'Full Name is required';
+    }
+    if (!formData.phoneNo.trim()) {
+      errors.phoneNo = 'Phone Number is required';
+    }
+    if (!formData.emailAddress.trim()) {
+      errors.emailAddress = 'Email Address is required';
+    }
+    if (!formData.pickupAddress.trim()) {
+      errors.pickupAddress = 'Pickup Address is required';
+    }
+    if (!formData.pickupDate) {
+      errors.pickupDate = 'Pickup Date is required';
+    }
+    if (!formData.dropOffAddress.trim()) {
+      errors.dropOffAddress = 'Drop Off Address is required';
+    }
+    if (!formData.dropOffDate) {
+      errors.dropOffDate = 'Drop Off Date is required';
+    }
+    setFormData(prevData => ({ ...prevData, errors }));
+
+    // // If there are errors, don't proceed with the payment
+    // if (Object.keys(errors).length === 0) {
+    //   handlePayment(formData);
+    // }
+
+    // dispatch(setBookingData(formData));
+    isLogin ? (handlePayment(formData)) : (
+      <>
+        {
+          toast.error('You have to Login First!', {
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            onClose: () => navigate('/login')
+          })
+        }
+      </>
+    )
   };
 
 

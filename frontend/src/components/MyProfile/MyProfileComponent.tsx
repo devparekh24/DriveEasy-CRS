@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
 import { toast } from "react-toastify"
 import Avatar from '@mui/material/Avatar';
 import { useUpdateMeMutation } from "../../services/carApi";
-import { logout, setUserLogin } from "../../slices/authSlice";
+import { logout } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Button, Popconfirm } from 'antd';
 
@@ -20,8 +20,8 @@ export const MyProfileComponent = () => {
   let [name, setName] = useState<string | undefined>("");
   let [email, setEmail] = useState<string | undefined>("");
 
-  const authUser = useAppSelector(state => state.auth.user)
-  console.log(authUser)
+  // const authUser = useAppSelector(state => state.auth.user)
+  // console.log(authUser)
   // console.log(userProfile)
   // const name = userProfile?.name
   // const email = userProfile?.email
@@ -103,8 +103,8 @@ export const MyProfileComponent = () => {
 
   useEffect(() => {
     // Update local state with the initial name and email from the user profile
-    setName(loginUser?.name);
-    setEmail(loginUser?.email);
+    setName(loginUser.data?.name);
+    setEmail(loginUser.data?.email);
   }, [loginUser]);
 
   return (
@@ -113,7 +113,7 @@ export const MyProfileComponent = () => {
         <form className="myprofile-form">
           <div className="input-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 style={{ marginBottom: 15 }}>My Profile</h2>
-            <Avatar src={loginUser?.image}
+            <Avatar src={loginUser.data?.image}
               sx={{ width: 60, height: 60 }} />
           </div>
           <div className="input-group">

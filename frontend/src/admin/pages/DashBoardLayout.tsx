@@ -40,6 +40,7 @@ const DashBoardLayout = (props: DashboardProps) => {
     const loginUser = useAppSelector(state => state.user.users);
     const [getUser, { data, isError, error, isSuccess }] = useGetUserMutation()
     const dispatch = useAppDispatch()
+    const isLogin = useAppSelector(state => state.auth.isLoggedIn);
     const userId = JSON.parse(localStorage.getItem('user')!).userId
 
     const getCurrentUser = async () => {
@@ -56,7 +57,7 @@ const DashBoardLayout = (props: DashboardProps) => {
 
     useEffect(() => {
         getCurrentUser()
-    }, [])
+    }, [isLogin])
 
     useEffect(() => {
         setTimeout(() => {
@@ -89,7 +90,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                     breakpoint="lg"
                     collapsedWidth="0">
                     <div className="demo-logo-vertical" style={{ margin: 55 }} >
-                        <Avatar src={loginUser!.image} sx={{ width: 57, height: 57 }} />
+                        <Avatar src={loginUser?.data?.image} sx={{ width: 57, height: 57 }} />
                     </div>
                     <Menu theme="dark" mode="inline">
                         <Menu.Item key="1" icon={<HomeOutlined />}>

@@ -82,9 +82,9 @@ const AppRouting = () => {
                     </>) :
                     (<>
                         <Route path="/" element={< Home />} />
-                        <Route path="/cars" element={<ProtectedRoute element={< Cars />} />} />
+                        <Route path="/cars" element={< Cars />} />
                         <Route path="/booking" element={<ProtectedRoute element={< MyBookingPage />} />} />
-                        <Route path="/cars/:id" element={<ProtectedRoute element={< CarInfoPage />} />} />
+                        <Route path="/cars/:id" element={< CarInfoPage />} />
                         <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< CarInfoPage />} />} />
                         <Route path="/contact" element={< Contact />} />
                         <Route path="/my-profile" element={<ProtectedRoute element={< MyProfile />} />} />

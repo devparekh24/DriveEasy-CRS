@@ -35,7 +35,7 @@ const Navbar = () => {
 
     useEffect(() => {
         getCurrentUser()
-    }, [])
+    }, [isLogin])
 
     useEffect(() => {
         setTimeout(() => {
@@ -61,13 +61,17 @@ const Navbar = () => {
     };
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const user = JSON.parse(storedUser);
-            console.log(user)
-            dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId, user: loginUser! }));
-        }
+        setTimeout(() => {
+
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                const user = JSON.parse(storedUser);
+                console.log(user)
+                dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId, user: loginUser! }));
+            }
+        }, 1500)
     }, [dispatch, setUserLogin]);
+    
     const handleLogout = () => {
         dispatch(logout())
     }
@@ -91,7 +95,7 @@ const Navbar = () => {
                             <>
                                 <NavLink to="/login" onClick={handleLogout}>Logout</NavLink>
                                 <Link to="/my-profile">
-                                    <Avatar src={loginUser?.image} />
+                                    <Avatar src={loginUser.data?.image} />
                                 </Link>
                             </>
                         ) : (<NavLink to="/login">Login</NavLink>)

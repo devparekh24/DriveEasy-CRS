@@ -14,10 +14,6 @@
     background-color: white;
 }
 
-.input-group #firstname {
-    margin-bottom: 20px;
-}
-
 .input-group #email,
 input {
     padding: 15px;
