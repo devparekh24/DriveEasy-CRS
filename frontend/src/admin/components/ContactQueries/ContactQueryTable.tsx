@@ -5,6 +5,7 @@ import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-desig
 import AdminLoader from '../adminLoader/adminLoader';
 import { ContactQuery, ContactQueryState } from '../../../slices/contactQuerySlice';
 import { useRemoveContactQueryMutation, useUpdateContactQueryMutation } from '../../../services/contactQueryApi';
+const { Search } = Input;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -69,11 +70,19 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
     let [formData, setFormData] = useState<ContactQuery[]>();
     const [editingKey, setEditingKey] = useState('');
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
+    const [searchText, setSearchText] = useState<string>('');
 
     // console.log(data)
 
     const [removeContactQuery, { isError: isErrorOnRemoveContactQuery, isLoading: isLoadingOnRemoveContactQuery, error: errorOnRemoveContactQuery, isSuccess: isSuccessOnRemoveContactQuery }] = useRemoveContactQueryMutation()
     const [updateContactQuery, { isError: isErrorOnUpdateContactQuery, isLoading: isLoadingOnUpdateContactQuery, isSuccess: isSuccessOnUpdateContactQuery, error: errorOnUpdateContactQuery }] = useUpdateContactQueryMutation()
+
+    const handleSearch = (value: string) => {
+        setSearchText(value);
+    };
+    const filteredData = tableData.filter((record) => {
+        return headers.some((header) => record[header].toString().toLowerCase().includes(searchText.toLowerCase()));
+    });
 
     const handleDelete = async (_id: string) => {
         try {
@@ -133,6 +142,19 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
         dataIndex: header,
         key: header,
         editable: true,
+        sorter: (a: ContactQuery, b: ContactQuery) => {
+            const aValue = a[header];
+            const bValue = b[header];
+            // Handle sorting based on the data type of the column
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return aValue.localeCompare(bValue);
+            } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return aValue - bValue;
+            } else {
+                return 0;
+            }
+        },
+        sortDirections: ['ascend', 'descend'],
     }));
 
     const mergedColumns = columns.map((col) => {
@@ -208,6 +230,12 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
 
     return (
         <Form form={form} component={false}>
+            <Search
+                placeholder="Search"
+                allowClear
+                onChange={(e) => handleSearch(e.target.value)}
+                style={{ marginBottom: 16 }}
+            />
             {
                 isLoadingOnRemoveContactQuery || isLoadingOnUpdateContactQuery ? (
                     <AdminLoader />
@@ -219,7 +247,7 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
                             },
                         }}
                         bordered
-                        dataSource={tableData}
+                        dataSource={filteredData}
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 10 }}

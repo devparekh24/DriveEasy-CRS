@@ -122,7 +122,7 @@ export default function ContactComponent() {
         <div className="contact-form-container">
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="input-group">
-              <input type="text" id="name" name="name" placeholder="Enter Name" value={formData.name} onChange={handleChange} required />
+              <input type="text" id="fname" name="name" placeholder="Enter Name" value={formData.name} onChange={handleChange} required />
               <input type="Number" id="contactNo" name="contactNo" placeholder="Enter Contact Number" value={formData.contactNo} onChange={handleChange} minLength={10} maxLength={10} required />
             </div>
             <div className="input-group">

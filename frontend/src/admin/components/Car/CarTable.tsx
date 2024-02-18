@@ -6,6 +6,7 @@ import { Car } from '../../../slices/carSlice';
 import { useRemoveCarMutation, useUpdateCarMutation } from '../../../services/carApi';
 import AdminLoader from '../adminLoader/adminLoader';
 import ImageUploader from '../../../components/ImageUploader/ImageUploader';
+const { Search } = Input;
 
 interface Item {
     _id: string;
@@ -129,11 +130,19 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
     let [formData, setFormData] = useState<Car[]>();
     const [editingKey, setEditingKey] = useState('');
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
+    const [searchText, setSearchText] = useState<string>('');
 
     // console.log(data)
 
     const [removeCar, { isError: isErrorOnRemoveCar, isLoading: isLoadingOnRemoveCar, error: errorOnRemoveCar, isSuccess: isSuccessOnRemoveCar }] = useRemoveCarMutation()
     const [updateCar, { isError: isErrorOnUpdateCar, isLoading: isLoadingOnUpdateCar, isSuccess: isSuccessOnUpdateCar, error: errorOnUpdateCar }] = useUpdateCarMutation()
+
+    const handleSearch = (value: string) => {
+        setSearchText(value);
+    };
+    const filteredData = tableData.filter((record) => {
+        return headers.some((header) => record[header].toString().toLowerCase().includes(searchText.toLowerCase()));
+    });
 
     const handleDelete = async (_id: string) => {
         try {
@@ -194,6 +203,19 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
         dataIndex: header,
         key: header,
         editable: true,
+        sorter: (a: Car, b: Car) => {
+            const aValue = a[header];
+            const bValue = b[header];
+            // Handle sorting based on the data type of the column
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return aValue.localeCompare(bValue);
+            } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return aValue - bValue;
+            } else {
+                return 0;
+            }
+        },
+        sortDirections: ['ascend', 'descend'],
     }));
 
     const mergedColumns = columns.map((col) => {
@@ -273,6 +295,12 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
 
     return (
         <Form form={form} component={false}>
+            <Search
+                placeholder="Search"
+                allowClear
+                onChange={(e) => handleSearch(e.target.value)}
+                style={{ marginBottom: 16 }}
+            />
             {
                 isLoadingOnRemoveCar || isLoadingOnUpdateCar ? (
                     <AdminLoader />
@@ -284,7 +312,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                             },
                         }}
                         bordered
-                        dataSource={tableData}
+                        dataSource={filteredData}
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 5 }}

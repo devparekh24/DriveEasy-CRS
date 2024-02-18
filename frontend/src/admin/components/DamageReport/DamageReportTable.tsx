@@ -5,6 +5,7 @@ import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-desig
 import AdminLoader from '../adminLoader/adminLoader';
 import { DamageReport, DamageReportState } from '../../../slices/damageReportSlice';
 import { useRemoveDamageReportMutation, useUpdateDamageReportMutation } from '../../../services/damageReportApi';
+const { Search } = Input;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -69,11 +70,19 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
     const [formData, setFormData] = useState<DamageReport[]>();
     const [editingKey, setEditingKey] = useState('');
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
+    const [searchText, setSearchText] = useState<string>('');
 
     // console.log(data)
 
     const [removeDamageReport, { isError: isErrorOnRemoveDamageReport, isLoading: isLoadingOnRemoveDamageReport, error: errorOnRemoveDamageReport, isSuccess: isSuccessOnRemoveDamageReport }] = useRemoveDamageReportMutation()
     const [updateDamageReport, { isError: isErrorOnUpdateDamageReport, isLoading: isLoadingOnUpdateDamageReport, isSuccess: isSuccessOnUpdateDamageReport, error: errorOnUpdateDamageReport }] = useUpdateDamageReportMutation()
+
+    const handleSearch = (value: string) => {
+        setSearchText(value);
+    };
+    const filteredData = tableData.filter((record) => {
+        return headers.some((header) => record[header].toString().toLowerCase().includes(searchText.toLowerCase()));
+    });
 
     const handleDelete = async (_id: string) => {
         try {
@@ -133,6 +142,21 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
         dataIndex: header,
         key: header,
         editable: true,
+        sorter: (a: DamageReport, b: DamageReport) => {
+            const aValue = a[header];
+            const bValue = b[header];
+            // Handle sorting based on the data type of the column
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return aValue.localeCompare(bValue);
+            } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return aValue - bValue;
+            } else if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
+                return aValue - bValue;
+            } else {
+                return 0;
+            }
+        },
+        sortDirections: ['ascend', 'descend'],
         render: (text: any, record: DamageReport) => {
             if (typeof text === 'boolean') {
                 return text.toString();
@@ -212,6 +236,12 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
 
     return (
         <Form form={form} component={false}>
+            <Search
+                placeholder="Search"
+                allowClear
+                onChange={(e) => handleSearch(e.target.value)}
+                style={{ marginBottom: 16 }}
+            />
             {
                 isLoadingOnRemoveDamageReport || isLoadingOnUpdateDamageReport ? (
                     <AdminLoader />
@@ -223,7 +253,7 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
                             },
                         }}
                         bordered
-                        dataSource={tableData}
+                        dataSource={filteredData}
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 5 }}

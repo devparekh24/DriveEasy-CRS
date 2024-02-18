@@ -6,6 +6,7 @@ import AdminLoader from '../adminLoader/adminLoader';
 import { User, UserState } from '../../../slices/userSlice';
 import { useRemoveUserMutation, useUpdateUserMutation } from '../../../services/userApi';
 import UserImageUploader from '../../../components/ImageUploader/UserImageUploader';
+const { Search } = Input;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -63,11 +64,19 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
     let [formData, setFormData] = useState<User[]>();
     const [editingKey, setEditingKey] = useState('');
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
+    const [searchText, setSearchText] = useState<string>('');
 
     // console.log(data)
 
     const [removeUser, { isError: isErrorOnRemoveUser, isLoading: isLoadingOnRemoveUser, error: errorOnRemoveUser, isSuccess: isSuccessOnRemoveUser }] = useRemoveUserMutation()
     const [updateUser, { isError: isErrorOnUpdateUser, isLoading: isLoadingOnUpdateUser, isSuccess: isSuccessOnUpdateUser, error: errorOnUpdateUser }] = useUpdateUserMutation()
+
+    const handleSearch = (value: string) => {
+        setSearchText(value);
+    };
+    const filteredData = tableData.filter((record) => {
+        return headers.some((header) => record[header].toString().toLowerCase().includes(searchText.toLowerCase()));
+    });
 
     const handleDelete = async (_id: string) => {
         try {
@@ -127,6 +136,19 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
         dataIndex: header,
         key: header,
         editable: true,
+        sorter: (a: User, b: User) => {
+            const aValue = a[header];
+            const bValue = b[header];
+            // Handle sorting based on the data type of the column
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return aValue.localeCompare(bValue);
+            } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return aValue - bValue;
+            } else {
+                return 0;
+            }
+        },
+        sortDirections: ['ascend', 'descend'],
     }));
 
     const mergedColumns = columns.map((col) => {
@@ -202,6 +224,12 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
 
     return (
         <Form form={form} component={false}>
+            <Search
+                placeholder="Search"
+                allowClear
+                onChange={(e) => handleSearch(e.target.value)}
+                style={{ marginBottom: 16 }}
+            />
             {
                 isLoadingOnRemoveUser || isLoadingOnUpdateUser ? (
                     <AdminLoader />
@@ -213,7 +241,7 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
                             },
                         }}
                         bordered
-                        dataSource={tableData}
+                        dataSource={filteredData}
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 5 }}

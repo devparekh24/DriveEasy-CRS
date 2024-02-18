@@ -5,6 +5,7 @@ import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-desig
 import AdminLoader from '../adminLoader/adminLoader';
 import { Order, OrderState } from '../../../slices/orderSlice';
 import { useRemoveOrderMutation, useUpdateOrderMutation } from '../../../services/orderApi';
+const { Search } = Input;
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
     editing: boolean;
@@ -60,11 +61,19 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
     let [formData, setFormData] = useState<Order[]>();
     const [editingKey, setEditingKey] = useState('');
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
+    const [searchText, setSearchText] = useState<string>('');
 
     // console.log(data)
 
     const [removeOrder, { isError: isErrorOnRemoveOrder, isLoading: isLoadingOnRemoveOrder, error: errorOnRemoveOrder, isSuccess: isSuccessOnRemoveOrder }] = useRemoveOrderMutation()
     const [updateOrder, { isError: isErrorOnUpdateOrder, isLoading: isLoadingOnUpdateOrder, isSuccess: isSuccessOnUpdateOrder, error: errorOnUpdateOrder }] = useUpdateOrderMutation()
+
+    const handleSearch = (value: string) => {
+        setSearchText(value);
+    };
+    const filteredData = tableData.filter((record) => {
+        return headers.some((header) => record[header].toString().toLowerCase().includes(searchText.toLowerCase()));
+    });
 
     const handleDelete = async (_id: string) => {
         try {
@@ -125,6 +134,19 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
         dataIndex: header,
         key: header,
         editable: true,
+        sorter: (a: Order, b: Order) => {
+            const aValue = a[header];
+            const bValue = b[header];
+            // Handle sorting based on the data type of the column
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return aValue.localeCompare(bValue);
+            } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return aValue - bValue;
+            } else {
+                return 0;
+            }
+        },
+        sortDirections: ['ascend', 'descend'],
     }));
 
     const mergedColumns = columns.map((col) => {
@@ -200,6 +222,12 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
 
     return (
         <Form form={form} component={false}>
+            <Search
+                placeholder="Search"
+                allowClear
+                onChange={(e) => handleSearch(e.target.value)}
+                style={{ marginBottom: 16 }}
+            />
             {
                 isLoadingOnRemoveOrder || isLoadingOnUpdateOrder ? (
                     <AdminLoader />
@@ -211,7 +239,7 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
                             },
                         }}
                         bordered
-                        dataSource={tableData}
+                        dataSource={filteredData}
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 5 }}
