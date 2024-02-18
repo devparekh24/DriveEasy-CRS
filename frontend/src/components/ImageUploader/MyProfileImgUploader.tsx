@@ -15,7 +15,7 @@ interface ImageUploaderProps {
 
 const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
 
-const MainUploader: React.FC<ImageUploaderProps> = ({ onUpload, url }) => {
+const MyProfileImgUploader: React.FC<ImageUploaderProps> = ({ onUpload, url }) => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     const authToken = getAuthToken();
@@ -85,4 +85,4 @@ const MainUploader: React.FC<ImageUploaderProps> = ({ onUpload, url }) => {
     );
 };
 
-export default MainUploader;
+export default MyProfileImgUploader;
