@@ -36,7 +36,7 @@ router.use(authController.protectedRoute)
 
 router.patch('/:id', userController.changeUserRole)
 
-router.put('/:id/user-img-upload', authController.restrictTo('admin'), uploads.single('image'), userController.uploadUserImage)
+router.put('/:id/user-img-upload', uploads.single('image'), userController.uploadUserImage)
 
 router
     .route('/')

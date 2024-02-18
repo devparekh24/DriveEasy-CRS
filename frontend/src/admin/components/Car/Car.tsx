@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from 'react';
 import { Form, Input, Button, Upload, message, InputNumber, Select, ColorPicker, Modal } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import DashBoardLayout from '../../pages/DashBoardLayout';
-import FinalTable from './FinalTable';
+import CarTable from './CarTable';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { useAddCarMutation, useGetAllCarsQuery } from '../../../services/carApi';
 import { Car as CarState, setCars } from '../../../slices/carSlice';
@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 import AdminLoader from '../adminLoader/adminLoader';
 
 const AddCarModal: FC = () => {
-    
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [addCar, { data: addCarData, isError: isErrorOnAddCar, isSuccess: isSuccessOnAddCar, error: errorOnAddCar }] = useAddCarMutation()
 
@@ -241,7 +241,7 @@ const Car: FC = () => {
         <DashBoardLayout>
             <AddCarModal />
             {isLoading ? (<AdminLoader />) : (
-                <FinalTable headers={headers} tableData={tableData} />
+                <CarTable headers={headers} tableData={tableData} />
             )}
         </DashBoardLayout>
     );

@@ -123,7 +123,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 };
 
 
-const FinalTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] }) => {
+const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] }) => {
 
     const [form] = Form.useForm();
     let [formData, setFormData] = useState<Car[]>();
@@ -295,4 +295,4 @@ const FinalTable = ({ headers, tableData }: { headers: string[]; tableData: Car[
         </Form>
     )
 }
-export default FinalTable;
+export default CarTable;

@@ -5,7 +5,10 @@ import Avatar from '@mui/material/Avatar';
 import { useUpdateMeMutation } from "../../services/carApi";
 import { logout } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import { Button, Popconfirm } from 'antd';
+import { Button, Popconfirm, message } from 'antd';
+import MyProfileImgUploader from "../ImageUploader/MyProfileImgUploader";
+import { useGetUserMutation } from "../../services/userApi";
+import { setUsers } from "../../slices/userSlice";
 
 export const MyProfileComponent = () => {
 
@@ -17,15 +20,11 @@ export const MyProfileComponent = () => {
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  let [name, setName] = useState<string | undefined>("");
-  let [email, setEmail] = useState<string | undefined>("");
+  const [name, setName] = useState<string | undefined>("");
+  const [email, setEmail] = useState<string | undefined>("");
+  const [image, setImage] = useState<string | undefined>("");
 
-  // const authUser = useAppSelector(state => state.auth.user)
-  // console.log(authUser)
-  // console.log(userProfile)
-  // const name = userProfile?.name
-  // const email = userProfile?.email
-  // const userImg = userProfile?.image
+  const userId = JSON.parse(localStorage.getItem('user')!).userId;
 
   const [updateMe, { data, isError, error, isLoading, isSuccess }] = useUpdateMeMutation()
 
@@ -98,6 +97,33 @@ export const MyProfileComponent = () => {
     }
   }, [isSuccess, data, isLoading])
 
+  const [getUser, { data: userData, isError: isErrorOnGetUser, error: errorOnGetUser, isSuccess: isSuccessOnGetUser }] = useGetUserMutation()
+
+  const getCurrentUser = async () => {
+    try {
+      if (userId) {
+        await getUser(userId).unwrap()
+      }
+      if (isErrorOnGetUser) throw errorOnGetUser
+    }
+    catch (error: any) {
+      message.error(error.data.message)
+    }
+  }
+
+  useEffect(() => {
+    getCurrentUser()
+  }, [image])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (isSuccessOnGetUser) {
+        dispatch(setUsers(userData!.data))
+      }
+    }, 100)
+
+  }, [dispatch, isSuccessOnGetUser, userData])
+
   const loginUser = useAppSelector(state => state.user.users)
   console.log(loginUser)
 
@@ -114,7 +140,8 @@ export const MyProfileComponent = () => {
           <div className="input-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 style={{ marginBottom: 15 }}>My Profile</h2>
             <Avatar src={loginUser.data?.image}
-              sx={{ width: 60, height: 60 }} />
+              sx={{ width: 100, height: 100 }} style={{ marginBottom: 20 }} />
+            <MyProfileImgUploader onUpload={(imgUrl) => setImage(imgUrl)} url={`http://localhost:8000/users/${userId}/user-img-upload`} />
           </div>
           <div className="input-group">
             <label htmlFor="name">Name</label>

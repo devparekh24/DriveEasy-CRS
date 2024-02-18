@@ -50,7 +50,7 @@ const UserImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, userId }) =
     const props: UploadProps = {
         name: 'image',
         customRequest,
-        showUploadList: false, // Hide the default upload list
+        showUploadList: true, // Hide the default upload list
     };
 
     return (

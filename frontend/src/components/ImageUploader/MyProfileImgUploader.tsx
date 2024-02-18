@@ -2,15 +2,20 @@ import React, { useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { Button, message, Upload } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import type { GetProp, UploadFile } from 'antd';
+
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
+
 
 interface ImageUploaderProps {
     onUpload: (imageUrl: string) => void;
-    carId: string;
+    url: string;
 }
 
 const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, carId }) => {
+const MainUploader: React.FC<ImageUploaderProps> = ({ onUpload, url }) => {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
 
     const authToken = getAuthToken();
@@ -20,7 +25,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, carId }) => {
             const formData = new FormData();
             formData.append('image', file);
 
-            const response = await fetch(`http://localhost:8000/cars/${carId}/img-upload`, {
+            const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${authToken}`,
@@ -47,18 +52,37 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, carId }) => {
         }
     };
 
+    const onPreview = async (file: UploadFile) => {
+        let src = file.url as string;
+        if (!src) {
+            src = await new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file.originFileObj as FileType);
+                reader.onload = () => resolve(reader.result as string);
+            });
+        }
+        const image = new Image();
+        image.src = src;
+        const imgWindow = window.open(src);
+        imgWindow?.document.write(image.outerHTML);
+    };
+
     const props: UploadProps = {
         name: 'image',
         customRequest,
         showUploadList: true, // Hide the default upload list
+        onPreview
     };
 
     return (
-        <Upload {...props}>
-            <Button icon={<UploadOutlined />}>Click to Upload</Button>
-            {imageUrl && <img src={imageUrl} alt="Uploaded" style={{ width: '100%', marginTop: '10px' }} />}
-        </Upload>
+        <ImgCrop rotationSlider>
+            <Upload {...props}>
+                <Button icon={<UploadOutlined />}>  Click to Upload</Button>
+                {imageUrl && <img src={imageUrl} alt="Uploaded" style={{ width: '100%', marginTop: '10px' }} />}
+            </Upload>
+        </ImgCrop>
+
     );
 };
 
-export default ImageUploader;
+export default MainUploader;
