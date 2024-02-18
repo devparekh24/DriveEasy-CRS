@@ -16,6 +16,7 @@ const carSchema = new mongoose.Schema({
     carNumberPlate: {
         type: String,
         required: [true, 'Car must has a Number Plate'],
+        unique:true,
         validate: {
             validator: function (value) {
                 //regular expression for car number plate validation

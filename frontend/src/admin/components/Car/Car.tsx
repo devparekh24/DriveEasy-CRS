@@ -1,7 +1,7 @@
 // CarComponent.tsx
 import './car.css'
 import { FC, useEffect, useState } from 'react';
-import { Form, Input, Button, Upload, message, InputNumber, Select, ColorPicker, Modal } from 'antd';
+import { Form, Input, Button, Upload, message, InputNumber, Select, ColorPicker, Modal, Space, DatePicker } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import DashBoardLayout from '../../pages/DashBoardLayout';
 import CarTable from './CarTable';
@@ -10,6 +10,19 @@ import { useAddCarMutation, useGetAllCarsQuery } from '../../../services/carApi'
 import { Car as CarState, setCars } from '../../../slices/carSlice';
 import { toast } from 'react-toastify';
 import AdminLoader from '../adminLoader/adminLoader';
+import type { GetProps } from 'antd';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
+
+dayjs.extend(customParseFormat);
+
+// eslint-disable-next-line arrow-body-style
+const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current < dayjs().endOf('day');
+};
 
 const AddCarModal: FC = () => {
 
@@ -86,8 +99,19 @@ const AddCarModal: FC = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="Company Name" name="companyName" rules={[{ required: true, message: "Please enter the car's company name" }]}>
+                        <Form.Item label="Company Name / Brand Name" name="companyName" rules={[{ required: true, message: "Please enter the car's company name" }]}>
                             <Input />
+                        </Form.Item>
+
+                        <Form.Item label="Car Number Plate" name="carNumberPlate" rules={[{ required: true, message: "Please enter the car's number plate" }]}>
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item label="When Will Car Available?" name="whenWillCarAvailable" rules={[{ required: true, message: "Please enter that when will car available" }]}>
+                            <DatePicker
+                                format="YYYY-MM-DD"
+                                disabledDate={disabledDate}
+                            />
                         </Form.Item>
 
                         <Form.Item label="Year" name="year" rules={[{ required: true, message: "Please enter the car's manufacturing year" }]}>
@@ -97,7 +121,15 @@ const AddCarModal: FC = () => {
                             <InputNumber type='number' min={new Date().getFullYear() - 50} max={new Date().getFullYear() + 10} defaultValue={new Date().getFullYear()} />
                         </Form.Item>
 
-                        <Form.Item label="Rent Price" name="rentPrice" rules={[{ required: true, message: 'Please enter the rent price of car' }]}>
+                        <Form.Item label="Rent Price Per Day" name="rentPricePerDay" rules={[{ required: true, message: 'Please enter the rent price per day of car' }]}>
+                            <InputNumber type='number' min={0} />
+                        </Form.Item>
+
+                        <Form.Item label="Rent Price Per Hour" name="rentPricePerHour" rules={[{ required: true, message: 'Please enter the rent price per hour of car' }]}>
+                            <InputNumber type='number' min={0} />
+                        </Form.Item>
+
+                        <Form.Item label="Rent Price Per Km" name="rentPricePerKm" rules={[{ required: true, message: 'Please enter the rent price per km of car' }]}>
                             <InputNumber type='number' min={0} />
                         </Form.Item>
 
@@ -218,7 +250,7 @@ const Car: FC = () => {
             .filter((header) => (header !== '_id' && header !== 'carName' && header !== 'image' && header !== 'availability'))
             .sort(); // Sort headers alphabetically
 
-        const finalHeaders = ['carName', 'image', '_id', ...sortedHeaders];
+        const finalHeaders = ['carName', 'image', ...sortedHeaders];
         setHeaders(finalHeaders);
     }
 

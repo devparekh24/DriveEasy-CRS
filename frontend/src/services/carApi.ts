@@ -45,7 +45,7 @@ export const carApi = createApi({
         updateCar: builder.mutation<Car, { carId: string; updatedCar: Partial<Car> }>({
             query: ({ carId, updatedCar }) => ({
                 url: `/cars/${carId}`,
-                method: 'PATCH',
+                method: 'PUT',
                 body: updatedCar
             }),
             invalidatesTags: ['Car']

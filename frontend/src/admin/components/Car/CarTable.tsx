@@ -1,27 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, message } from 'antd';
-import type { TableColumnsType } from 'antd';
+import { DatePicker, Form, Input, InputNumber, Popconfirm, Select, Space, Table, Typography, message } from 'antd';
+import type { DatePickerProps, TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Car } from '../../../slices/carSlice';
 import { useRemoveCarMutation, useUpdateCarMutation } from '../../../services/carApi';
 import AdminLoader from '../adminLoader/adminLoader';
 import ImageUploader from '../../../components/ImageUploader/ImageUploader';
 const { Search } = Input;
+import type { GetProps } from 'antd';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
+
+dayjs.extend(customParseFormat);
+
+// eslint-disable-next-line arrow-body-style
+const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current < dayjs().endOf('day');
+};
 
 interface Item {
     _id: string;
     carName: string;
-    carType: string;
     companyName: string;
     mileage: number;
     year: string;
     capacity: number;
     color: string;
     availability: boolean;
-    rentPrice: number;
+    rentPricePerDay: number;
+    rentPricePerHour: number;
+    rentPricePerKm: number;
+    carNumberPlate: string;
     image: string;
     fule: string;
     transmission: string;
+    whenWillCarAvailable: string;
     editable: boolean;
 }
 
@@ -46,6 +62,15 @@ const EditableCell: React.FC<EditableCellProps> = ({
     ...restProps
 }) => {
     const [form] = Form.useForm();
+
+    const onChange = (
+        value: DatePickerProps['value'],
+        dateString: string,
+    ) => {
+        console.log('Selected Time: ', value);
+        console.log('Formatted Selected Time: ', dateString);
+    };
+
     const inputNode =
         inputType === 'number' ? (
             <InputNumber />
@@ -95,6 +120,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
                     },
                 ]} />
             // <ImageUploader onUpload={(imgUrl) => form.setFieldsValue({ [dataIndex]: imgUrl })} />
+        ) : dataIndex === 'whenWillCarAvailable' && editing ? (
+            <Form.Item>
+                <DatePicker
+                    format="YYYY-MM-DD"
+                    disabledDate={disabledDate}
+                    onChange={onChange}
+                />
+            </Form.Item>
         ) : (
             <Input />
         );
@@ -186,12 +219,19 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
     const save = async (key: React.Key) => {
         try {
             const row = await (await form.validateFields()) as Item;
+            // console.log(row.whenWillCarAvailable)
+            // Convert the 'whenWillCarAvailable' date to a string format
+            if (row.whenWillCarAvailable instanceof Date) {
+                row.whenWillCarAvailable = dayjs(row.whenWillCarAvailable).format('YYYY-MM-DD');
+            }
+
             const updatedData = formData?.map((item: any) => (item._id === key ? { ...item, ...row } : item));
 
             setFormData(updatedData);
             setEditingKey('');
             // Call the update function here
-            const updatedRow = { ...row, _id: key };
+            const updatedRow = { ...row, _id: key, whenWillCarAvailable: row.whenWillCarAvailable };
+
             handleUpdate(updatedRow);
         } catch (errInfo) {
             console.log('Validate Failed:', errInfo);
@@ -245,7 +285,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
             title: 'Action',
             key: 'action',
             fixed: 'right', // Fix the Action column to the right
-            width: 80,
+            width: 75,
             render: (_: any, record: Item) => {
                 const editable = isEditing(record);
                 return editable ? (
@@ -316,7 +356,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 5 }}
-                        scroll={{ x: 1500, y: 460 }}
+                        scroll={{ x: 2000, y: 460 }}
                     />
                 )
             }

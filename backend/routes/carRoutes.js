@@ -28,7 +28,7 @@ router
 router
     .route('/:id')
     .get(carController.getCar)
-    .patch(authController.protectedRoute,authController.restrictTo('admin'), carController.updateCar)
+    .put(authController.protectedRoute,authController.restrictTo('admin'), carController.updateCar)
     .delete(authController.protectedRoute,authController.restrictTo('admin'), carController.deleteCar)
 
 module.exports = router
