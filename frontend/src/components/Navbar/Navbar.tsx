@@ -10,6 +10,7 @@ import { SiMediamarkt } from "react-icons/si";
 import { useGetUserMutation } from "../../services/userApi";
 import { message } from "antd";
 import { setUsers } from "../../slices/userSlice";
+import { RiLogoutCircleRLine } from "react-icons/ri";
 
 const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
@@ -20,7 +21,7 @@ const Navbar = () => {
 
     const [getUser, { data, isError, error, isSuccess }] = useGetUserMutation()
     const getCurrentUser = async () => {
-        const userId = JSON.parse(localStorage.getItem('user')!).userId
+        const userId = await JSON.parse(localStorage.getItem('user')!).userId
 
         try {
             if (userId) {
@@ -71,7 +72,7 @@ const Navbar = () => {
             }
         }, 1500)
     }, [dispatch, setUserLogin]);
-    
+
     const handleLogout = () => {
         dispatch(logout())
     }
@@ -93,10 +94,12 @@ const Navbar = () => {
                     {
                         isLogin ? (
                             <>
-                                <NavLink to="/login" onClick={handleLogout}>Logout</NavLink>
                                 <Link to="/my-profile">
                                     <Avatar src={loginUser.data?.image} />
                                 </Link>
+                                <NavLink to="/login" onClick={handleLogout}>
+                                    <RiLogoutCircleRLine style={{ marginTop: 8, fontSize: 25 }} />
+                                </NavLink>
                             </>
                         ) : (<NavLink to="/login">Login</NavLink>)
                     }

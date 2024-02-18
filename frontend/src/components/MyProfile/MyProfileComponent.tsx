@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
 import { toast } from "react-toastify"
 import Avatar from '@mui/material/Avatar';
-import { useUpdateMeMutation } from "../../services/carApi";
+import { useUpdateMeMutation } from "../../services/userApi";
 import { logout } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { Button, Popconfirm, message } from 'antd';

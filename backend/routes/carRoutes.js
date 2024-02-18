@@ -16,19 +16,19 @@ const fileFilter = (req, file, cb) => {
 
 const uploads = multer({ storage, fileFilter })
 
-router.use(authController.protectedRoute)
+// router.use(authController.protectedRoute)
 
-router.put('/:id/img-upload', authController.restrictTo('admin'), uploads.single('image'), carController.uploadImage)
+router.put('/:id/img-upload', authController.protectedRoute, authController.restrictTo('admin'), uploads.single('image'), carController.uploadImage)
 
 router
     .route('/')
     .get(carController.getAllCars)
-    .post(authController.restrictTo('admin'), carController.createCar)
+    .post(authController.protectedRoute,authController.restrictTo('admin'), carController.createCar)
 
 router
     .route('/:id')
     .get(carController.getCar)
-    .patch(authController.restrictTo('admin'), carController.updateCar)
-    .delete(authController.restrictTo('admin'), carController.deleteCar)
+    .patch(authController.protectedRoute,authController.restrictTo('admin'), carController.updateCar)
+    .delete(authController.protectedRoute,authController.restrictTo('admin'), carController.deleteCar)
 
 module.exports = router

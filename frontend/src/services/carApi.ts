@@ -1,16 +1,19 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Car } from "../slices/carSlice";
+import { RootState } from "../store/store";
 
 
-const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+// const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
 
 export const carApi = createApi({
     reducerPath: 'carApi',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8000',
-        prepareHeaders: (headers) => {
-            const authToken = getAuthToken();
-            if (authToken) {
+        prepareHeaders: (headers, { getState }) => {
+            const isAdmin = (getState() as RootState).auth.isAdmin;
+            if (isAdmin) {
+                const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+                const authToken = getAuthToken();
                 headers.set('Authorization', `Bearer ${authToken}`);
             }
             return headers;
@@ -54,13 +57,6 @@ export const carApi = createApi({
             }),
             invalidatesTags: ['Car']
         }),
-        updateMe: builder.mutation({
-            query: (body: { name: string, email: string, currentPassword: string, password: string, confirmPassword: string }) => ({
-                url: '/users/updateMe',
-                method: 'PATCH',
-                body,
-            })
-        }),
         uploadCarImage: builder.mutation<Car, { carId: string; file: File }>({
             query: ({ carId, file }) => ({
                 url: `/cars/${carId}/img-upload`,
@@ -79,6 +75,5 @@ export const {
     useAddCarMutation,
     useUpdateCarMutation,
     useRemoveCarMutation,
-    useUpdateMeMutation,
     useUploadCarImageMutation
 } = carApi
