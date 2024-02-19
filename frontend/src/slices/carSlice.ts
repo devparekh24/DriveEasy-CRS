@@ -4,17 +4,20 @@ import { RootState } from "../store/store";
 export interface Car {
     _id: string;
     carName: string;
-    carType: string;
     companyName: string;
     mileage: number;
     year: string;
     capacity: number;
     color: string;
     availability: boolean;
-    rentPrice: number;
+    rentPricePerDay: number;
+    rentPricePerHour: number;
+    rentPricePerKm: number;
+    carNumberPlate: string;
     image: string;
     fule: string;
     transmission: string;
+    whenWillCarAvailable: string;
 }
 
 export interface CarState {

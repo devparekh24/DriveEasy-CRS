@@ -111,11 +111,11 @@ const EditableCell: React.FC<EditableCellProps> = ({
                         label: 'Automatic Transmission (AT)',
                     },
                     {
-                        value: 'Automated Manual',
+                        value: 'AM',
                         label: 'Automated Manual Transmission (AM)',
                     },
                     {
-                        value: 'Continuously Variable',
+                        value: 'CV',
                         label: 'Continuously Variable Transmission (CVT)',
                     },
                 ]} />

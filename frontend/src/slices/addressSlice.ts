@@ -4,11 +4,13 @@ import { RootState } from "../store/store";
 export interface Address {
     pickupAddress: string;
     dropoffAddress: string;
+    totalKm: number;
 }
 
 const initialState: Address = {
     pickupAddress: '',
-    dropoffAddress: ''
+    dropoffAddress: '',
+    totalKm: 0,
 }
 
 const addressSlice = createSlice({
@@ -21,13 +23,17 @@ const addressSlice = createSlice({
         setDropoffAddress: (state, action: PayloadAction<{ dropoffAddress: string }>) => {
             state.dropoffAddress = action.payload.dropoffAddress;
         },
+        setTotalKm: (state, action: PayloadAction<{ totalKm: number }>) => {
+            state.totalKm = action.payload.totalKm;
+        },
         clearRoute: (state) => {
             state.pickupAddress = '';
             state.dropoffAddress = '';
+            state.totalKm = 0;
         }
     }
 })
 
 export const selectAddress = (state: RootState) => state.address
-export const { setPickupAddress, setDropoffAddress, clearRoute } = addressSlice.actions;
+export const { setPickupAddress, setDropoffAddress, setTotalKm, clearRoute } = addressSlice.actions;
 export default addressSlice.reducer;

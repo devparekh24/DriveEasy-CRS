@@ -38,6 +38,9 @@ const orderSchema = new mongoose.Schema({
     dropOffTime: {
         type: String,
     },
+    totalKm: {
+        type: Number,
+    },
     totalAmount: {
         type: Number,
     },

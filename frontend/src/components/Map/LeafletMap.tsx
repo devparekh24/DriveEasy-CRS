@@ -7,7 +7,7 @@ import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 import { Button } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { clearRoute, setDropoffAddress, setPickupAddress } from '../../slices/addressSlice';
+import { clearRoute, setDropoffAddress, setPickupAddress, setTotalKm } from '../../slices/addressSlice';
 
 interface Coordinates {
     latitude: number;
@@ -24,8 +24,14 @@ const Map: React.FC<MapProps> = ({ center }) => {
     let dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
     const dispatch = useAppDispatch()
 
+    // let routingControl = null;
+    const routingControlRef = useRef<any>(null);
     const mapRef = useRef<L.Map | null>(null);
-    let startMarker: any, endMarker: any;
+    const startMarkerRef = useRef<any>(null);
+    const endMarkerRef = useRef<any>(null);
+
+    // let startMarker: any, endMarker: any;
+
     // let map = L.map('map').setView([center.latitude, center.longitude], 13);
 
     // const buildMap = (center) => {
@@ -154,7 +160,7 @@ const Map: React.FC<MapProps> = ({ center }) => {
     useEffect(() => {
         console.log('useEffect....')
         // Create a Leaflet map centered at a default location
-        let map = L.map('map',{
+        const map = L.map('map', {
             scrollWheelZoom: false
         }).setView([center.latitude, center.longitude], 13);
 
@@ -225,18 +231,36 @@ const Map: React.FC<MapProps> = ({ center }) => {
 
         //calculate route between two locations 
         function calculateRoute(startLatLng: L.LatLng, endLatLng: L.LatLng) {
-            L.Routing.control({
+            if (routingControlRef.current) {
+                mapRef.current!.removeControl(routingControlRef.current);
+            }
+            const routingControl = L.Routing.control({
                 waypoints: [
                     L.latLng(startLatLng),
                     L.latLng(endLatLng)
                 ],
                 routeWhileDragging: true
-            }).addTo(map);
+            }).addTo(mapRef.current!);
+
+            // console.log(routingControl) class of L.Routing.control
+
+            routingControlRef.current = routingControl;
+
+            // Event listener for route selection
+            routingControl.on('routeselected', (event: any) => {
+                const selectedRoute = event.route;
+                console.log('Selected Route:', selectedRoute);
+
+                // Access the distance information
+                const distance = selectedRoute.summary.totalDistance;
+                console.log(`Total Distance: ${distance} meters`);
+                dispatch(setTotalKm({ totalKm: distance / 1000 }))
+            });
         }
 
 
         // Event listener for search results
-        const handleSelectedLocation = (event: any) => {
+        const handleSelectedLocation = async (event: any) => {
             const { x, y, label } = event.location;
             // const selectedLocation = L.latLng(y, x);
 
@@ -249,62 +273,56 @@ const Map: React.FC<MapProps> = ({ center }) => {
             // console.log(`Location found at (${x}, ${y})`);
 
             // Remove existing markers
-            if (startMarker) {
-                map.removeLayer(startMarker);
+            if (startMarkerRef.current) {
+                mapRef.current!.removeLayer(startMarkerRef.current);
             }
 
-            if (endMarker) {
-                map.removeLayer(endMarker);
+            if (endMarkerRef.current) {
+                mapRef.current!.removeLayer(endMarkerRef.current);
             }
+
+            if (routingControlRef.current) {
+                mapRef.current!.removeControl(routingControlRef.current);
+                routingControlRef.current = null;
+            }
+
             // Add new marker
-            if (!startMarker) {
-                startMarker = L.marker([y, x]).addTo(map).bindPopup(`Pick up Point! ${label}`).openPopup();
+            if (!startMarkerRef.current) {
+                startMarkerRef.current = await L.marker([y, x]).addTo(mapRef.current!)
+                    .bindPopup(`Pick up Point! ${label}`).openPopup();
                 pickupAdd = label;
                 dispatch(setPickupAddress({ pickupAddress: pickupAdd }))
-            } else if (!endMarker) {
-                endMarker = L.marker([y, x]).addTo(map).bindPopup(`Drop off Point! ${label}`).openPopup();
+            } else if (!endMarkerRef.current) {
+                endMarkerRef.current = await L.marker([y, x]).addTo(mapRef.current!)
+                    .bindPopup(`Drop off Point! ${label}`).openPopup();
                 dropoffAdd = label;
                 dispatch(setDropoffAddress({ dropoffAddress: dropoffAdd }))
             }
 
             // Calculate and display the route
-            calculateRoute(startMarker.getLatLng(), endMarker.getLatLng());
+            calculateRoute(startMarkerRef.current!.getLatLng(), endMarkerRef.current!.getLatLng());
         };
 
         const handleSearchBoxCancel = () => {
             // Clear any existing markers or perform any cleanup logic
-            if (startMarker) {
-                map.removeLayer(startMarker);
-                startMarker = null;
+            if (startMarkerRef.current) {
+                mapRef.current!.removeLayer(startMarkerRef.current);
+                startMarkerRef.current = null;
             }
 
-            if (endMarker) {
-                map.removeLayer(endMarker);
-                endMarker = null;
+            if (endMarkerRef.current) {
+                mapRef.current!.removeLayer(endMarkerRef.current);
+                endMarkerRef.current = null;
             }
+
+            if (routingControlRef.current) {
+                mapRef.current!.removeControl(routingControlRef.current);
+                routingControlRef.current = null;
+            }
+            mapRef.current = null;
+            routingControlRef.current = null;
         };
 
-
-        // map.on('click', (e: L.LeafletMouseEvent) => {
-        //     const { lat, lng } = e.latlng;
-        //     // Remove existing markers
-        //     if (startMarker) {
-        //         map.removeLayer(startMarker);
-        //     }
-
-        //     if (endMarker) {
-        //         map.removeLayer(endMarker);
-        //     }
-        //     // Add new marker
-        //     if (!startMarker) {
-        //         startMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Starting Point!').openPopup();
-        //     } else if (!endMarker) {
-        //         endMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Ending Point!').openPopup();
-
-        //         // Calculate and display the route
-        //         calculateRoute(startMarker.getLatLng(), endMarker.getLatLng());
-        //     }
-        // });
 
         map.on('geosearch/showlocation', handleSelectedLocation);
         map.on('geosearch/cancel', handleSearchBoxCancel);
@@ -326,20 +344,42 @@ const Map: React.FC<MapProps> = ({ center }) => {
 
     }, [center]);
 
-    // const handleClearRoute = () => {
-    //     dispatch(clearRoute())
-    //     // map.removeLayer(startMarker)
-    //     // map.removeLayer(endMarker)
-    //     startMarker = null
-    //     endMarker = null
-    // }
+    const handleClearRoute = () => {
+
+        if (mapRef.current) {
+            mapRef.current.eachLayer(layer => {
+                if (layer instanceof L.Routing.Control) {
+                    mapRef!.current!.removeControl(layer);
+                }
+            });
+        }
+
+        // You may also want to remove markers or perform additional cleanup here
+        if (startMarkerRef.current) {
+            mapRef.current!.removeLayer(startMarkerRef.current);
+            startMarkerRef.current = null;
+        }
+
+        if (endMarkerRef.current) {
+            mapRef.current!.removeLayer(endMarkerRef.current);
+            endMarkerRef.current = null;
+        }
+
+        if (routingControlRef.current) {
+            mapRef.current!.removeControl(routingControlRef.current);
+            routingControlRef.current = null;
+        }
+
+        dispatch(clearRoute());
+    };
 
     return (
         <>
+            <h2 style={{ margin: 5, display: 'flex', justifyContent: 'center' }}>Map for selecting the Pick-Up and Drof-Off Location</h2>
             <div id="map" style={{ height: '550px' }} />
-            {/* <div className="clear-btn" style={{ marginTop: 8, display: 'flex', justifyContent: 'end' }}>
+            <div className="clear-btn" style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
                 <Button type="primary" onClick={handleClearRoute} >Clear Route (Enter Location Manually)</Button>
-            </div> */}
+            </div>
         </>
     );
 };

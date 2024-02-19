@@ -47,7 +47,7 @@ const Navbar = () => {
 
     }, [dispatch, isSuccess, data])
 
-    let loginUser = useAppSelector(state => state.user.users);
+    const loginUser = useAppSelector(state => state.user.users);
     console.log(loginUser)
     // const sr = JSON.parse(localStorage.getItem('user')!);
     // console.log(sr.user)
@@ -58,6 +58,13 @@ const Navbar = () => {
     const showNavbar = () => {
         if (navRef.current) {
             navRef.current.classList.toggle("responsive_nav");
+            // Add event listeners to toggle the navigation menu
+            const navLinks = document.querySelectorAll('header nav a');
+            navLinks.forEach((link: any) => {
+                link.addEventListener('click', () => {
+                    navRef?.current?.classList.remove("responsive_nav");
+                });
+            });
         }
     };
 

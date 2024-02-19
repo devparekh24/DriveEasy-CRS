@@ -7,7 +7,7 @@ const carSchema = new mongoose.Schema({
     },
     transmission: {
         type: String,
-        enum: ['Automatic', 'Manual', 'Automated Manual', 'Continuously Variable']
+        enum: ['Automatic', 'Manual', 'AM', 'CV']
     },
     companyName: {
         type: String,

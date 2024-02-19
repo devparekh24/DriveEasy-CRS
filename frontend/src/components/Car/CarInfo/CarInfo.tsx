@@ -1,5 +1,5 @@
 import "./CarInfo.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import LeafletMap from "../../Map/LeafletMap";
@@ -13,6 +13,8 @@ import { useGetAllCarsQuery } from "../../../services/carApi";
 import { setCars } from "../../../slices/carSlice";
 import Loader from "../../Loader/Loader";
 import { AiOutlineCheck } from "react-icons/ai";
+import type { RadioChangeEvent } from 'antd';
+import { ConfigProvider, Radio } from 'antd';
 
 const CarInfo: React.FC = () => {
   const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
@@ -49,6 +51,13 @@ const CarInfo: React.FC = () => {
   const find_car = cars.find((c: any) => {
     return c._id == params.id;
   });
+
+  const [bookingFormValue, setBookingFormValue] = useState<string>('day');
+
+  const onChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value);
+    setBookingFormValue(e.target.value);
+  };
 
   return (
     <>
@@ -121,10 +130,28 @@ const CarInfo: React.FC = () => {
               </div>
             </div>
             <div className="car-info-form-col">
-              <CarBookingFormByDay />
+              <h1 style={{ display: 'flex', justifyContent:'center' }}>Rental Booking Form</h1>
+              <ConfigProvider
+                theme={{
+                  token: {
+                    // Seed Token
+                    colorPrimary: '#000',
+
+                    // Alias Token
+                    colorBgContainer: '#d1d1d1',
+                  },
+                }}
+              >
+                <Radio.Group onChange={onChange} value={bookingFormValue}>
+                  <Radio value='day'><h3>Booking Per Day</h3></Radio>
+                  <Radio value='hour'><h3>Booking Per Hour</h3></Radio>
+                  <Radio value='km'><h3>Booking Per Km</h3></Radio>
+                </Radio.Group>
+              </ConfigProvider>
+              <CarBookingFormByDay bookingFormValue={bookingFormValue} />
             </div>
           </div>
-        </div>
+        </div >
       )
       }
     </>

@@ -15,6 +15,7 @@ export interface Order {
     dropOffDate: string;
     dropOffTime: string;
     totalAmount: number;
+    totalKm: number;
 }
 
 export interface OrderState {

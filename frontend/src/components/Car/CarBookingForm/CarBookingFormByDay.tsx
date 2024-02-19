@@ -2,7 +2,7 @@ import './CarBookingForm.css';
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
-import { setBookingData, BookingState } from "../../../slices/bookingSlice";
+// import { setBookingData, BookingState } from "../../../slices/bookingSlice";
 import { DatePicker } from 'antd';
 import type { DatePickerProps, GetProps } from 'antd';
 import dayjs from 'dayjs';
@@ -25,6 +25,7 @@ interface initialState {
   dropOffDate: string;
   dropOffTime: string;
   totalAmount: number;
+  totalKm: number;
   errors: {
     fullName?: string;
     emailAddress?: string;
@@ -33,6 +34,7 @@ interface initialState {
     pickupDate?: string;
     dropOffAddress?: string;
     dropOffDate?: string;
+    totalKm?: number;
   };
 }
 const initialState: initialState = {
@@ -46,6 +48,7 @@ const initialState: initialState = {
   dropOffDate: '',
   dropOffTime: '',
   totalAmount: 0,
+  totalKm: 0,
   errors: {},
 }
 
@@ -59,31 +62,14 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
   return current && current < dayjs().endOf('day');
 };
 
-const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number => {
-  const pricePerDay = basePrice;
-  // Parse input dates
-  const pickupDateTime = Date.parse(pickupDate);
-  const dropOffDateTime = Date.parse(dropOffDate);
-  // Check if the date parsing was successful
-  if (isNaN(pickupDateTime) || isNaN(dropOffDateTime)) {
-    // console.error("Invalid date format");
-    return 0; // Or handle the error in a way suitable for your application
-  }
-  const totalDays = Math.ceil(((dropOffDateTime - pickupDateTime) + 1) / (24 * 60 * 60 * 1000));
 
-  if (totalDays <= 0) {
-    // console.error("Invalid date range");
-    return 0; // Or handle the error in a way suitable for your application
-  }
-
-  return pricePerDay * totalDays;
-};
-
-const CarBookingFormByDay = () => {
+const CarBookingFormByDay = ({ bookingFormValue }: any) => {
 
   const navigate = useNavigate()
   const params = useParams<{ id: string }>();
   const cars = useAppSelector(state => state.car.cars)
+  const addressState = useAppSelector(state => state.address)
+
   // const pickupAdd = useAppSelector(state => state.address.pickupAddress)
   // const dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
   // const bookingFormData = useAppSelector(state => state.booking)
@@ -98,36 +84,108 @@ const CarBookingFormByDay = () => {
   const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
   const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
   const [formData, setFormData] = useState<initialState>(initialState)
+  const loginUser = useAppSelector(state => state.user.users)
+
+  const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number => {
+    // const pricePerDay = basePrice;
+    // Parse input dates
+    // const pickupDateTime = Date.parse(pickupDate);
+    // const dropOffDateTime = Date.parse(dropOffDate);
+
+    const pickupDateTime = dayjs(pickupDate).toDate().getTime();
+    const dropOffDateTime = dayjs(dropOffDate).toDate().getTime();
 
 
+    // Check if the date parsing was successful
+    if (isNaN(pickupDateTime) || isNaN(dropOffDateTime)) {
+      // console.error("Invalid date format");
+      return 0; // Or handle the error in a way suitable for your application
+    }
+    // const totalDays = Math.ceil(((dropOffDateTime - pickupDateTime) + 1) / (24 * 60 * 60 * 1000));
+    // const totalHours = Math.ceil(((dropOffDateTime - pickupDateTime)) / (60 * 60 * 1000));
+    // console.log(totalHours)
+    // if (totalDays <= 0
+    // || totalHours <= 0
+    // ) {
+    // console.error("Invalid date range");
+    // return 0; // Or handle the error in a way suitable for your application
+    // }
+    // if (bookingFormValue === 'day') return basePrice * totalDays;
+    // if (bookingFormValue === 'hour') return basePrice * totalHours;
+
+    switch (bookingFormValue) {
+      case 'day': {
+        const totalDays = Math.ceil(((dropOffDateTime - pickupDateTime) + 1) / (24 * 60 * 60 * 1000));
+        if (totalDays <= 0) return 0;
+        return basePrice * totalDays;
+      }
+
+      case 'hour': {
+        const totalHours = Math.ceil(((dropOffDateTime - pickupDateTime)) / (60 * 60 * 1000));
+        if (totalHours <= 0) return 0;
+        return basePrice * totalHours;
+      }
+
+      default:
+        break;
+    }
+  };
 
   const calculateAndSetTotalAmount = () => {
-    const totalAmount = calculateTotalAmount(find_car!.rentPrice, formData.pickupDate, formData.dropOffDate);
-    setFormData(prevData => ({ ...prevData, totalAmount }));
+
+    if (bookingFormValue === 'day') {
+      const totalAmount = calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDate, formData.dropOffDate);
+      setFormData(prevData => ({ ...prevData, totalAmount }));
+    }
+    if (bookingFormValue === 'hour') {
+      const totalAmount = calculateTotalAmount(find_car!.rentPricePerHour, formData.pickupDate, formData.dropOffDate);
+      setFormData(prevData => ({ ...prevData, totalAmount }));
+    }
   };
 
   const onChange = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string,
   ) => {
-    console.log('Selected Time: ', value);
+    console.log('Selected Time: ', value?.toString());
     console.log('Formatted Selected Time: ', dateString);
 
-    if (Array.isArray(dateString)) {
-      const [pickupDate, dropOffDate] = dateString.map(item => item.split(' ')[0]);
-      const [pickupTime, dropOffTime] = dateString.map(item => item.split(' ')[1]);
+    switch (bookingFormValue) {
+      case 'day': {
+        if (Array.isArray(dateString)) {
+          const [pickupDate, dropOffDate] = dateString.map(item => item.split(' ')[0]);
+          const [pickupTime, dropOffTime] = dateString.map(item => item.split(' ')[1]);
 
-      setFormData(prevData => ({
-        ...prevData,
-        pickupDate,
-        dropOffDate,
-        pickupTime,
-        dropOffTime,
-      }));
-      calculateAndSetTotalAmount();
+          setFormData(prevData => ({
+            ...prevData,
+            pickupDate,
+            dropOffDate,
+            pickupTime,
+            dropOffTime,
+          }));
+          calculateAndSetTotalAmount()
+        }
+        break;
+      }
+
+      // case 'hour': {
+      //   if (Array.isArray(value)) {
+      //     const [pickupDate, dropOffDate] = value.map(date => date?.toDate());
+      //     const pickupTime = value[0]?.format('HH:mm');
+      //     const dropOffTime = value[1]?.format('HH:mm');
+
+      //     setFormData(prevData => ({
+      //       ...prevData,
+      //       pickupDate: pickupDate?.toString() || '',
+      //       dropOffDate: dropOffDate?.toString() || '',
+      //       pickupTime: pickupTime?.toString() || '',
+      //       dropOffTime: dropOffTime?.toString() || '',
+      //     }));
+      //     break;
+      //   }
+      // }
     }
-  };
-
+  }
   const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
     console.log('onOk: ', value!);
   };
@@ -178,14 +236,21 @@ const CarBookingFormByDay = () => {
       };
       const rzp = new Razorpay(options);
 
-      rzp.on("payment.failed", function (response: any) {
-        alert(response.error.code);
-        alert(response.error.description);
-        alert(response.error.source);
-        alert(response.error.step);
-        alert(response.error.reason);
-        alert(response.error.metadata.order_id);
-        alert(response.error.metadata.payment_id);
+      rzp.on("payment.failed", function () {
+        // alert(response.error.code);
+        // alert(response.error.description);
+        // alert(response.error.source);
+        // alert(response.error.step);
+        // alert(response.error.reason);
+        // alert(response.error.metadata.order_id);
+        // alert(response.error.metadata.payment_id);
+        toast.error('Your Payment is Failed! Try Again...', {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true
+        })
       });
 
       rzp.open();
@@ -193,75 +258,111 @@ const CarBookingFormByDay = () => {
       if (isErrorOnAddOrder || isErrorOnBookCar) throw errorOnAddOrder || errorOnBookCar
     } catch (error) {
       console.error('Error booking the car:', error);
+      toast.error('Error booking the car!', {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      })
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value
-    }))
+
+    if (name === "totalKm") {
+      setFormData((prevData) => ({
+        ...prevData,
+        totalKm: Number(value), // Convert the input value to a number
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+
     if (name === "pickupDate" || name === "dropOffDate") {
       calculateAndSetTotalAmount();
     }
   }
 
-  const handleSubmitBookingForm = async (event: any) => {
-
-    event.preventDefault();
+  const handleValidation = () => {
 
     // Simple validation
     const errors: initialState['errors'] = {};
+    // Name validation
+    const nameRegex = /^[A-Za-z][A-Za-z]+$/;
     if (!formData.fullName.trim()) {
       errors.fullName = 'Full Name is required';
+    } else if (!nameRegex.test(formData.fullName)) {
+      errors.fullName = 'Invalid characters in Full Name';
     }
+
+    // Phone number validation
+    const phoneRegex = /^\d{10}$/;
     if (!formData.phoneNo.trim()) {
       errors.phoneNo = 'Phone Number is required';
+    } else if (!phoneRegex.test(formData.phoneNo)) {
+      errors.phoneNo = 'phone number must be 10 digit long only';
     }
+
     if (!formData.emailAddress.trim()) {
       errors.emailAddress = 'Email Address is required';
     }
-    if (!formData.pickupAddress.trim()) {
-      errors.pickupAddress = 'Pickup Address is required';
-    }
-    if (!formData.pickupDate) {
-      errors.pickupDate = 'Pickup Date is required';
-    }
-    if (!formData.dropOffAddress.trim()) {
-      errors.dropOffAddress = 'Drop Off Address is required';
-    }
-    if (!formData.dropOffDate) {
-      errors.dropOffDate = 'Drop Off Date is required';
-    }
-    setFormData(prevData => ({ ...prevData, errors }));
+    // if (!formData.pickupAddress.trim()) {
+    // errors.pickupAddress = 'Pickup Address is required';
+    // }
+    // if (!formData.pickupDate) {
+    //   errors.pickupDate = 'Pickup Date is required';
+    // }
+    // if (!formData.dropOffAddress.trim()) {
+    // errors.dropOffAddress = 'Drop Off Address is required';
+    // }
+    // if (!formData.dropOffDate) {
+    //   errors.dropOffDate = 'Drop Off Date is required';
+    // }
+    return errors;
 
     // // If there are errors, don't proceed with the payment
     // if (Object.keys(errors).length === 0) {
     //   handlePayment(formData);
     // }
+  }
 
-    // dispatch(setBookingData(formData));
-    isLogin ? (handlePayment(formData)) : (
-      <>
-        {
-          toast.error('You have to Login First!', {
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            onClose: () => navigate('/login')
-          })
-        }
-      </>
-    )
+  const handleSubmitBookingForm = async (event: any) => {
+    event.preventDefault();
+    const errors = handleValidation();
+
+    if (Object.keys(errors).length === 0) {
+      // No errors, proceed with payment or other actions
+      // handlePayment(formData);
+      isLogin ? (handlePayment(formData)) : (
+        <>
+          {
+            toast.error('You have to Login First!', {
+              autoClose: 2000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              onClose: () => navigate('/login')
+            })
+          }
+        </>
+      )
+    } else {
+      // Update state with errors
+      setFormData((prevData) => ({ ...prevData, errors }));
+    }
+
   };
 
 
   useEffect(() => {
     calculateAndSetTotalAmount();
-  }, [find_car, formData.pickupDate, formData.dropOffDate])
+  }, [find_car, formData.pickupDate, formData.dropOffDate, formData.pickupTime, formData.dropOffTime, bookingFormValue])
 
   useEffect(() => {
     if (isSuccessOnBookCar) {
@@ -276,14 +377,31 @@ const CarBookingFormByDay = () => {
     }
   }, [isSuccessOnAddOrder])
 
-  const loginUser = useAppSelector(state => state.user.users)
 
   return (
     <div>
       <form onSubmit={handleSubmitBookingForm}>
-        <h2>
-          ₹{find_car?.rentPrice} <span>Per Day</span>
-        </h2>
+        {
+          bookingFormValue === 'day' && (
+            <h2>
+              ₹{find_car?.rentPricePerDay} <span>Per Day</span>
+            </h2>
+          )
+        }
+        {
+          bookingFormValue === 'hour' && (
+            <h2>
+              ₹{find_car?.rentPricePerHour} <span>Per Hour</span>
+            </h2>
+          )
+        }
+        {
+          bookingFormValue === 'km' && (
+            <h2>
+              ₹{find_car?.rentPricePerKm} <span>Per Km</span>
+            </h2>
+          )
+        }
         <div>
           <label htmlFor="fullName">Full Name</label>
           <input
@@ -291,10 +409,11 @@ const CarBookingFormByDay = () => {
             placeholder="Enter Full Name"
             name="fullName"
             id="fullName"
-            onChange={handleChange}
-            value={loginUser?.name}
-            required
+            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+            value={loginUser.data?.name}
+          // required
           />
+          {formData.errors.fullName && <p className="error">{formData.errors.fullName}</p>}
         </div>
         <div>
           <label htmlFor="emailAddress">Email Address</label>
@@ -303,34 +422,75 @@ const CarBookingFormByDay = () => {
             placeholder="Enter Email"
             name="emailAddress"
             id="emailAddress"
-            onChange={handleChange}
-            value={loginUser?.email}
+            onChange={(e) => setFormData({ ...formData, emailAddress: e.target.value })}
+            value={loginUser.data?.email}
           />
+          {formData.errors.emailAddress && <p className="error">{formData.errors.emailAddress}</p>}
         </div>
         <div>
           <label htmlFor="phoneNo">Phone Number</label>
           <input
-            type="text"
+            type="number"
+            maxLength={10}
+            minLength={10}
             placeholder="Enter Contact Number"
             name="phoneNo"
             id="phoneNo"
-            onChange={handleChange}
+            onChange={(e) => setFormData({ ...formData, phoneNo: e.target.value })}
             value={formData.phoneNo}
-            required
+          // required
           />
+          {formData.errors.phoneNo && <p className="error">{formData.errors.phoneNo}</p>}
         </div>
         <div className='range-picker'>
           <label htmlFor="pickupAddress">Select Date & Time</label>
-          <RangePicker
-            disabledDate={disabledDate}
-            showTime={{
-              hideDisabledOptions: true,
-              defaultValue: [dayjs('08:00', 'HH:mm'), dayjs('20:00', 'HH:mm')],
-            }}
-            format="YYYY-MM-DD HH:mm"
-            onChange={onChange}
-            onOk={onOk}
-          />
+          {
+            bookingFormValue === 'day' && (
+              <>
+                {/* <label htmlFor="pickupAddress">Select Date (8hrs)</label> */}
+                <RangePicker
+                  disabledDate={disabledDate}
+                  showTime={{
+                    hideDisabledOptions: true,
+                    // defaultValue: [dayjs('08:00', 'HH:mm'), dayjs('20:00', 'HH:mm')],
+                  }}
+                  format="YYYY-MM-DD"
+                  onChange={onChange}
+                  onOk={onOk}
+                />
+                {/* {(formData.errors.dropOffDate || formData.errors.pickupDate) && <p className="error">{formData.errors.pickupDate || formData.errors.dropOffDate}</p>} */}
+              </>
+            )
+          }
+          {
+            bookingFormValue === 'hour' && (
+              <>
+                <RangePicker
+                  disabledDate={disabledDate}
+                  showTime={{
+                    hideDisabledOptions: true,
+                    defaultValue: [dayjs('08:00', 'HH:mm'), dayjs('20:00', 'HH:mm')],
+                  }}
+                  format="YYYY-MM-DD HH:mm"
+                  onChange={onChange}
+                  onOk={onOk}
+                />
+                {/* {(formData.errors.dropOffDate || formData.errors.pickupDate) && <p className="error">{formData.errors.pickupDate || formData.errors.dropOffDate}</p>} */}
+              </>
+            )
+          }
+          {
+            bookingFormValue === 'km' && (
+              <>
+                <DatePicker
+                  format="YYYY-MM-DD HH:mm"
+                  disabledDate={disabledDate}
+                  showTime={{ defaultValue: dayjs('08:00', 'HH:mm') }}
+                />
+                {/* {(formData.errors.dropOffDate || formData.errors.pickupDate) && <p className="error">{formData.errors.pickupDate || formData.errors.dropOffDate}</p>} */}
+              </>
+            )
+          }
         </div>
         <div>
           <label htmlFor="pickupAddress">Pickup Address</label>
@@ -339,10 +499,11 @@ const CarBookingFormByDay = () => {
             placeholder="Enter Pick-up Address"
             name="pickupAddress"
             id="pickupAddress"
-            onChange={handleChange}
-            value={formData.pickupAddress}
-            required
+            onChange={(e) => setFormData({ ...formData, pickupAddress: e.target.value })}
+            value={addressState.pickupAddress}
+          // required
           />
+          {formData.errors.pickupAddress && <p className="error">{formData.errors.pickupAddress}</p>}
         </div>
         <div>
           <label htmlFor="dropOffAddress">Drop Off Address</label>
@@ -351,15 +512,46 @@ const CarBookingFormByDay = () => {
             placeholder="Enter Drop-off Address"
             name="dropOffAddress"
             id="dropOffAddress"
-            onChange={handleChange}
-            value={formData.dropOffAddress}
-            required
+            onChange={(e) => setFormData({ ...formData, dropOffAddress: e.target.value })}
+            value={addressState.dropoffAddress}
+          // required
           />
+          {formData.errors.dropOffAddress && <p className="error">{formData.errors.dropOffAddress}</p>}
+
         </div>
         <div>
-          <h2>
-            Total Amount: ₹{calculateTotalAmount(find_car!.rentPrice, formData.pickupDate, formData.dropOffDate)}
-          </h2>
+          {
+            bookingFormValue === 'day' && (
+              <h2>
+                Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDate, formData.dropOffDate)}
+              </h2>)
+          }
+          {
+            bookingFormValue === 'hour' && (
+              <h2>
+                Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerHour, formData.pickupDate, formData.dropOffDate)}
+              </h2>)
+          }
+          {
+            bookingFormValue === 'km' && (
+              <>
+                <label htmlFor="totalKm">Total Kilometre </label>
+                <input
+                  type="number"
+                  placeholder="Enter Total Km"
+                  name="totalKm"
+                  id="totalKm"
+                  onChange={(e) => (setFormData({ ...formData, totalKm: +e.target.value }), setFormData({ ...formData, totalAmount: Number(find_car!.rentPricePerKm * addressState.totalKm) }))}
+                  value={addressState.totalKm}
+                  // value={formData.totalKm}
+                  required
+                />
+                <h2 style={{ marginTop: 20 }}>
+                  Total Amount: ₹{Number(find_car!.rentPricePerKm * addressState.totalKm)}
+                </h2>
+              </>
+            )
+          }
         </div>
         <div>
           <button className="booking-btn" type="submit">
