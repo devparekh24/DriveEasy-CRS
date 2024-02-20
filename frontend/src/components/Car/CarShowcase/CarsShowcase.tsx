@@ -130,27 +130,32 @@ const CarsShowcase = ({ filters }: { filters: any }) => {
       (
         <div className="cars-showcase">
           <div className="list-row">
-            {filteredCars.map((car: Car) => (
-              <CarDetailsCard
-                key={car._id}
-                _id={car._id}
-                carName={car.carName}
-                image={car.image}
-                capacity={car.capacity}
-                transmission={car.transmission}
-                rentPricePerDay={car.rentPricePerDay}
-                rentPricePerHour={car.rentPricePerHour}
-                rentPricePerKm={car.rentPricePerKm}
-                availability={car.availability}
-                color={car.color}
-                companyName={car.companyName}
-                fule={car.fule}
-                mileage={car.mileage}
-                year={car.year}
-                carNumberPlate={car.carNumberPlate}
-                whenWillCarAvailable={car.whenWillCarAvailable}
-              />
-            ))}
+            {filteredCars.length === 0 ? (<h3>No car found!</h3>) :
+              (<>
+                {filteredCars.map((car: Car) => (
+                  <CarDetailsCard
+                    key={car._id}
+                    _id={car._id}
+                    carName={car.carName}
+                    image={car.image}
+                    capacity={car.capacity}
+                    transmission={car.transmission}
+                    rentPricePerDay={car.rentPricePerDay}
+                    rentPricePerHour={car.rentPricePerHour}
+                    rentPricePerKm={car.rentPricePerKm}
+                    availability={car.availability}
+                    color={car.color}
+                    companyName={car.companyName}
+                    fule={car.fule}
+                    mileage={car.mileage}
+                    year={car.year}
+                    carNumberPlate={car.carNumberPlate}
+                    whenWillCarAvailable={car.whenWillCarAvailable}
+                  />
+                ))
+                }
+              </>)
+            }
           </div>
         </div>
       )
