@@ -185,7 +185,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
             if (isErrorOnRemoveCar) throw errorOnRemoveCar
         }
         catch (error) {
-            message.error(error?.data?.message);
+            message.error(error?.data?.message, 2);
         }
     };
 
@@ -201,7 +201,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
 
             if (isErrorOnUpdateCar) throw errorOnUpdateCar
         } catch (error) {
-            message.error(error?.data?.message);
+            message.error(error?.data?.message, 2);
         }
     }
 
@@ -268,7 +268,9 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                 record,
                 inputType: (col.dataIndex === 'mileage' ||
                     col.dataIndex === 'capacity' ||
-                    col.dataIndex === 'rentPrice' ||
+                    col.dataIndex === 'rentPricePerDay' ||
+                    col.dataIndex === 'rentPricePerHour' ||
+                    col.dataIndex === 'rentPricePerKm' ||
                     col.dataIndex === 'year') ? 'number' : 'text',
                 dataIndex: col.dataIndex,
                 title: col.title,
@@ -319,14 +321,14 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
     useEffect(() => {
         setTimeout(() => {
             if (isSuccessOnRemoveCar)
-                message.success('Car Deleted Successfully!');
+                message.success('Car Deleted Successfully!', 2);
         }, 1500)
     }, [isSuccessOnRemoveCar])
 
     useEffect(() => {
         setTimeout(() => {
             if (isSuccessOnUpdateCar)
-                message.success('Car Updated Successfully!');
+                message.success('Car Updated Successfully!', 2);
         }, 1500)
         if (shouldRefresh) {
             setShouldRefresh(false);

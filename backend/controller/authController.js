@@ -153,12 +153,11 @@ exports.forgotPassword = catchAsyncErr(async (req, res, next) => {
         <h2>Forgot Password?</h2>
 
         <p>
-            It seems that you've requested to reset your password. To proceed, please click the link below:
+            It seems that you've requested to reset your password. To proceed, please copy below Reset Token:
         </p>
 
-        <p>
-            <a href="${resetURL}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
-        </p>
+        <input type="text" value=${resetToken} id="myInput">
+        <button id="copyButton">Copy Token</button>
 
         <p>
             If you did not request a password reset, you can ignore this email.

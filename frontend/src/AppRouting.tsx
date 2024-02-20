@@ -23,6 +23,7 @@ import LeafletMap from "./admin/components/Map/LeafletMap";
 import PageNotFound from "./pages/PageNotFound";
 import PageNotFoundOnAdmin from "./admin/pages/PageNotFoundOnAdmin";
 import ContactQuery from "./admin/components/ContactQueries/ContactQuery";
+import ResetPassword from "./components/Auth/ResetPassword";
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
 
@@ -91,6 +92,7 @@ const AppRouting = () => {
                         <Route path="/login" element={< Login />} />
                         <Route path="/signup" element={< Signup />} />
                         <Route path="/forgot-password" element={< ForgotPassword />} />
+                        <Route path="/reset-password/:token" element={< ResetPassword />} />
                         {/* <Route path="/cars/:carName/:id" element={<CarDetails />} /> */}
                         <Route path='*' element={<PageNotFound />} />
                     </>)}
