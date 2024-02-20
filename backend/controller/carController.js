@@ -7,7 +7,7 @@ const cloudinary = require('../utils/imgUpload')
 exports.getAllCars = mainController.getAll(Car)
 exports.getCar = mainController.getOne(Car)
 exports.createCar = mainController.createOne(Car)
-exports.updateCar = mainController.updateOne(Car)
+// exports.updateCar = mainController.updateOne(Car)
 exports.deleteCar = mainController.deleteOne(Car)
 
 exports.uploadImage = catchAsyncErr(async (req, res, next) => {
@@ -34,3 +34,37 @@ exports.uploadImage = catchAsyncErr(async (req, res, next) => {
         message: 'Image Uploaded Successfully!'
     })
 })
+
+exports.updateCar = mainController.updateOne(Car, async (req) => {
+
+    const { id } = req.params;
+    const car = await Car.findByIdAndUpdate(id);
+
+    if (!car) {
+        return next(new AppError('No Car Found!', 404))
+    }
+
+    // Check if the car is available for the requested booking dates
+    const { startDate, endDate } = req.body;
+    const isAvailable = car.bookedDates.every((booking) => {
+        return (
+            endDate < booking.startDate && startDate > booking.endDate
+        );
+    });
+
+    if (!isAvailable) {
+        return next(new AppError('Car is not available for the selected dates', 400))
+    }
+
+    // Add the booked dates to the car
+    car.bookedDates.push({ startDate, endDate });
+    await car.save()
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            data: car
+        }
+    })
+
+});

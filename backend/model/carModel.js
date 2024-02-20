@@ -16,7 +16,7 @@ const carSchema = new mongoose.Schema({
     carNumberPlate: {
         type: String,
         required: [true, 'Car must has a Number Plate'],
-        unique:true,
+        unique: true,
         validate: {
             validator: function (value) {
                 //regular expression for car number plate validation
@@ -68,6 +68,22 @@ const carSchema = new mongoose.Schema({
     whenWillCarAvailable: {
         type: String,
         required: [true, 'You have to mention that when will car available']
+    },
+    bookedDates: [
+        {
+            startDate: {
+                type: Date,
+                required: true,
+            },
+            endDate: {
+                type: Date,
+                required: true,
+            },
+        },
+    ],
+    hasBooking: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order'
     }
 }, {
     timestamps: true

@@ -75,7 +75,7 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
         setSearchText(value);
     };
     const filteredData = tableData.filter((record) => {
-        return headers.some((header) => record[header].toString().toLowerCase().includes(searchText.toLowerCase()));
+        return headers.some((header) => record[header]?.toString().toLowerCase().includes(searchText.toLowerCase()));
     });
 
     const handleDelete = async (_id: string) => {

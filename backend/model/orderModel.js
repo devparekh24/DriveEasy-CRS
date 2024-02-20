@@ -12,37 +12,48 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
     fullName: {
-        type: String
+        type: String,
+        required: true
     },
     emailAddress: {
         type: String,
+        required: true
     },
     phoneNo: {
         type: String,
+        required: true
     },
     pickupAddress: {
         type: String,
+        required: true
     },
     pickupDate: {
         type: String,
+        required: true
     },
     pickupTime: {
         type: String,
+        required: true
     },
     dropOffAddress: {
         type: String,
+        required: true
     },
     dropOffDate: {
         type: String,
+        // required: true
     },
     dropOffTime: {
         type: String,
+        // required: true
     },
     totalKm: {
         type: Number,
+        required: true
     },
     totalAmount: {
         type: Number,
+        required: true
     },
 });
 

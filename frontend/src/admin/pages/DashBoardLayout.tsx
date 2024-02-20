@@ -82,6 +82,11 @@ const DashBoardLayout = (props: DashboardProps) => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
+    const handleLogout = () => {
+        dispatch(logout())
+        dispatch(setUsers([]))
+    }
+
     return (
         <>
             <Layout style={{ height: '100%', minHeight: '100vh' }}>
@@ -117,7 +122,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                     </Menu>
                     <Menu theme="dark" mode="inline" style={{ marginTop: '150px' }}>
                         <Menu.Item key="8" icon={<LogoutOutlined rotate={180} />}>
-                            <NavLink to='/login' onClick={() => dispatch(logout())}>Logout</NavLink>
+                            <NavLink to='/login' onClick={handleLogout}>Logout</NavLink>
                         </Menu.Item>
                     </Menu>
                 </Sider>

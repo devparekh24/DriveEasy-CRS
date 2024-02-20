@@ -1,5 +1,5 @@
 import './CarBookingForm.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 // import { setBookingData, BookingState } from "../../../slices/bookingSlice";
@@ -69,10 +69,23 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   const params = useParams<{ id: string }>();
   const cars = useAppSelector(state => state.car.cars)
   const addressState = useAppSelector(state => state.address)
+  const loginUser = useAppSelector(state => state.user.users)
 
   // const pickupAdd = useAppSelector(state => state.address.pickupAddress)
   // const dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
   // const bookingFormData = useAppSelector(state => state.booking)
+
+  const [fullNameInput, setFullNameInput] = useState(loginUser!.data!.name!)
+  const [emailAddressInput, setEmailAddressInput] = useState(loginUser!.data!.email!)
+  const [phoneNoInput, setPhoneNoInput] = useState(loginUser!.data!.contactNumber!)
+  const [pickupAddressInput, setPickupAddressInput] = useState(addressState.pickupAddress)
+  const [dropOffAddressInput, setDropOffAddressInput] = useState(addressState.dropoffAddress)
+
+  const fullNameRef = useRef<HTMLInputElement | null>(null)
+  const emailAddressRef = useRef<HTMLInputElement | null>(null)
+  const phoneNoRef = useRef<HTMLInputElement | null>(null)
+  const pickupAddressRef = useRef<HTMLInputElement | null>(null)
+  const dropOffAddressRef = useRef<HTMLInputElement | null>(null)
 
   const find_car = cars.find((c: any) => {
     return c._id == params.id;
@@ -84,7 +97,6 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
   const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
   const [formData, setFormData] = useState<initialState>(initialState)
-  const loginUser = useAppSelector(state => state.user.users)
 
   const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number => {
     // const pricePerDay = basePrice;
@@ -409,8 +421,9 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Full Name"
             name="fullName"
             id="fullName"
-            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            value={loginUser.data?.name}
+            onChange={(e) => setFullNameInput(e.target.value)}
+            value={fullNameInput}
+            ref={fullNameRef}
           // required
           />
           {formData.errors.fullName && <p className="error">{formData.errors.fullName}</p>}
@@ -422,8 +435,9 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Email"
             name="emailAddress"
             id="emailAddress"
-            onChange={(e) => setFormData({ ...formData, emailAddress: e.target.value })}
-            value={loginUser.data?.email}
+            onChange={(e) => setEmailAddressInput(e.target.value)}
+            value={emailAddressInput}
+            ref={emailAddressRef}
           />
           {formData.errors.emailAddress && <p className="error">{formData.errors.emailAddress}</p>}
         </div>
@@ -436,8 +450,9 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Contact Number"
             name="phoneNo"
             id="phoneNo"
-            onChange={(e) => setFormData({ ...formData, phoneNo: e.target.value })}
-            value={loginUser.data?.contactNumber}
+            onChange={(e) => setPhoneNoInput(e.target.value)}
+            value={phoneNoInput}
+            ref={phoneNoRef}
           // required
           />
           {formData.errors.phoneNo && <p className="error">{formData.errors.phoneNo}</p>}
@@ -499,8 +514,9 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Pick-up Address"
             name="pickupAddress"
             id="pickupAddress"
-            onChange={(e) => setFormData({ ...formData, pickupAddress: e.target.value })}
-            value={addressState.pickupAddress}
+            onChange={(e) => setPickupAddressInput(e.target.value)}
+            value={pickupAddressInput}
+            ref={pickupAddressRef}
           // required
           />
           {formData.errors.pickupAddress && <p className="error">{formData.errors.pickupAddress}</p>}
@@ -512,8 +528,9 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Drop-off Address"
             name="dropOffAddress"
             id="dropOffAddress"
-            onChange={(e) => setFormData({ ...formData, dropOffAddress: e.target.value })}
-            value={addressState.dropoffAddress}
+            onChange={(e) => setDropOffAddressInput(e.target.value)}
+            value={dropOffAddressInput}
+            ref={dropOffAddressRef}
           // required
           />
           {formData.errors.dropOffAddress && <p className="error">{formData.errors.dropOffAddress}</p>}
@@ -543,7 +560,6 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
                   id="totalKm"
                   onChange={(e) => (setFormData({ ...formData, totalKm: +e.target.value }), setFormData({ ...formData, totalAmount: Number(find_car!.rentPricePerKm * addressState.totalKm) }))}
                   value={addressState.totalKm}
-                  // value={formData.totalKm}
                   required
                 />
                 <h2 style={{ marginTop: 20 }}>
