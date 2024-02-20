@@ -46,7 +46,7 @@ export const userApi = createApi({
             invalidatesTags: ['User']
         }),
         updateMe: builder.mutation({
-            query: (body: { name: string, email: string, currentPassword: string, password: string, confirmPassword: string }) => ({
+            query: (body: { name: string, email: string, contactNumber: number, currentPassword: string, password: string, confirmPassword: string }) => ({
                 url: '/users/updateMe',
                 method: 'PATCH',
                 body,

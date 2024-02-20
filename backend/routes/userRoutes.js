@@ -18,7 +18,7 @@ const fileFilter = (req, file, cb) => {
 const uploads = multer({
     storage,
     fileFilter,
-    limits: { fieldSize: 10000000 }
+    limits: { fieldSize: 10000000 } //bytes - 10MB
 })
 
 //nested route

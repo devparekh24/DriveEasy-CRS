@@ -32,6 +32,7 @@ exports.signup = catchAsyncErr(async (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
+        contactNumber:req.body.contactNumber,
         role: req.body.role,
     })
     createSendToken(newUser, 201, res);
@@ -229,6 +230,10 @@ exports.updateMe = catchAsyncErr(async (req, res, next) => {
         user.email = req.body.email;
     }
 
+    if (req.body.contactNumber) {
+        user.contactNumber = req.body.contactNumber;
+    }
+    
     if (req.body.password && req.body.confirmPassword) {
 
         //2. check if posted currentpassword is correct 

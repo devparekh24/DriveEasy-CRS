@@ -14,16 +14,16 @@ export const authApi = createApi({
                 method: 'POST',
                 body,
             }),
-            invalidatesTags:['Auth']
+            invalidatesTags: ['Auth']
         }),
 
         signup: builder.mutation({
-            query: (body: { name: string, email: string, password: string, confirmPassword: string }) => ({
+            query: (body: { name: string, email: string, password: string, confirmPassword: string, contactNumber: number }) => ({
                 url: '/signup',
                 method: 'POST',
                 body,
             }),
-            invalidatesTags:['Auth']
+            invalidatesTags: ['Auth']
         })
     })
 })

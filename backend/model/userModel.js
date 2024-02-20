@@ -19,6 +19,21 @@ const userSchema = new mongoose.Schema({
         unique: true,
         lowercase: true
     },
+    contactNumber: {
+        type: Number,
+        required: [true, 'User must has a contact number'],
+        unique: true,
+        minlength: [10, 'Contact number must be 10 digits long'],
+        maxlength: [10, 'Contact number must be 10 digits long'],
+        // validate: {
+        //     validator: function (value) {
+        //         //regular expression for contact number validation
+        //         const regex = /^\d{10}$/;
+        //         return regex.test(value);
+        //     },
+        //     message: 'Invalid length of contact number'
+        // }
+    },
     password: {
         type: String,
         required: [true, 'Password is necessary'],

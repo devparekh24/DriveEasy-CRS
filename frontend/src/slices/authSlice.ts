@@ -52,7 +52,7 @@ const authSlice = createSlice({
                 state.isAdmin = true;
             }
         },
-        setUserSignup(state, action: PayloadAction<{ name: string, email: string, password: string, confirmPassword: string, user: User }>) {
+        setUserSignup(state, action: PayloadAction<{ name: string, email: string, password: string, confirmPassword: string, contactNumber: number, user: User }>) {
             state.user = action.payload.user;
         },
         logout(state) {

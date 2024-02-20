@@ -437,7 +437,7 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             name="phoneNo"
             id="phoneNo"
             onChange={(e) => setFormData({ ...formData, phoneNo: e.target.value })}
-            value={formData.phoneNo}
+            value={loginUser.data?.contactNumber}
           // required
           />
           {formData.errors.phoneNo && <p className="error">{formData.errors.phoneNo}</p>}
