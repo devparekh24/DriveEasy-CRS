@@ -73,6 +73,11 @@ const CarInfo: React.FC = () => {
               {/* <p>reviews</p> */}
               <div className="car-interior-info">
                 <div>
+                  {/* <IoPersonOutline className="car-info-icon" /> */}
+                  <span>{find_car?.carNumberPlate}</span>
+                  {/* <p>Passengers</p> */}
+                </div>
+                <div>
                   <IoPersonOutline className="car-info-icon" />
                   <span>{find_car?.capacity}</span>
                   <p>Passengers</p>
@@ -130,7 +135,7 @@ const CarInfo: React.FC = () => {
               </div>
             </div>
             <div className="car-info-form-col">
-              <h1 style={{ display: 'flex', justifyContent:'center' }}>Rental Booking Form</h1>
+              <h1 style={{ display: 'flex', justifyContent: 'center' }}>Rental Booking Form</h1>
               <ConfigProvider
                 theme={{
                   token: {

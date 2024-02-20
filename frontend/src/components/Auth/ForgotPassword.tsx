@@ -1,7 +1,13 @@
+import { useEffect } from 'react';
 import './auth.css'
 import { Link } from 'react-router-dom'
 
 const ForgotPassword = () => {
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }, []);
+
     return (
         <div className="login">
             <div className="login-container">

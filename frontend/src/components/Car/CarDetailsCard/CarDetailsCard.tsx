@@ -21,7 +21,6 @@ const CarDetailsCard: React.FC<Car> = ({
   fule,
   image,
   mileage,
-  rentPrice,
   transmission,
   year,
   carNumberPlate,
@@ -43,7 +42,8 @@ const CarDetailsCard: React.FC<Car> = ({
         <div className="car-details-text-left">
           <h3>{carName}</h3>
           <p className="rating">
-            <span className="rating-icon">
+            <p>{carNumberPlate}</p>
+            {/* <span className="rating-icon">
               <AiFillStar />
             </span>
             <span className="rating-icon">
@@ -58,7 +58,7 @@ const CarDetailsCard: React.FC<Car> = ({
             <span className="rating-icon">
               <AiOutlineStar />
             </span>
-            <span className="reviews">4 reviews</span>
+            <span className="reviews">4 reviews</span> */}
           </p>
           <p className="info-icons">
             <span className="info-icon">

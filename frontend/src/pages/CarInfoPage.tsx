@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import CarCarousel from '../components/CarCarousel';
 import CarInfo from '../components/Car/CarInfo/CarInfo';
 
@@ -18,6 +18,11 @@ import CarInfo from '../components/Car/CarInfo/CarInfo';
 // ];
 
 const CarInfoPage: React.FC = () => {
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, []);
+
   return (
     <div>
       {/* <CarCarousel slideImages={slideImages} /> */}
