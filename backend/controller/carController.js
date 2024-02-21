@@ -46,16 +46,10 @@ exports.updateCar = mainController.updateOne(Car, async (req) => {
 
     // Check if the car is available for the requested booking dates
     const { startDate, endDate } = req.body;
-    const isAvailable = car.bookedDates.every((booking) => {
-        return (
-            endDate < booking.startDate && startDate > booking.endDate
-        );
-    });
-
-    if (!isAvailable) {
-        return next(new AppError('Car is not available for the selected dates', 400))
-    }
-
+    if (car.isBookedFor(startDate, endDate)) {
+        return next(new AppError('Car is already booked for the requested time period', 400))    
+    } 
+    
     // Add the booked dates to the car
     car.bookedDates.push({ startDate, endDate });
     await car.save()

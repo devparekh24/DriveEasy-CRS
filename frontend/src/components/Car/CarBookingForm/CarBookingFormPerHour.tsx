@@ -11,6 +11,13 @@ import useRazorpay from "react-razorpay";
 import razorpayImg from '../../../assets/DriveEasy.png';
 import { useAddOrderMutation } from '../../../services/orderApi';
 import { toast } from 'react-toastify';
+import { useUpdateCarMutation } from '../../../services/carApi';
+import { updateCar } from '../../../slices/carSlice';
+
+interface BookedDate {
+    startDate: Date | string;
+    endDate: Date | string;
+}
 
 interface initialState {
     fullName: string;
@@ -22,6 +29,7 @@ interface initialState {
     dropOffDateAndTime: Date | string;
     totalAmount: number;
     totalKm: number;
+    bookedDates: BookedDate[];
 }
 const initialState: initialState = {
     fullName: '',
@@ -33,6 +41,10 @@ const initialState: initialState = {
     dropOffDateAndTime: '',
     totalAmount: 0,
     totalKm: 0,
+    bookedDates: [{
+        startDate: '',
+        endDate: '',
+    }]
 }
 
 dayjs.extend(customParseFormat);
@@ -53,7 +65,6 @@ const CarBookingFormPerHour = () => {
     const cars = useAppSelector(state => state.car.cars)
     const addressState = useAppSelector(state => state.address)
     const loginUser = useAppSelector(state => state.user.users)
-
     const [totalNumberOfHours, setTotalNumberOfHours] = useState(0)
     const fullNameRef = useRef<HTMLInputElement | null>(null)
     const emailAddressRef = useRef<HTMLInputElement | null>(null)
@@ -70,6 +81,7 @@ const CarBookingFormPerHour = () => {
     const isLogin = useAppSelector(state => state.auth.isLoggedIn)
     const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
     const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
+    const [updateBookedCarDates, { data: updatedCarData, error: errorOnUpdateCar, isError: isErrorOnUpdateCar, isSuccess: isSuccessOnUpdateCar }] = useUpdateCarMutation()
     // const [formData, setFormData] = useState<initialState>(initialState)
 
     const [formData, setFormData] = useState<initialState>({
@@ -82,6 +94,10 @@ const CarBookingFormPerHour = () => {
         pickupDateAndTime: '',
         totalAmount: 0,
         totalKm: 0,
+        bookedDates: [{
+            startDate: '',
+            endDate: '',
+        }]
     });
 
     const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number | undefined => {
@@ -117,8 +133,6 @@ const CarBookingFormPerHour = () => {
 
             // Calculate the total hours between pickup and drop-off dates
             const totalHours = dayjs(dropOffDate).diff(pickupDate, 'hour');
-            // console.log(totalHours)
-            // totalNumberOfHours = totalHours
             setTotalNumberOfHours(totalHours)
             setFormData(prevData => ({
                 ...prevData,
@@ -126,6 +140,30 @@ const CarBookingFormPerHour = () => {
                 dropOffDateAndTime: dropOffDate!,
             }));
             calculateAndSetTotalAmount()
+        }
+    }
+
+    const handleUpdateBookedCar = async () => {
+        try {
+            await updateBookedCarDates({
+                carId: find_car!._id, updatedCar: {
+                    bookedDates: [
+                        ...find_car!.bookedDates,
+                        {
+                            startDate: formData.pickupDateAndTime,
+                            endDate: formData.dropOffDateAndTime,
+                        }]
+                }
+            }).unwrap();
+            if (isErrorOnUpdateCar) throw errorOnUpdateCar
+        } catch (error) {
+            toast.error(error?.data?.message, {
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+            })
         }
     }
 
@@ -154,8 +192,8 @@ const CarBookingFormPerHour = () => {
                         pauseOnHover: true,
                         draggable: true,
                     })
+                    handleUpdateBookedCar()
                     setFormData(initialState)
-
                 },
                 prefill: {
                     name: formData.fullName,
@@ -290,7 +328,24 @@ const CarBookingFormPerHour = () => {
 
         const success = handleValidation();
         if (success) {
-            // No errors, proceed with payment or other actions
+            // Check for car availability before proceeding
+            const isCarAvailable = find_car?.bookedDates.every((booking) => {
+                return (
+                    new Date(formData.dropOffDateAndTime) <= new Date(booking!.startDate!) ||
+                    new Date(formData.pickupDateAndTime) >= new Date(booking!.endDate!)
+                );
+            });
+
+            if (!isCarAvailable) {
+                toast.error('Car is not available for the selected dates (time period)!', {
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                return;
+            }
             isLogin ? (handlePayment(formData)) : (
                 <>
                     {toast.error('You have to Login First!', {
@@ -333,6 +388,22 @@ const CarBookingFormPerHour = () => {
             setFormData(initialState)
         }
     }, [isSuccessOnAddOrder])
+
+    useEffect(() => {
+        if (isSuccessOnUpdateCar) {
+            console.log(updatedCarData)
+            dispatch(updateCar({
+                _id: find_car!._id, updatedCar: {
+                    bookedDates: [
+                        ...find_car!.bookedDates,
+                        {
+                            startDate: formData.pickupDateAndTime,
+                            endDate: formData.dropOffDateAndTime
+                        }]
+                }
+            }))
+        }
+    }, [isSuccessOnUpdateCar])
 
 
     return (

@@ -81,13 +81,24 @@ const carSchema = new mongoose.Schema({
             },
         },
     ],
-    hasBooking: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Order'
-    }
 }, {
     timestamps: true
 })
+
+carSchema.methods.isBookedFor = function(startDate, endDate) {
+    const bookedDates = this.bookedDates;
+    for (let i = 0; i < bookedDates.length; i++) {
+        const bookedStartDate = bookedDates[i].startDate;
+        const bookedEndDate = bookedDates[i].endDate;
+        if (
+            (startDate >= bookedStartDate && startDate <= bookedEndDate) ||
+            (endDate >= bookedStartDate && endDate <= bookedEndDate)
+        ) {
+            return true;
+        }
+    }
+    return false;
+}
 
 const Car = mongoose.model('Car', carSchema)
 module.exports = Car

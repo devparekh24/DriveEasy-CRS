@@ -11,6 +11,13 @@ import useRazorpay from "react-razorpay";
 import razorpayImg from '../../../assets/DriveEasy.png';
 import { useAddOrderMutation } from '../../../services/orderApi';
 import { toast } from 'react-toastify';
+import { useUpdateCarMutation } from '../../../services/carApi';
+import { updateCar } from '../../../slices/carSlice';
+
+interface BookedDate {
+  startDate: Date | string;
+  endDate: Date | string;
+}
 
 interface initialState {
   fullName: string;
@@ -22,6 +29,7 @@ interface initialState {
   dropOffDateAndTime: Date | string;
   totalAmount: number;
   totalKm: number;
+  bookedDates: BookedDate[];
 }
 const initialState: initialState = {
   fullName: '',
@@ -33,6 +41,10 @@ const initialState: initialState = {
   dropOffDateAndTime: '',
   totalAmount: 0,
   totalKm: 0,
+  bookedDates: [{
+    startDate: '',
+    endDate: '',
+  }]
 }
 
 dayjs.extend(customParseFormat);
@@ -69,6 +81,7 @@ const CarBookingFormPerDay = () => {
   const isLogin = useAppSelector(state => state.auth.isLoggedIn)
   const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
   const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
+  const [updateBookedCarDates, { data: updatedCarData, error: errorOnUpdateCar, isError: isErrorOnUpdateCar, isSuccess: isSuccessOnUpdateCar }] = useUpdateCarMutation()
   // const [formData, setFormData] = useState<initialState>(initialState)
 
   const [formData, setFormData] = useState<initialState>({
@@ -81,6 +94,10 @@ const CarBookingFormPerDay = () => {
     pickupDateAndTime: '',
     totalAmount: 0,
     totalKm: 0,
+    bookedDates: [{
+      startDate: '',
+      endDate: '',
+    }]
   });
 
   const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number | undefined => {
@@ -123,7 +140,31 @@ const CarBookingFormPerDay = () => {
     }
   }
 
-  const handlePayment = async (formData: any) => {
+  const handleUpdateBookedCar = async () => {
+    try {
+      await updateBookedCarDates({
+        carId: find_car!._id, updatedCar: {
+          bookedDates: [
+            ...find_car!.bookedDates,
+            {
+              startDate: formData.pickupDateAndTime,
+              endDate: formData.dropOffDateAndTime,
+            }]
+        }
+      }).unwrap();
+      if (isErrorOnUpdateCar) throw errorOnUpdateCar
+    } catch (error) {
+      toast.error(error?.data?.message, {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true
+      })
+    }
+  }
+
+  const handlePayment = async (formData: initialState) => {
     try {
 
       // Create order on your backend
@@ -147,6 +188,7 @@ const CarBookingFormPerDay = () => {
             pauseOnHover: true,
             draggable: true,
           })
+          handleUpdateBookedCar()
           setFormData(initialState)
         },
         prefill: {
@@ -199,87 +241,103 @@ const CarBookingFormPerDay = () => {
     }
   }
 
-
-  const handleSubmitBookingForm = async (event: any) => {
-    event.preventDefault();
+  const handleValidation = () => {
     const fullName = fullNameRef!.current!.value!
     const emailAddress = emailAddressRef!.current!.value!
     const phoneNo = phoneNoRef!.current!.value!
+    // Name validation
+    const nameRegex = /^[a-zA-Z]{1,}(?: [a-zA-Z]+){0,2}$/;
+    if (!fullName!.trim()) {
+      toast.error('Full Name is required', {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+      return false
+    } else if (!nameRegex.test(fullName!)) {
+      toast.error('Invalid characters in Full Name', {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+      return false
+    }
 
-    const handleValidation = () => {
-      // Name validation
-      const nameRegex = /^[a-zA-Z]{1,}(?: [a-zA-Z]+){0,2}$/;
-      if (!fullName!.trim()) {
-        toast.error('Full Name is required', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      } else if (!nameRegex.test(fullName!)) {
-        toast.error('Invalid characters in Full Name', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      }
+    // Phone number validation
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneNo!.trim()) {
+      toast.error('Phone Number is required', {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+      return false
+    } else if (!phoneRegex.test(phoneNo!)) {
+      toast.error('Phone number must be 10 digit long only', {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+      return false
+    }
 
-      // Phone number validation
-      const phoneRegex = /^\d{10}$/;
-      if (!phoneNo!.trim()) {
-        toast.error('Phone Number is required', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      } else if (!phoneRegex.test(phoneNo!)) {
-        toast.error('Phone number must be 10 digit long only', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      }
+    if (!emailAddress!.trim()) {
+      toast.error('Email Address is required', {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      })
+      return false
+    }
 
-      if (!emailAddress!.trim()) {
-        toast.error('Email Address is required', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      }
+    // RangePicker validation
+    if (!formData.pickupDateAndTime || !formData.dropOffDateAndTime) {
+      toast.error('Please select valid pickup and drop-off dates.', {
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return false;
+    }
 
-      // RangePicker validation
-      if (!formData.pickupDateAndTime || !formData.dropOffDateAndTime) {
-        toast.error('Please select valid pickup and drop-off dates.', {
-          autoClose: 2000,
+    return true;
+  }
+
+  const handleSubmitBookingForm = async (event: any) => {
+    event.preventDefault();
+    const success = handleValidation();
+    if (success) {
+      // Check for car availability before proceeding
+      const isCarAvailable = find_car?.bookedDates.every((booking) => {
+        return (
+          new Date(formData.dropOffDateAndTime) <= new Date(booking!.startDate!) ||
+          new Date(formData.pickupDateAndTime) >= new Date(booking!.endDate!)
+        );
+      });
+
+      if (!isCarAvailable) {
+        toast.error('Car is not available for the selected dates (time period)!', {
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
         });
-        return false;
+        return;
       }
 
-      return true;
-    }
-
-    const success = handleValidation();
-    if (success) {
-      // No errors, proceed with payment or other actions
       isLogin ? (handlePayment(formData)) : (
         <>
           {
@@ -325,6 +383,21 @@ const CarBookingFormPerDay = () => {
     }
   }, [isSuccessOnAddOrder])
 
+  useEffect(() => {
+    if (isSuccessOnUpdateCar) {
+      console.log(updatedCarData)
+      dispatch(updateCar({
+        _id: find_car!._id, updatedCar: {
+          bookedDates: [
+            ...find_car!.bookedDates,
+            {
+              startDate: formData.pickupDateAndTime,
+              endDate: formData.dropOffDateAndTime
+            }]
+        }
+      }))
+    }
+  }, [isSuccessOnUpdateCar])
 
   return (
     <div>
@@ -377,7 +450,7 @@ const CarBookingFormPerDay = () => {
             format="YYYY-MM-DD"
             onChange={onChange}
           />
-          {<h4>Total Hours: {totalNumberOfDays}</h4>}
+          {<h4>Total Days: {totalNumberOfDays + 1}</h4>}
         </div>
         <div>
           <label htmlFor="pickupAddress">Pickup Address</label>

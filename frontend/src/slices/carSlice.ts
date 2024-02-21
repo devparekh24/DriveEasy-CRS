@@ -1,6 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 
+interface BookedDate {
+    startDate: Date | string;
+    endDate: Date | string;
+}
+
 export interface Car {
     _id: string;
     carName: string;
@@ -18,6 +23,7 @@ export interface Car {
     fule: string;
     transmission: string;
     whenWillCarAvailable: string;
+    bookedDates: BookedDate[];
 }
 
 export interface CarState {

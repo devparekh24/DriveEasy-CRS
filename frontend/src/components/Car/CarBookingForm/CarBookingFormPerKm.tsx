@@ -11,6 +11,13 @@ import useRazorpay from "react-razorpay";
 import razorpayImg from '../../../assets/DriveEasy.png';
 import { useAddOrderMutation } from '../../../services/orderApi';
 import { toast } from 'react-toastify';
+import { useUpdateCarMutation } from '../../../services/carApi';
+import { updateCar } from '../../../slices/carSlice';
+
+interface BookedDate {
+    startDate: Date | string;
+    endDate: Date | string;
+}
 
 interface initialState {
     fullName: string;
@@ -22,6 +29,7 @@ interface initialState {
     dropOffDateAndTime: Date | string;
     totalAmount: number;
     totalKm: number;
+    bookedDates: BookedDate[];
 }
 const initialState: initialState = {
     fullName: '',
@@ -33,6 +41,10 @@ const initialState: initialState = {
     dropOffDateAndTime: '',
     totalAmount: 0,
     totalKm: 0,
+    bookedDates: [{
+        startDate: '',
+        endDate: '',
+    }]
 }
 
 dayjs.extend(customParseFormat);
@@ -69,6 +81,7 @@ const CarBookingFormPerKm = () => {
     const isLogin = useAppSelector(state => state.auth.isLoggedIn)
     // const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
     const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
+    const [updateBookedCarDates, { data: updatedCarData, error: errorOnUpdateCar, isError: isErrorOnUpdateCar, isSuccess: isSuccessOnUpdateCar }] = useUpdateCarMutation()
     // const [formData, setFormData] = useState<initialState>(initialState)
 
     const [formData, setFormData] = useState<initialState>({
@@ -81,6 +94,10 @@ const CarBookingFormPerKm = () => {
         pickupDateAndTime: '',
         totalAmount: 0,
         totalKm: 0,
+        bookedDates: [{
+            startDate: '',
+            endDate: '',
+        }]
     });
 
     const calculateTotalAmount = (basePrice: number, totalKm: number): number | undefined => {
@@ -109,6 +126,31 @@ const CarBookingFormPerKm = () => {
         }
     }
 
+    const handleUpdateBookedCar = async () => {
+        try {
+            await updateBookedCarDates({
+                carId: find_car!._id, updatedCar: {
+                    bookedDates: [
+                        ...find_car!.bookedDates,
+                        {
+                            startDate: formData.pickupDateAndTime,
+                            endDate: formData.dropOffDateAndTime,
+                        }]
+                }
+            }).unwrap();
+            if (isErrorOnUpdateCar) throw errorOnUpdateCar
+        } catch (error) {
+            toast.error(error?.data?.message, {
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true
+            })
+        }
+    }
+
+
     const handlePayment = async (formData: any) => {
 
         try {
@@ -134,6 +176,7 @@ const CarBookingFormPerKm = () => {
                         pauseOnHover: true,
                         draggable: true,
                     })
+                    handleUpdateBookedCar()
                     setFormData(initialState)
                 },
                 prefill: {
@@ -262,7 +305,24 @@ const CarBookingFormPerKm = () => {
 
         const success = handleValidation();
         if (success) {
-            // No errors, proceed with payment or other actions
+            // Check for car availability before proceeding
+            const isCarAvailable = find_car?.bookedDates.every((booking) => {
+                return (
+                    new Date(formData.dropOffDateAndTime) <= new Date(booking!.startDate!) ||
+                    new Date(formData.pickupDateAndTime) >= new Date(booking!.endDate!)
+                );
+            });
+
+            if (!isCarAvailable) {
+                toast.error('Car is not available for the selected dates (time period)!', {
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                return;
+            }
             isLogin ? (handlePayment(formData)) : (
                 <>
                     {toast.error('You have to Login First!', {
@@ -300,6 +360,21 @@ const CarBookingFormPerKm = () => {
         }
     }, [isSuccessOnAddOrder])
 
+    useEffect(() => {
+        if (isSuccessOnUpdateCar) {
+            console.log(updatedCarData)
+            dispatch(updateCar({
+                _id: find_car!._id, updatedCar: {
+                    bookedDates: [
+                        ...find_car!.bookedDates,
+                        {
+                            startDate: formData.pickupDateAndTime,
+                            endDate: formData.dropOffDateAndTime
+                        }]
+                }
+            }))
+        }
+    }, [isSuccessOnUpdateCar])
 
     return (
         <div>
