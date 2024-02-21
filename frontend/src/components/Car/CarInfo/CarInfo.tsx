@@ -1,7 +1,7 @@
 import "./CarInfo.css";
 import React, { useEffect, useState } from "react";
 import { IoPersonOutline } from "react-icons/io5";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LeafletMap from "../../Map/LeafletMap";
 import CarBookingFormPerDay from "../CarBookingForm/CarBookingFormPerDay";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
@@ -21,6 +21,7 @@ import CarBookingFormPerKm from "../CarBookingForm/CarBookingFormPerKm";
 const CarInfo: React.FC = () => {
   const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
   const carData = async () => {
     try {
@@ -68,6 +69,7 @@ const CarInfo: React.FC = () => {
         <div className="car-info">
           <div className="car-info-row">
             <div className="car-info-text-col">
+              <h3 onClick={() => navigate('/cars')} style={{ cursor: 'pointer' }}> <u>Go Back</u></h3>
               <div className="car-image">
                 <img src={find_car?.image} alt={find_car?.image} />
               </div>

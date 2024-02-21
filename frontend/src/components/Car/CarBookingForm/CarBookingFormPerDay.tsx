@@ -200,14 +200,11 @@ const CarBookingFormPerDay = () => {
   }
 
 
-
   const handleSubmitBookingForm = async (event: any) => {
     event.preventDefault();
     const fullName = fullNameRef!.current!.value!
     const emailAddress = emailAddressRef!.current!.value!
     const phoneNo = phoneNoRef!.current!.value!
-    const pickupAddress = pickupAddressRef!.current!.value!
-    const dropOffAddress = dropOffAddressRef!.current!.value!
 
     const handleValidation = () => {
       // Name validation
@@ -301,6 +298,13 @@ const CarBookingFormPerDay = () => {
 
   };
 
+  useEffect(() => {
+    setFormData(prevData => ({
+      ...prevData,
+      pickupAddress: addressState?.pickupAddress,
+      dropOffAddress: addressState?.dropoffAddress,
+    }));
+  }, [addressState]);
 
   useEffect(() => {
     calculateAndSetTotalAmount();

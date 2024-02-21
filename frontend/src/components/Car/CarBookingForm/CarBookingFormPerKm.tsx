@@ -118,7 +118,7 @@ const CarBookingFormPerKm = () => {
 
             const options = {
                 key: 'rzp_test_rj5Bthp9EwXcYE', // Replace with your Razorpay key
-                amount: (formData?.totalAmount * 100).toString(), // Amount is in currency subunits. Default currency is INR.
+                amount: (formData?.totalAmount.toFixed(2) * 100).toString(), // Amount is in currency subunits. Default currency is INR.
                 currency: 'INR',
                 name: 'Drive Easy',
                 description: 'Car Rental Booking',
@@ -179,13 +179,6 @@ const CarBookingFormPerKm = () => {
             ...prevData,
             [name]: value,
         }));
-        // console.log(object)
-        setFormData((prev) => ({
-            ...prev,
-            pickupAddress: pickupAddressRef.current?.value!,
-            dropOffAddress: dropOffAddressRef.current?.value!,
-            totalKm: addressState.totalKm,
-        }))
     }
 
     const handleSubmitBookingForm = async (event: any) => {
@@ -193,9 +186,6 @@ const CarBookingFormPerKm = () => {
         const fullName = fullNameRef!.current!.value!
         const emailAddress = emailAddressRef!.current!.value!
         const phoneNo = phoneNoRef!.current!.value!
-        const pickupAddress = pickupAddressRef!.current!.value!
-        const dropOffAddress = dropOffAddressRef!.current!.value!
-        const totalKm = totalKmRef!.current!.value!
 
         console.log(formData)
 
@@ -288,6 +278,15 @@ const CarBookingFormPerKm = () => {
             )
         }
     };
+
+    useEffect(() => {
+        setFormData(prevData => ({
+            ...prevData,
+            pickupAddress: addressState?.pickupAddress,
+            dropOffAddress: addressState?.dropoffAddress,
+            totalKm: addressState?.totalKm,
+        }));
+    }, [addressState]);
 
 
     useEffect(() => {
@@ -389,15 +388,6 @@ const CarBookingFormPerKm = () => {
                         placeholder="Enter Total Km"
                         name="totalKm"
                         id="totalKm"
-                        onChange={(e) => {
-                            const totalKm = +e.target.value;
-                            const totalAmount = find_car?.rentPricePerKm! * addressState.totalKm;
-                            setFormData({
-                                ...formData,
-                                totalKm,
-                                totalAmount,
-                            });
-                        }}
                         value={addressState.totalKm}
                         ref={totalKmRef}
                         required

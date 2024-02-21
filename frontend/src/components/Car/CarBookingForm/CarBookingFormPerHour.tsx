@@ -207,8 +207,7 @@ const CarBookingFormPerHour = () => {
         }
     }
 
-
-
+    
     const handleSubmitBookingForm = async (event: any) => {
         event.preventDefault();
         const fullName = fullNameRef!.current!.value!
@@ -308,6 +307,13 @@ const CarBookingFormPerHour = () => {
         }
     };
 
+    useEffect(() => {
+        setFormData(prevData => ({
+            ...prevData,
+            pickupAddress: addressState?.pickupAddress,
+            dropOffAddress: addressState?.dropoffAddress,
+        }));
+    }, [addressState]);
 
     useEffect(() => {
         calculateAndSetTotalAmount();
