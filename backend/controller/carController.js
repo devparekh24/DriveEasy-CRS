@@ -62,3 +62,69 @@ exports.updateCar = mainController.updateOne(Car, async (req) => {
     })
 
 });
+
+exports.getAvailableCars = catchAsyncErr( async (req, res, next) => {
+
+    const { pickupDate, dropOffDate } = req.body;
+
+    // Convert input dates to Date objects
+    const pickupDateObj = new Date(pickupDate);
+    const dropOffDateObj = new Date(dropOffDate);
+
+    // Calculate the number of days between pickup and drop-off dates (inclusive)
+    const totalDays = Math.floor((dropOffDateObj - pickupDateObj) / (1000 * 60 * 60 * 24)) + 1;
+
+    // Find cars that have at least one available day within the given date range
+    const availableCars = await Car.find({
+      $or: [
+        {
+          bookedDates: {
+            $not: {
+              $elemMatch: {
+                startDate: {
+                  $lte: pickupDateObj,
+                },
+                endDate: {
+                  $gte: dropOffDateObj,
+                },
+              },
+            },
+          },
+        },
+        {
+          bookedDates: {
+            $not: {
+              $elemMatch: {
+                startDate: {
+                  $gte: pickupDateObj,
+                  $lt: dropOffDateObj,
+                },
+              },
+            },
+          },
+        },
+        {
+          bookedDates: {
+            $not: {
+              $elemMatch: {
+                endDate: {
+                  $gte: pickupDateObj,
+                  $lt: dropOffDateObj,
+                },
+              },
+            },
+          },
+        },
+      ],
+    }).limit(totalDays);
+
+    res.status(200).json({
+      status: 'success',
+        data: {
+            data : availableCars,
+        },
+    });
+    
+    if(error) next(error);
+})
+

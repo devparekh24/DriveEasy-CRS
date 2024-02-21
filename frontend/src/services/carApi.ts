@@ -34,6 +34,13 @@ export const carApi = createApi({
             }),
             providesTags: ['Car']
         }),
+        getAvailableCars: builder.query<Car[], { pickupDate?: string; dropOffDate?: string }>({
+            query: ({ pickupDate, dropOffDate }) => ({
+                url: '/cars/available-cars',
+                params: { pickupDate, dropOffDate },
+            }),
+            providesTags: ['Car'],
+        }),
         addCar: builder.mutation<Car, Partial<Car>>({
             query: (newCar) => ({
                 url: '/cars',
@@ -75,5 +82,6 @@ export const {
     useAddCarMutation,
     useUpdateCarMutation,
     useRemoveCarMutation,
-    useUploadCarImageMutation
+    useUploadCarImageMutation,
+    useGetAvailableCarsQuery,
 } = carApi

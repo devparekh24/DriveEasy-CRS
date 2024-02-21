@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store/store";
 
-interface BookedDate {
+export interface BookedDate {
     startDate: Date | string;
     endDate: Date | string;
 }

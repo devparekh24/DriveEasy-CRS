@@ -67,7 +67,7 @@ const carSchema = new mongoose.Schema({
     },
     whenWillCarAvailable: {
         type: String,
-        required: [true, 'You have to mention that when will car available']
+        // required: [true, 'You have to mention that when will car available']
     },
     bookedDates: [
         {

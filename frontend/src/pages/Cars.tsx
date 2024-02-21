@@ -13,14 +13,18 @@ const Cars: React.FC = () => {
     startDate: null,
     endDate: null,
   });
+  // const [pickupDate, setPickupDate] = useState<string>('');
+  // const [dropOffDate, setDropOffDate] = useState<string>('');
 
   const handleFilterChange = (newFilters: any) => {
     setFilters(newFilters);
+    // setPickupDate(pickupDate)
+    // setDropOffDate(dropOffDate)
   };
-  
+
   useEffect(() => {
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-    }, []);
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, []);
 
   return (
     <div>

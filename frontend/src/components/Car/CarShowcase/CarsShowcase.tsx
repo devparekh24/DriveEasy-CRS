@@ -10,6 +10,10 @@ import Loader from "../../Loader/Loader";
 const CarsShowcase = ({ filters }: { filters: any }) => {
 
   const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
+  // const { data: getAvailableCarData, isError: isErrorOnGetAvailableCar, isLoading: isLoadingOnGetAvailableCar, error: errorOnGetAvailableCar, isSuccess: isSuccessOnGetAvailableCar } = useGetAvailableCarsQuery({
+  //   pickupDate,
+  //   dropOffDate,
+  // });
   const dispatch = useAppDispatch();
   const cars = useAppSelector(state => state.car.cars)
   console.log(cars)
@@ -18,10 +22,10 @@ const CarsShowcase = ({ filters }: { filters: any }) => {
   const carData = async () => {
     try {
       // if (isLoading) console.log('loading...')
+      await data
       if (isError) {
         throw error
       }
-      await data
     }
     catch (error: any) {
       toast.error(error?.data?.message, {
@@ -43,7 +47,7 @@ const CarsShowcase = ({ filters }: { filters: any }) => {
 
   const filteredCars = useMemo(() => {
     let result = [...cars];
-
+    result = result.filter((car: Car) => car.availability);
     // Apply filters based on the selected values of rentPrice
     switch (filters.sortBy) {
       case 'dailyPriceHighToLow':
@@ -120,7 +124,25 @@ const CarsShowcase = ({ filters }: { filters: any }) => {
         break;
     }
 
-    // Apply more filters as needed
+    // // Filter out cars with booked dates overlapping with the selected range
+    // result = result.filter((car: Car) => {
+    //   if (car.bookedDates) {
+    //     return car.bookedDates.every((booking: any) => {
+    //       const bookingStart = new Date(booking.startDate);
+    //       const bookingEnd = new Date(booking.endDate);
+
+    //       const selectedStartDate = new Date(pickupDate);
+    //       const selectedEndDate = new Date(dropOffDate);
+
+    //       // Check for date range overlap
+    //       return (
+    //         selectedEndDate < bookingStart || selectedStartDate > bookingEnd
+    //       );
+    //     });
+    //   }
+    //   // If the car has no booked dates, consider it available
+    //   return true;
+    // });
 
     return result;
   }, [cars, filters]);
@@ -151,6 +173,7 @@ const CarsShowcase = ({ filters }: { filters: any }) => {
                     year={car.year}
                     carNumberPlate={car.carNumberPlate}
                     whenWillCarAvailable={car.whenWillCarAvailable}
+                    bookedDates={car.bookedDates}
                   />
                 ))
                 }

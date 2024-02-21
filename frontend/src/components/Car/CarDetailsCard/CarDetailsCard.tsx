@@ -27,7 +27,8 @@ const CarDetailsCard: React.FC<Car> = ({
   rentPricePerDay,
   rentPricePerHour,
   rentPricePerKm,
-  whenWillCarAvailable
+  whenWillCarAvailable,
+  bookedDates
 }) => {
   const navigate = useNavigate();
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { DatePicker, Form, Input, InputNumber, Popconfirm, Select, Space, Table, Typography, message } from 'antd';
 import type { DatePickerProps, TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Car } from '../../../slices/carSlice';
+import { BookedDate, Car } from '../../../slices/carSlice';
 import { useRemoveCarMutation, useUpdateCarMutation } from '../../../services/carApi';
 import AdminLoader from '../AdminLoader/AdminLoader';
 import ImageUploader from '../../../components/ImageUploader/ImageUploader';
@@ -38,6 +38,7 @@ interface Item {
     fule: string;
     transmission: string;
     whenWillCarAvailable: string;
+    bookedDates: BookedDate[];
     editable: boolean;
 }
 
@@ -128,6 +129,19 @@ const EditableCell: React.FC<EditableCellProps> = ({
                     onChange={onChange}
                 />
             </Form.Item>
+        ) : dataIndex === 'availability' && editing ? (
+            <Select showSearch
+                placeholder="Select Availability"
+                options={[
+                    {
+                        value: 'true',
+                        label: 'Available',
+                    },
+                    {
+                        value: 'false',
+                        label: 'Not Available',
+                    }
+                ]} />
         ) : (
             <Input />
         );
@@ -160,7 +174,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] }) => {
 
     const [form] = Form.useForm();
-    let [formData, setFormData] = useState<Car[]>();
+    const [formData, setFormData] = useState<Car[]>();
     const [editingKey, setEditingKey] = useState('');
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>('');
@@ -238,25 +252,51 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
         }
     };
 
-    const columns: TableColumnsType<Item> = headers.map((header: any) => ({
-        title: header,
-        dataIndex: header,
-        key: header,
-        editable: true,
-        sorter: (a: Car, b: Car) => {
-            const aValue = a[header];
-            const bValue = b[header];
-            // Handle sorting based on the data type of the column
-            if (typeof aValue === 'string' && typeof bValue === 'string') {
-                return aValue.localeCompare(bValue);
-            } else if (typeof aValue === 'number' && typeof bValue === 'number') {
-                return aValue - bValue;
-            } else {
-                return 0;
-            }
-        },
-        sortDirections: ['ascend', 'descend'],
-    }));
+    const columns: TableColumnsType<Item> = headers.map((header: any) => {
+        if (header === 'bookedDates') {
+            return {
+                title: 'Booked Dates',
+                dataIndex: 'bookedDates',
+                key: 'bookedDates',
+                render: (bookedDates: any) => (
+                    <span>
+                        {bookedDates.map((dateRange: any, index: number) => (
+                            <div key={index}>
+                                {`Start: ${dateRange.startDate}, End: ${dateRange.endDate}`}
+                            </div>
+                        ))}
+                    </span>
+                ),
+            };
+        }
+        return {
+            title: header,
+            dataIndex: header,
+            key: header,
+            editable: true,
+            sorter: (a: Car, b: Car) => {
+                const aValue = a[header];
+                const bValue = b[header];
+                // Handle sorting based on the data type of the column
+                if (typeof aValue === 'string' && typeof bValue === 'string') {
+                    return aValue.localeCompare(bValue);
+                } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+                    return aValue - bValue;
+                } else if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
+                    return aValue - bValue;
+                } else {
+                    return 0;
+                }
+            },
+            sortDirections: ['ascend', 'descend'],
+            render: (text: any, record: DamageReport) => {
+                if (typeof text === 'boolean') {
+                    return text.toString();
+                }
+                return text;
+            },
+        }
+    });
 
     const mergedColumns = columns.map((col) => {
         if (!col.editable || col.dataIndex === '_id') {
@@ -358,7 +398,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                         columns={mergedColumns}
                         rowClassName="editable-row"
                         pagination={{ pageSize: 5 }}
-                        scroll={{ x: 2000, y: 460 }}
+                        scroll={{ x: 2400, y: 460 }}
                     />
                 )
             }

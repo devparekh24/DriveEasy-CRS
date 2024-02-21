@@ -9,9 +9,9 @@ const SearchFields = ({ onFilterChange }: { onFilterChange: (filters: any) => vo
     transmission: '',
     seatingCapacity: '',
     fuel: '',
-    startDate: null,
-    endDate: null,
   });
+  // const [pickupDate, setPickupDate] = useState<string>('');
+  // const [dropOffDate, setDropOffDate] = useState<string>('');
 
   const handleFilterChange = (filterType: string, value: any) => {
     setSelectedFilters((prevFilters) => ({
@@ -20,9 +20,27 @@ const SearchFields = ({ onFilterChange }: { onFilterChange: (filters: any) => vo
     }));
   };
 
+  // const handleDateChange = (type: 'pickup' | 'dropOff', date: string) => {
+  //   if (type === 'pickup') {
+  //     setPickupDate(date);
+  //   } else {
+  //     setDropOffDate(date);
+  //   }
+  // };
+
   const handleSearch = () => {
     // Pass the selected filters to the parent component
     onFilterChange(selectedFilters);
+
+    // if (!pickupDate || !dropOffDate) {
+    //   onFilterChange(SearchFields)
+    // } else {
+    //   onFilterChange({
+    //     ...selectedFilters,
+    //     startDate: pickupDate,
+    //     endDate: dropOffDate,
+    //   });
+    // }
   };
 
   return (
@@ -81,19 +99,22 @@ const SearchFields = ({ onFilterChange }: { onFilterChange: (filters: any) => vo
           </select>
         </div>
 
-        <div className="search-field-col">
-          <select className="select-field">
-            <option value="someOption">Price Low to High</option>
-            <option value="otherOption">Other option</option>
-          </select>
-        </div>
+        {/* Date pickers
+        // <div className="search-field-col">
+        //   <input
+        //     type="date"
+        //     value={pickupDate || ''}
+        //     onChange={(e) => handleDateChange('pickup', e.target.value)}
+        //   />
+        // </div>
 
-        <div className="search-field-col">
-          <select className="select-field">
-            <option value="someOption">Price Low to High</option>
-            <option value="otherOption">Other option</option>
-          </select>
-        </div>
+        // <div className="search-field-col">
+        //   <input
+        //     type="date"
+        //     value={dropOffDate || ''}
+        //     onChange={(e) => handleDateChange('dropOff', e.target.value)}
+        //   />
+        // </div> */}
 
         <div className="search-field-col">
           <button className="filter-btn" onClick={handleSearch}>Search</button>
@@ -103,8 +124,6 @@ const SearchFields = ({ onFilterChange }: { onFilterChange: (filters: any) => vo
               transmission: '',
               fuel: '',
               seatingCapacity: '',
-              startDate: null,
-              endDate: null,
             })} />
         </div>
       </div>

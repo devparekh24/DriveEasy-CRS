@@ -71,7 +71,7 @@ const AddDamageReportModal: FC = () => {
         setTimeout(() => {
             if (isSuccessOnGetAllCars || isSuccessOnGetAllUsers) {
                 dispatch(setCars(carsData!.data))
-                dispatch(setUsers(usersData!.data))
+                dispatch(setUsers(usersData?.data?.data))
             }
         }, 1500)
 
@@ -101,7 +101,7 @@ const AddDamageReportModal: FC = () => {
                                 isSuccessOnGetAllCars && Array.isArray(carsList) ? (
                                     carsList.map((car) => (
                                         <Select.Option key={car._id} value={car._id}>
-                                            {car.carName}
+                                            {car.carName} - {car.carNumberPlate}
                                         </Select.Option>
                                     ))
                                 ) : (<AdminLoader />)

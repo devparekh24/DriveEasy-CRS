@@ -107,11 +107,26 @@ const AddCarModal: FC = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="When Will Car Available?" name="whenWillCarAvailable" rules={[{ required: true, message: "Please enter that when will car available" }]}>
+                        {/* <Form.Item label="When Will Car Available?" name="whenWillCarAvailable" rules={[{ required: true, message: "Please enter that when will car available" }]}>
                             <DatePicker
                                 format="YYYY-MM-DD"
                                 disabledDate={disabledDate}
                             />
+                        </Form.Item> */}
+
+                        <Form.Item label="Availability" name="availability" rules={[{ required: true, message: 'Please enter the availability of car' }]}>
+                            <Select showSearch
+                                placeholder="Select Availability"
+                                options={[
+                                    {
+                                        value: 'true',
+                                        label: 'Available',
+                                    },
+                                    {
+                                        value: 'false',
+                                        label: 'Not Available',
+                                    }
+                                ]} />
                         </Form.Item>
 
                         <Form.Item label="Year" name="year" rules={[{ required: true, message: "Please enter the car's manufacturing year" }]}>
@@ -247,7 +262,7 @@ const Car: FC = () => {
     const getHeaders = async () => {
         const columns = await Object.keys(carsList[0]!);
         const sortedHeaders = columns
-            .filter((header) => (header !== '_id' && header !== 'carName' && header !== 'image' && header !== 'availability'))
+            .filter((header) => (header !== '_id' && header !== 'carName' && header !== 'image'))
             .sort(); // Sort headers alphabetically
 
         const finalHeaders = ['carName', 'image', ...sortedHeaders];

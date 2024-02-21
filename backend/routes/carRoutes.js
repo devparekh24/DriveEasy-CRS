@@ -19,6 +19,7 @@ const uploads = multer({ storage, fileFilter })
 // router.use(authController.protectedRoute)
 
 router.put('/:id/img-upload', authController.protectedRoute, authController.restrictTo('admin'), uploads.single('image'), carController.uploadImage)
+router.get('/available-cars',carController.getAvailableCars)
 
 router
     .route('/')
