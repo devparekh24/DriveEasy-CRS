@@ -19,37 +19,22 @@ interface initialState {
   emailAddress: string;
   phoneNo: string;
   pickupAddress: string;
-  pickupDate: string;
-  pickupTime: string;
+  pickupDateAndTime: Date | string;
   dropOffAddress: string;
-  dropOffDate: string;
-  dropOffTime: string;
+  dropOffDateAndTime: Date | string;
   totalAmount: number;
   totalKm: number;
-  errors: {
-    fullName?: string;
-    emailAddress?: string;
-    phoneNo?: string;
-    pickupAddress?: string;
-    pickupDate?: string;
-    dropOffAddress?: string;
-    dropOffDate?: string;
-    totalKm?: number;
-  };
 }
 const initialState: initialState = {
   fullName: '',
   emailAddress: '',
   phoneNo: '',
   pickupAddress: '',
-  pickupDate: '',
-  pickupTime: '',
+  pickupDateAndTime: '',
   dropOffAddress: '',
-  dropOffDate: '',
-  dropOffTime: '',
+  dropOffDateAndTime: '',
   totalAmount: 0,
   totalKm: 0,
-  errors: {},
 }
 
 dayjs.extend(customParseFormat);
@@ -71,15 +56,11 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   const addressState = useAppSelector(state => state.address)
   const loginUser = useAppSelector(state => state.user.users)
 
-  // const pickupAdd = useAppSelector(state => state.address.pickupAddress)
-  // const dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
-  // const bookingFormData = useAppSelector(state => state.booking)
-
-  const [fullNameInput, setFullNameInput] = useState(loginUser!.data!.name!)
-  const [emailAddressInput, setEmailAddressInput] = useState(loginUser!.data!.email!)
-  const [phoneNoInput, setPhoneNoInput] = useState(loginUser!.data!.contactNumber!)
-  const [pickupAddressInput, setPickupAddressInput] = useState(addressState.pickupAddress)
-  const [dropOffAddressInput, setDropOffAddressInput] = useState(addressState.dropoffAddress)
+  // const [fullNameInput, setFullNameInput] = useState(loginUser?.data?.name)
+  // const [emailAddressInput, setEmailAddressInput] = useState(loginUser?.data?.email)
+  // const [phoneNoInput, setPhoneNoInput] = useState(loginUser?.data?.contactNumber)
+  // const [pickupAddressInput, setPickupAddressInput] = useState(addressState.pickupAddress)
+  // const [dropOffAddressInput, setDropOffAddressInput] = useState(addressState.dropoffAddress)
 
   const fullNameRef = useRef<HTMLInputElement | null>(null)
   const emailAddressRef = useRef<HTMLInputElement | null>(null)
@@ -96,7 +77,19 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   const isLogin = useAppSelector(state => state.auth.isLoggedIn)
   const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
   const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
-  const [formData, setFormData] = useState<initialState>(initialState)
+  // const [formData, setFormData] = useState<initialState>(initialState)
+
+  const [formData, setFormData] = useState<initialState>({
+    fullName: loginUser?.data?.name || '',
+    emailAddress: loginUser?.data?.email || '',
+    phoneNo: loginUser?.data?.contactNumber || '',
+    pickupAddress: addressState.pickupAddress || '',
+    dropOffAddress: addressState.dropoffAddress || '',
+    dropOffDateAndTime: '',
+    pickupDateAndTime: '',
+    totalAmount: 0,
+    totalKm: 0,
+  });
 
   const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number => {
     // const pricePerDay = basePrice;
@@ -146,11 +139,11 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   const calculateAndSetTotalAmount = () => {
 
     if (bookingFormValue === 'day') {
-      const totalAmount = calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDate, formData.dropOffDate);
+      const totalAmount = calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString());
       setFormData(prevData => ({ ...prevData, totalAmount }));
     }
     if (bookingFormValue === 'hour') {
-      const totalAmount = calculateTotalAmount(find_car!.rentPricePerHour, formData.pickupDate, formData.dropOffDate);
+      const totalAmount = calculateTotalAmount(find_car!.rentPricePerHour, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString());
       setFormData(prevData => ({ ...prevData, totalAmount }));
     }
   };
@@ -163,39 +156,31 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
     console.log('Formatted Selected Time: ', dateString);
 
     switch (bookingFormValue) {
-      case 'day': {
-        if (Array.isArray(dateString)) {
-          const [pickupDate, dropOffDate] = dateString.map(item => item.split(' ')[0]);
-          const [pickupTime, dropOffTime] = dateString.map(item => item.split(' ')[1]);
 
+      case 'day': {
+        if (Array.isArray(value)) {
+          const [pickupDate, dropOffDate] = value.map(date => date?.toDate());
           setFormData(prevData => ({
             ...prevData,
-            pickupDate,
-            dropOffDate,
-            pickupTime,
-            dropOffTime,
+            pickupDateAndTime: pickupDate!,
+            dropOffDateAndTime: dropOffDate!,
           }));
           calculateAndSetTotalAmount()
         }
         break;
       }
 
-      // case 'hour': {
-      //   if (Array.isArray(value)) {
-      //     const [pickupDate, dropOffDate] = value.map(date => date?.toDate());
-      //     const pickupTime = value[0]?.format('HH:mm');
-      //     const dropOffTime = value[1]?.format('HH:mm');
-
-      //     setFormData(prevData => ({
-      //       ...prevData,
-      //       pickupDate: pickupDate?.toString() || '',
-      //       dropOffDate: dropOffDate?.toString() || '',
-      //       pickupTime: pickupTime?.toString() || '',
-      //       dropOffTime: dropOffTime?.toString() || '',
-      //     }));
-      //     break;
-      //   }
-      // }
+      case 'hour': {
+        if (Array.isArray(value)) {
+          const [pickupDate, dropOffDate] = value.map(date => date?.toDate());
+          setFormData(prevData => ({
+            ...prevData,
+            pickupDateAndTime: pickupDate?.toString() || '',
+            dropOffDateAndTime: dropOffDate?.toString() || '',
+          }));
+          break;
+        }
+      }
     }
   }
   const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
@@ -210,7 +195,7 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
       console.log(formData)
 
       // Create order on your backend
-      const order = await addOrder({ carId: find_car!._id, newOrder: formData }).unwrap();
+      const order = await addOrder({ carId: find_car!._id, newOrder: { ...formData } }).unwrap();
 
       console.log(formData.totalAmount)
       const options = {
@@ -278,6 +263,7 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
         draggable: true
       })
     }
+    setFormData(initialState)
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -295,59 +281,96 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
       }));
     }
 
-    if (name === "pickupDate" || name === "dropOffDate") {
+    if (name === "pickupDateAndTime" || name === "dropOffDateAndTime") {
       calculateAndSetTotalAmount();
     }
   }
 
-  const handleValidation = () => {
 
-    // Simple validation
-    const errors: initialState['errors'] = {};
-    // Name validation
-    const nameRegex = /^[A-Za-z][A-Za-z]+$/;
-    if (!formData.fullName.trim()) {
-      errors.fullName = 'Full Name is required';
-    } else if (!nameRegex.test(formData.fullName)) {
-      errors.fullName = 'Invalid characters in Full Name';
-    }
-
-    // Phone number validation
-    const phoneRegex = /^\d{10}$/;
-    if (!formData.phoneNo.trim()) {
-      errors.phoneNo = 'Phone Number is required';
-    } else if (!phoneRegex.test(formData.phoneNo)) {
-      errors.phoneNo = 'phone number must be 10 digit long only';
-    }
-
-    if (!formData.emailAddress.trim()) {
-      errors.emailAddress = 'Email Address is required';
-    }
-    // if (!formData.pickupAddress.trim()) {
-    // errors.pickupAddress = 'Pickup Address is required';
-    // }
-    // if (!formData.pickupDate) {
-    //   errors.pickupDate = 'Pickup Date is required';
-    // }
-    // if (!formData.dropOffAddress.trim()) {
-    // errors.dropOffAddress = 'Drop Off Address is required';
-    // }
-    // if (!formData.dropOffDate) {
-    //   errors.dropOffDate = 'Drop Off Date is required';
-    // }
-    return errors;
-
-    // // If there are errors, don't proceed with the payment
-    // if (Object.keys(errors).length === 0) {
-    //   handlePayment(formData);
-    // }
-  }
 
   const handleSubmitBookingForm = async (event: any) => {
     event.preventDefault();
-    const errors = handleValidation();
+    const fullName = fullNameRef!.current!.value!
+    const emailAddress = emailAddressRef!.current!.value!
+    const phoneNo = phoneNoRef!.current!.value!
+    const pickupAddress = pickupAddressRef!.current!.value!
+    const dropOffAddress = dropOffAddressRef!.current!.value!
 
-    if (Object.keys(errors).length === 0) {
+    console.log(fullName, emailAddress, phoneNo, pickupAddress, dropOffAddress)
+    console.log(formData)
+
+    const handleValidation = () => {
+      // Name validation
+      const nameRegex = /^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/;
+      if (!fullName!.trim()) {
+        toast.error('Full Name is required', {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+        return false
+      } else if (!nameRegex.test(fullName!)) {
+        toast.error('Invalid characters in Full Name', {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+        return false
+      }
+
+      // Phone number validation
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneNo!.trim()) {
+        toast.error('Phone Number is required', {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+        return false
+      } else if (!phoneRegex.test(phoneNo!)) {
+        toast.error('Phone number must be 10 digit long only', {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+        return false
+      }
+
+      if (!emailAddress!.trim()) {
+        toast.error('Email Address is required', {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        })
+        return false
+      }
+
+      // RangePicker validation
+      if (!formData.pickupDateAndTime || !formData.dropOffDateAndTime) {
+        toast.error('Please select valid pickup and drop-off dates.', {
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        return false;
+      }
+
+      return true;
+    }
+    const success = handleValidation();
+    if (success) {
       // No errors, proceed with payment or other actions
       // handlePayment(formData);
       isLogin ? (handlePayment(formData)) : (
@@ -364,9 +387,6 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
           }
         </>
       )
-    } else {
-      // Update state with errors
-      setFormData((prevData) => ({ ...prevData, errors }));
     }
 
   };
@@ -374,7 +394,7 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
 
   useEffect(() => {
     calculateAndSetTotalAmount();
-  }, [find_car, formData.pickupDate, formData.dropOffDate, formData.pickupTime, formData.dropOffTime, bookingFormValue])
+  }, [bookingFormValue, find_car, formData.dropOffDateAndTime, formData.pickupDateAndTime])
 
   useEffect(() => {
     if (isSuccessOnBookCar) {
@@ -421,12 +441,11 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Full Name"
             name="fullName"
             id="fullName"
-            onChange={(e) => setFullNameInput(e.target.value)}
-            value={fullNameInput}
+            onChange={handleChange}
+            value={formData.fullName}
             ref={fullNameRef}
-          // required
           />
-          {formData.errors.fullName && <p className="error">{formData.errors.fullName}</p>}
+
         </div>
         <div>
           <label htmlFor="emailAddress">Email Address</label>
@@ -435,11 +454,11 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Email"
             name="emailAddress"
             id="emailAddress"
-            onChange={(e) => setEmailAddressInput(e.target.value)}
-            value={emailAddressInput}
+            onChange={handleChange}
+            value={formData.emailAddress}
             ref={emailAddressRef}
           />
-          {formData.errors.emailAddress && <p className="error">{formData.errors.emailAddress}</p>}
+
         </div>
         <div>
           <label htmlFor="phoneNo">Phone Number</label>
@@ -450,12 +469,11 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Contact Number"
             name="phoneNo"
             id="phoneNo"
-            onChange={(e) => setPhoneNoInput(e.target.value)}
-            value={phoneNoInput}
+            onChange={handleChange}
+            value={formData.phoneNo}
             ref={phoneNoRef}
-          // required
           />
-          {formData.errors.phoneNo && <p className="error">{formData.errors.phoneNo}</p>}
+
         </div>
         <div className='range-picker'>
           <label htmlFor="pickupAddress">Select Date & Time</label>
@@ -514,12 +532,12 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Pick-up Address"
             name="pickupAddress"
             id="pickupAddress"
-            onChange={(e) => setPickupAddressInput(e.target.value)}
-            value={pickupAddressInput}
+            onChange={handleChange}
+            value={formData.pickupAddress || addressState.pickupAddress}
             ref={pickupAddressRef}
-          // required
+            required
           />
-          {formData.errors.pickupAddress && <p className="error">{formData.errors.pickupAddress}</p>}
+
         </div>
         <div>
           <label htmlFor="dropOffAddress">Drop Off Address</label>
@@ -528,25 +546,25 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             placeholder="Enter Drop-off Address"
             name="dropOffAddress"
             id="dropOffAddress"
-            onChange={(e) => setDropOffAddressInput(e.target.value)}
-            value={dropOffAddressInput}
+            onChange={handleChange}
+            value={formData.dropOffAddress || addressState.dropoffAddress}
             ref={dropOffAddressRef}
-          // required
+            required
           />
-          {formData.errors.dropOffAddress && <p className="error">{formData.errors.dropOffAddress}</p>}
+
 
         </div>
         <div>
           {
             bookingFormValue === 'day' && (
               <h2>
-                Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDate, formData.dropOffDate)}
+                Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString())}
               </h2>)
           }
           {
             bookingFormValue === 'hour' && (
               <h2>
-                Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerHour, formData.pickupDate, formData.dropOffDate)}
+                Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerHour, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString())}
               </h2>)
           }
           {

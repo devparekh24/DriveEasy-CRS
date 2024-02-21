@@ -103,7 +103,7 @@ const Signup = () => {
                     </div>
 
                     <div className="input-group">
-                        <input type="password" id="password" name="password" placeholder="Password" ref={passwordRef} required />
+                        <input type="password" id="password" name="password" placeholder="Password" ref={passwordRef} minLength={8} required />
                     </div>
                     <div className="input-group">
                         <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" ref={confirmPasswordRef} required />
