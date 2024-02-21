@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Popconfirm, Table, Typography, message } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 import { User, UserState } from '../../../slices/userSlice';
 import { useRemoveUserMutation, useUpdateUserMutation } from '../../../services/userApi';
 import UserImageUploader from '../../../components/ImageUploader/UserImageUploader';

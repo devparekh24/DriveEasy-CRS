@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     contactNumber: {
         type: Number,
-        required: [true, 'User must has a contact number'],
+        // required: [true, 'User must has a contact number'],
         unique: true,
         minlength: [10, 'Contact number must be 10 digits long'],
         maxlength: [10, 'Contact number must be 10 digits long'],

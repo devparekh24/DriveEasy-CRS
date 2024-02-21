@@ -24,6 +24,7 @@ import PageNotFound from "./pages/PageNotFound";
 import PageNotFoundOnAdmin from "./admin/pages/PageNotFoundOnAdmin";
 import ContactQuery from "./admin/components/ContactQueries/ContactQuery";
 import ResetPassword from "./components/Auth/ResetPassword";
+import AdminProfile from "./admin/components/AdminProfile/AdminProfile";
 
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
 
@@ -77,8 +78,9 @@ const AppRouting = () => {
                         <Route path='/orders' element={<OrdersComponent />} />
                         <Route path='/users' element={<UsersComponent />} />
                         <Route path='/damage-reports' element={<DamageReportingComponent />} />
-                        <Route path='/maps' element={<LeafletMap />} />
                         <Route path='/contact-queries' element={<ContactQuery />} />
+                        <Route path='/maps' element={<LeafletMap />} />
+                        <Route path='/me' element={<AdminProfile/>} />
                         <Route path='*' element={<PageNotFoundOnAdmin />} />
                     </>) :
                     (<>

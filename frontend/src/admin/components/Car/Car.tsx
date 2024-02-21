@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { useAddCarMutation, useGetAllCarsQuery } from '../../../services/carApi';
 import { Car as CarState, setCars } from '../../../slices/carSlice';
 import { toast } from 'react-toastify';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 import type { GetProps } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';

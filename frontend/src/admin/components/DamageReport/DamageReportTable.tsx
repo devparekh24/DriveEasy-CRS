@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Popconfirm, Select, Table, Typography, message } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 import { DamageReport, DamageReportState } from '../../../slices/damageReportSlice';
 import { useRemoveDamageReportMutation, useUpdateDamageReportMutation } from '../../../services/damageReportApi';
 const { Search } = Input;

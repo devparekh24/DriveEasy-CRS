@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import DashBoardLayout from '../../pages/DashBoardLayout';
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 import ContactQueryTable from './ContactQueryTable';
 import { useGetAllContactQueriesQuery } from '../../../services/contactQueryApi';
 import { ContactQueryState, setContactQueries } from '../../../slices/contactQuerySlice';

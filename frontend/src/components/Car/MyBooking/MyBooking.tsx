@@ -8,7 +8,7 @@ import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { BookingState, setBookingData } from "../../../slices/bookingSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
-import AdminLoader from "../../../admin/components/adminLoader/adminLoader";
+import AdminLoader from "../../../admin/components/AdminLoader/AdminLoader";
 
 const MyBookingTable = ({ headers, tableData }: { headers: string[]; tableData: BookingState[] }) => {
 
@@ -80,7 +80,7 @@ const MyBookingTable = ({ headers, tableData }: { headers: string[]; tableData: 
             columns={mergedColumns}
             rowClassName="editable-row"
             pagination={{ pageSize: 5 }}
-            scroll={{ x: 1500, y: 460 }}
+            scroll={{ x: 1550, y: 460 }}
           />
         )
       }

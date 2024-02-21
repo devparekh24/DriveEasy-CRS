@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { FileTextOutlined, UserOutlined, CarOutlined, HomeOutlined, ShoppingCartOutlined, EnvironmentOutlined, LogoutOutlined } from '@ant-design/icons';
+import { UsergroupAddOutlined, FileTextOutlined, UserOutlined, CarOutlined, HomeOutlined, ShoppingCartOutlined, EnvironmentOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Layout, Menu, message, theme } from 'antd';
 import { NavLink } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
@@ -107,7 +107,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                         <Menu.Item key="3" icon={<ShoppingCartOutlined />}>
                             <NavLink to="/orders">Orders</NavLink>
                         </Menu.Item>
-                        <Menu.Item key="4" icon={<UserOutlined />}>
+                        <Menu.Item key="4" icon={<UsergroupAddOutlined />}>
                             <NavLink to="/users">Users</NavLink>
                         </Menu.Item>
                         <Menu.Item key="5" icon={<FileTextOutlined />}>
@@ -121,7 +121,10 @@ const DashBoardLayout = (props: DashboardProps) => {
                         </Menu.Item>
                     </Menu>
                     <Menu theme="dark" mode="inline" style={{ marginTop: '150px' }}>
-                        <Menu.Item key="8" icon={<LogoutOutlined rotate={180} />}>
+                        <Menu.Item key="8" icon={<UserOutlined />}>
+                            <NavLink to="/me">My Profile</NavLink>
+                        </Menu.Item>
+                        <Menu.Item key="9" icon={<LogoutOutlined rotate={180} />}>
                             <NavLink to='/login' onClick={handleLogout}>Logout</NavLink>
                         </Menu.Item>
                     </Menu>

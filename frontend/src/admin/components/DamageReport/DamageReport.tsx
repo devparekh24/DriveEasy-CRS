@@ -4,7 +4,7 @@ import DashBoardLayout from '../../pages/DashBoardLayout';
 import { useAddDamageReportMutation, useGetAllDamageReportsQuery } from '../../../services/damageReportApi';
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { DamageReportState, setDamageReports } from '../../../slices/damageReportSlice';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 import DamageReportTable from './DamageReportTable';
 import { useGetAllCarsQuery } from '../../../services/carApi';
 import { useGetAllUsersQuery } from '../../../services/userApi';

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, message } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 import { Order, OrderState } from '../../../slices/orderSlice';
 import { useRemoveOrderMutation, useUpdateOrderMutation } from '../../../services/orderApi';
 const { Search } = Input;

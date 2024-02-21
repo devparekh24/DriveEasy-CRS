@@ -1,24 +1,22 @@
 import { useEffect, useRef } from 'react'
-import { useAppDispatch } from '../../hooks/hooks'
-import { useSignupMutation } from '../../services/authApi'
+import { useResetPasswordMutation } from '../../services/authApi'
 import './auth.css'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 const ResetPassword = () => {
 
+    const navigate = useNavigate()
+    const params = useParams<{ token: string }>();
     const passwordRef = useRef<HTMLInputElement | null>(null)
     const confirmPasswordRef = useRef<HTMLInputElement | null>(null)
-    const navigate = useNavigate()
-    // const dispatch = useAppDispatch()
-    // const [signup, { data: signupData, isSuccess, isError, error }] = useSignupMutation()
+    const [resetPassword, { data, isSuccess, isError, error }] = useResetPasswordMutation()
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const password = passwordRef.current?.value || ''
         const confirmPassword = confirmPasswordRef.current?.value || ''
-
         try {
             if (password !== confirmPassword) {
                 toast.error('Password & Confirm Password must be same', {
@@ -30,12 +28,9 @@ const ResetPassword = () => {
                 })
             }
             if (password === confirmPassword) {
-                // await signup({ name: userName, email, password, confirmPassword }).unwrap();
+                await resetPassword({ token: params.token, password, confirmPassword }).unwrap();
             }
-            // else if (isError) {
-            //     console.log(error)
-            //     throw error
-            // }
+            if (isError) throw error
         }
         catch (error: any) {
             console.log(error)
@@ -49,20 +44,19 @@ const ResetPassword = () => {
         }
     }
 
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         toast.success('Password Reset Successful!', {
-    //             autoClose: 1500,
-    //             hideProgressBar: false,
-    //             closeOnClick: true,
-    //             pauseOnHover: true,
-    //             draggable: true,
-    //         })
-    //         console.log(signupData)
-    //         navigate('/login')
-    //     }
-
-    // }, [isSuccess])
+    useEffect(() => {
+        if (isSuccess) {
+            console.log(data)
+            toast.success('Password Reset Successful!', {
+                autoClose: 1500,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            })
+            navigate('/login')
+        }
+    }, [isSuccess])
 
 
     useEffect(() => {
@@ -75,7 +69,7 @@ const ResetPassword = () => {
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h1>Reset Your Password</h1>
                     <div className="input-group">
-                        <input type="password" id="password" name="password" placeholder="Password" ref={passwordRef} required />
+                        <input type="password" id="password" name="password" placeholder="Password" ref={passwordRef} minLength={8} required />
                     </div>
                     <div className="input-group">
                         <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" ref={confirmPasswordRef} required />

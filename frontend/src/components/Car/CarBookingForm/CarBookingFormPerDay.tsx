@@ -2,14 +2,12 @@ import './CarBookingForm.css';
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
-// import { setBookingData, BookingState } from "../../../slices/bookingSlice";
 import { DatePicker } from 'antd';
 import type { DatePickerProps, GetProps } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useBookCarMutation } from '../../../services/bookingApi';
 import useRazorpay from "react-razorpay";
-// import { addOrder } from '../../../slices/orderSlice';
 import razorpayImg from '../../../assets/DriveEasy.png';
 import { useAddOrderMutation } from '../../../services/orderApi';
 import { toast } from 'react-toastify';
@@ -48,20 +46,14 @@ const disabledDate: RangePickerProps['disabledDate'] = (current) => {
 };
 
 
-const CarBookingFormByDay = ({ bookingFormValue }: any) => {
+const CarBookingFormPerDay = () => {
 
   const navigate = useNavigate()
   const params = useParams<{ id: string }>();
   const cars = useAppSelector(state => state.car.cars)
   const addressState = useAppSelector(state => state.address)
   const loginUser = useAppSelector(state => state.user.users)
-
-  // const [fullNameInput, setFullNameInput] = useState(loginUser?.data?.name)
-  // const [emailAddressInput, setEmailAddressInput] = useState(loginUser?.data?.email)
-  // const [phoneNoInput, setPhoneNoInput] = useState(loginUser?.data?.contactNumber)
-  // const [pickupAddressInput, setPickupAddressInput] = useState(addressState.pickupAddress)
-  // const [dropOffAddressInput, setDropOffAddressInput] = useState(addressState.dropoffAddress)
-
+  const [totalNumberOfDays, setTotalNumberOfDays] = useState(0)
   const fullNameRef = useRef<HTMLInputElement | null>(null)
   const emailAddressRef = useRef<HTMLInputElement | null>(null)
   const phoneNoRef = useRef<HTMLInputElement | null>(null)
@@ -80,124 +72,63 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   // const [formData, setFormData] = useState<initialState>(initialState)
 
   const [formData, setFormData] = useState<initialState>({
-    fullName: loginUser?.data?.name || '',
-    emailAddress: loginUser?.data?.email || '',
-    phoneNo: loginUser?.data?.contactNumber || '',
-    pickupAddress: addressState.pickupAddress || '',
-    dropOffAddress: addressState.dropoffAddress || '',
+    fullName: loginUser?.data?.name,
+    emailAddress: loginUser?.data?.email,
+    phoneNo: loginUser?.data?.contactNumber,
+    pickupAddress: addressState?.pickupAddress,
+    dropOffAddress: addressState?.dropoffAddress,
     dropOffDateAndTime: '',
     pickupDateAndTime: '',
     totalAmount: 0,
     totalKm: 0,
   });
 
-  const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number => {
-    // const pricePerDay = basePrice;
-    // Parse input dates
-    // const pickupDateTime = Date.parse(pickupDate);
-    // const dropOffDateTime = Date.parse(dropOffDate);
+  const calculateTotalAmount = (basePrice: number, pickupDate: string, dropOffDate: string): number | undefined => {
 
     const pickupDateTime = dayjs(pickupDate).toDate().getTime();
     const dropOffDateTime = dayjs(dropOffDate).toDate().getTime();
 
-
     // Check if the date parsing was successful
     if (isNaN(pickupDateTime) || isNaN(dropOffDateTime)) {
       // console.error("Invalid date format");
-      return 0; // Or handle the error in a way suitable for your application
+      return 0;
     }
-    // const totalDays = Math.ceil(((dropOffDateTime - pickupDateTime) + 1) / (24 * 60 * 60 * 1000));
-    // const totalHours = Math.ceil(((dropOffDateTime - pickupDateTime)) / (60 * 60 * 1000));
-    // console.log(totalHours)
-    // if (totalDays <= 0
-    // || totalHours <= 0
-    // ) {
-    // console.error("Invalid date range");
-    // return 0; // Or handle the error in a way suitable for your application
-    // }
-    // if (bookingFormValue === 'day') return basePrice * totalDays;
-    // if (bookingFormValue === 'hour') return basePrice * totalHours;
 
-    switch (bookingFormValue) {
-      case 'day': {
-        const totalDays = Math.ceil(((dropOffDateTime - pickupDateTime) + 1) / (24 * 60 * 60 * 1000));
-        if (totalDays <= 0) return 0;
-        return basePrice * totalDays;
-      }
+    const totalDays = Math.ceil(((dropOffDateTime - pickupDateTime) + 1) / (24 * 60 * 60 * 1000));
+    if (totalDays <= 0) return 0;
+    return basePrice * totalDays;
 
-      case 'hour': {
-        const totalHours = Math.ceil(((dropOffDateTime - pickupDateTime)) / (60 * 60 * 1000));
-        if (totalHours <= 0) return 0;
-        return basePrice * totalHours;
-      }
-
-      default:
-        break;
-    }
   };
 
   const calculateAndSetTotalAmount = () => {
-
-    if (bookingFormValue === 'day') {
-      const totalAmount = calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString());
-      setFormData(prevData => ({ ...prevData, totalAmount }));
-    }
-    if (bookingFormValue === 'hour') {
-      const totalAmount = calculateTotalAmount(find_car!.rentPricePerHour, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString());
-      setFormData(prevData => ({ ...prevData, totalAmount }));
-    }
+    const totalAmount = calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString())!;
+    setFormData(prevData => ({ ...prevData, totalAmount }));
   };
 
   const onChange = (
     value: DatePickerProps['value'] | RangePickerProps['value'],
     dateString: [string, string] | string,
   ) => {
-    console.log('Selected Time: ', value?.toString());
-    console.log('Formatted Selected Time: ', dateString);
 
-    switch (bookingFormValue) {
-
-      case 'day': {
-        if (Array.isArray(value)) {
-          const [pickupDate, dropOffDate] = value.map(date => date?.toDate());
-          setFormData(prevData => ({
-            ...prevData,
-            pickupDateAndTime: pickupDate!,
-            dropOffDateAndTime: dropOffDate!,
-          }));
-          calculateAndSetTotalAmount()
-        }
-        break;
-      }
-
-      case 'hour': {
-        if (Array.isArray(value)) {
-          const [pickupDate, dropOffDate] = value.map(date => date?.toDate());
-          setFormData(prevData => ({
-            ...prevData,
-            pickupDateAndTime: pickupDate?.toString() || '',
-            dropOffDateAndTime: dropOffDate?.toString() || '',
-          }));
-          break;
-        }
-      }
+    if (Array.isArray(value)) {
+      const [pickupDate, dropOffDate] = value.map(date => date?.toDate());
+      const totalDays = dayjs(dropOffDate).diff(pickupDate, 'day');
+      setTotalNumberOfDays(totalDays)
+      setFormData(prevData => ({
+        ...prevData,
+        pickupDateAndTime: pickupDate!,
+        dropOffDateAndTime: dropOffDate!,
+      }));
+      calculateAndSetTotalAmount()
     }
   }
-  const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
-    console.log('onOk: ', value!);
-  };
 
   const handlePayment = async (formData: any) => {
-    console.log(find_car!._id, formData)
     try {
-      // const response = await bookCar({ carId: find_car!._id, bookingData: formData });
-      // console.log('Booking successful:', response);
-      console.log(formData)
 
       // Create order on your backend
       const order = await addOrder({ carId: find_car!._id, newOrder: { ...formData } }).unwrap();
 
-      console.log(formData.totalAmount)
       const options = {
         key: 'rzp_test_rj5Bthp9EwXcYE', // Replace with your Razorpay key
         amount: (formData?.totalAmount * 100).toString(), // Amount is in currency subunits. Default currency is INR.
@@ -207,11 +138,8 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
         order_id: order._id, // Pass the order ID obtained from the backend response
         image: razorpayImg,
         handler: function (response: any) {
-          console.log('Payment Succeeded frontend:', response);
           // Handle the successful payment response
-          console.log(
-            response.razorpay_payment_id
-          )
+          console.log('Payment Succeeded frontend:', response);
           toast.success('Car Booked Successfully!', {
             autoClose: 1500,
             hideProgressBar: false,
@@ -220,13 +148,12 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             draggable: true,
           })
           setFormData(initialState)
-
         },
-        // prefill: {
-        //   name: formData.fullName,
-        //   email: formData.emailAddress,
-        //   contact: formData.phoneNo,
-        // },
+        prefill: {
+          name: formData.fullName,
+          email: formData.emailAddress,
+          contact: formData.phoneNo,
+        },
         theme: {
           color: '#000',
         },
@@ -234,13 +161,6 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
       const rzp = new Razorpay(options);
 
       rzp.on("payment.failed", function () {
-        // alert(response.error.code);
-        // alert(response.error.description);
-        // alert(response.error.source);
-        // alert(response.error.step);
-        // alert(response.error.reason);
-        // alert(response.error.metadata.order_id);
-        // alert(response.error.metadata.payment_id);
         toast.error('Your Payment is Failed! Try Again...', {
           autoClose: 2000,
           hideProgressBar: false,
@@ -269,17 +189,10 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    if (name === "totalKm") {
-      setFormData((prevData) => ({
-        ...prevData,
-        totalKm: Number(value), // Convert the input value to a number
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
 
     if (name === "pickupDateAndTime" || name === "dropOffDateAndTime") {
       calculateAndSetTotalAmount();
@@ -296,12 +209,9 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
     const pickupAddress = pickupAddressRef!.current!.value!
     const dropOffAddress = dropOffAddressRef!.current!.value!
 
-    console.log(fullName, emailAddress, phoneNo, pickupAddress, dropOffAddress)
-    console.log(formData)
-
     const handleValidation = () => {
       // Name validation
-      const nameRegex = /^[a-zA-Z]{4,}(?: [a-zA-Z]+){0,2}$/;
+      const nameRegex = /^[a-zA-Z]{1,}(?: [a-zA-Z]+){0,2}$/;
       if (!fullName!.trim()) {
         toast.error('Full Name is required', {
           autoClose: 2000,
@@ -369,10 +279,10 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
 
       return true;
     }
+
     const success = handleValidation();
     if (success) {
       // No errors, proceed with payment or other actions
-      // handlePayment(formData);
       isLogin ? (handlePayment(formData)) : (
         <>
           {
@@ -394,7 +304,7 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
 
   useEffect(() => {
     calculateAndSetTotalAmount();
-  }, [bookingFormValue, find_car, formData.dropOffDateAndTime, formData.pickupDateAndTime])
+  }, [find_car, formData.dropOffDateAndTime, formData.pickupDateAndTime])
 
   useEffect(() => {
     if (isSuccessOnBookCar) {
@@ -406,6 +316,8 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   useEffect(() => {
     if (isSuccessOnAddOrder) {
       console.log(addOrderData)
+      setTotalNumberOfDays(0)
+      setFormData(initialState)
     }
   }, [isSuccessOnAddOrder])
 
@@ -413,27 +325,9 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   return (
     <div>
       <form onSubmit={handleSubmitBookingForm}>
-        {
-          bookingFormValue === 'day' && (
-            <h2>
-              ₹{find_car?.rentPricePerDay} <span>Per Day</span>
-            </h2>
-          )
-        }
-        {
-          bookingFormValue === 'hour' && (
-            <h2>
-              ₹{find_car?.rentPricePerHour} <span>Per Hour</span>
-            </h2>
-          )
-        }
-        {
-          bookingFormValue === 'km' && (
-            <h2>
-              ₹{find_car?.rentPricePerKm} <span>Per Km</span>
-            </h2>
-          )
-        }
+        <h2>
+          ₹{find_car?.rentPricePerDay} <span>Per Day</span>
+        </h2>
         <div>
           <label htmlFor="fullName">Full Name</label>
           <input
@@ -445,7 +339,6 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             value={formData.fullName}
             ref={fullNameRef}
           />
-
         </div>
         <div>
           <label htmlFor="emailAddress">Email Address</label>
@@ -458,7 +351,6 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             value={formData.emailAddress}
             ref={emailAddressRef}
           />
-
         </div>
         <div>
           <label htmlFor="phoneNo">Phone Number</label>
@@ -473,57 +365,15 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             value={formData.phoneNo}
             ref={phoneNoRef}
           />
-
         </div>
         <div className='range-picker'>
           <label htmlFor="pickupAddress">Select Date & Time</label>
-          {
-            bookingFormValue === 'day' && (
-              <>
-                {/* <label htmlFor="pickupAddress">Select Date (8hrs)</label> */}
-                <RangePicker
-                  disabledDate={disabledDate}
-                  showTime={{
-                    hideDisabledOptions: true,
-                    // defaultValue: [dayjs('08:00', 'HH:mm'), dayjs('20:00', 'HH:mm')],
-                  }}
-                  format="YYYY-MM-DD"
-                  onChange={onChange}
-                  onOk={onOk}
-                />
-                {/* {(formData.errors.dropOffDate || formData.errors.pickupDate) && <p className="error">{formData.errors.pickupDate || formData.errors.dropOffDate}</p>} */}
-              </>
-            )
-          }
-          {
-            bookingFormValue === 'hour' && (
-              <>
-                <RangePicker
-                  disabledDate={disabledDate}
-                  showTime={{
-                    hideDisabledOptions: true,
-                    defaultValue: [dayjs('08:00', 'HH:mm'), dayjs('20:00', 'HH:mm')],
-                  }}
-                  format="YYYY-MM-DD HH:mm"
-                  onChange={onChange}
-                  onOk={onOk}
-                />
-                {/* {(formData.errors.dropOffDate || formData.errors.pickupDate) && <p className="error">{formData.errors.pickupDate || formData.errors.dropOffDate}</p>} */}
-              </>
-            )
-          }
-          {
-            bookingFormValue === 'km' && (
-              <>
-                <DatePicker
-                  format="YYYY-MM-DD HH:mm"
-                  disabledDate={disabledDate}
-                  showTime={{ defaultValue: dayjs('08:00', 'HH:mm') }}
-                />
-                {/* {(formData.errors.dropOffDate || formData.errors.pickupDate) && <p className="error">{formData.errors.pickupDate || formData.errors.dropOffDate}</p>} */}
-              </>
-            )
-          }
+          <RangePicker
+            disabledDate={disabledDate}
+            format="YYYY-MM-DD"
+            onChange={onChange}
+          />
+          {<h4>Total Hours: {totalNumberOfDays}</h4>}
         </div>
         <div>
           <label htmlFor="pickupAddress">Pickup Address</label>
@@ -537,7 +387,6 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             ref={pickupAddressRef}
             required
           />
-
         </div>
         <div>
           <label htmlFor="dropOffAddress">Drop Off Address</label>
@@ -551,41 +400,11 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
             ref={dropOffAddressRef}
             required
           />
-
-
         </div>
         <div>
-          {
-            bookingFormValue === 'day' && (
-              <h2>
-                Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString())}
-              </h2>)
-          }
-          {
-            bookingFormValue === 'hour' && (
-              <h2>
-                Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerHour, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString())}
-              </h2>)
-          }
-          {
-            bookingFormValue === 'km' && (
-              <>
-                <label htmlFor="totalKm">Total Kilometre </label>
-                <input
-                  type="number"
-                  placeholder="Enter Total Km"
-                  name="totalKm"
-                  id="totalKm"
-                  onChange={(e) => (setFormData({ ...formData, totalKm: +e.target.value }), setFormData({ ...formData, totalAmount: Number(find_car!.rentPricePerKm * addressState.totalKm) }))}
-                  value={addressState.totalKm}
-                  required
-                />
-                <h2 style={{ marginTop: 20 }}>
-                  Total Amount: ₹{Number(find_car!.rentPricePerKm * addressState.totalKm)}
-                </h2>
-              </>
-            )
-          }
+          <h2>
+            Total Amount: ₹{calculateTotalAmount(find_car!.rentPricePerDay, formData.pickupDateAndTime.toString(), formData.dropOffDateAndTime.toString())}
+          </h2>
         </div>
         <div>
           <button className="booking-btn" type="submit">
@@ -597,4 +416,4 @@ const CarBookingFormByDay = ({ bookingFormValue }: any) => {
   )
 }
 
-export default CarBookingFormByDay
+export default CarBookingFormPerDay

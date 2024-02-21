@@ -32,7 +32,7 @@ exports.signup = catchAsyncErr(async (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
-        contactNumber:req.body.contactNumber,
+        contactNumber: req.body.contactNumber,
         role: req.body.role,
     })
     createSendToken(newUser, 201, res);
@@ -145,7 +145,7 @@ exports.forgotPassword = catchAsyncErr(async (req, res, next) => {
     await user.save({ validateBeforeSave: false })
 
     //send to the user email
-    const resetURL = `${req.protocol}://${req.get('host')}/users/resetpassword/${resetToken}`;
+    const resetURL = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
 
     const message = `<body style="font-family: Arial, sans-serif;">
 
@@ -154,11 +154,12 @@ exports.forgotPassword = catchAsyncErr(async (req, res, next) => {
         <h2>Forgot Password?</h2>
 
         <p>
-            It seems that you've requested to reset your password. To proceed, please copy below Reset Token:
+            It seems that you've requested to reset your password. To proceed, please click the link below:
         </p>
 
-        <input type="text" value=${resetToken} id="myInput">
-        <button id="copyButton">Copy Token</button>
+        <p>
+            <a href="${resetURL}" style="display: inline-block; padding: 10px 20px; background-color: #3498db; color: #fff; text-decoration: none; border-radius: 5px;">Reset Password</a>
+        </p>
 
         <p>
             If you did not request a password reset, you can ignore this email.
@@ -233,7 +234,7 @@ exports.updateMe = catchAsyncErr(async (req, res, next) => {
     if (req.body.contactNumber) {
         user.contactNumber = req.body.contactNumber;
     }
-    
+
     if (req.body.password && req.body.confirmPassword) {
 
         //2. check if posted currentpassword is correct 

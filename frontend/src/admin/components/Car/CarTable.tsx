@@ -4,7 +4,7 @@ import type { DatePickerProps, TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { Car } from '../../../slices/carSlice';
 import { useRemoveCarMutation, useUpdateCarMutation } from '../../../services/carApi';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 import ImageUploader from '../../../components/ImageUploader/ImageUploader';
 const { Search } = Input;
 import type { GetProps } from 'antd';

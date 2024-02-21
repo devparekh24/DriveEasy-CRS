@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { OrderState, setOrders } from '../../../slices/orderSlice';
 import { toast } from 'react-toastify';
 import OrderTable from './OrderTable';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 
 const OrdersComponent = () => {
 

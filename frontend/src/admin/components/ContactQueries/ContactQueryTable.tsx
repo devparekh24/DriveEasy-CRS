@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Popconfirm, Select, Table, Typography, message } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 import { ContactQuery, ContactQueryState } from '../../../slices/contactQuerySlice';
 import { useRemoveContactQueryMutation, useUpdateContactQueryMutation } from '../../../services/contactQueryApi';
 const { Search } = Input;

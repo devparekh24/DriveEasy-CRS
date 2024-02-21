@@ -6,7 +6,7 @@ import DashBoardLayout from '../../pages/DashBoardLayout';
 import UserTable from './UserTable';
 import { useEffect, useState } from 'react';
 import { message } from 'antd';
-import AdminLoader from '../adminLoader/adminLoader';
+import AdminLoader from '../AdminLoader/AdminLoader';
 
 const UsersComponent = () => {
     const { data, isError, isLoading, error, isSuccess } = useGetAllUsersQuery();

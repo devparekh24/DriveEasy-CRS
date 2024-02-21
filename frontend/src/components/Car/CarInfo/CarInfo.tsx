@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { IoPersonOutline } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import LeafletMap from "../../Map/LeafletMap";
-import CarBookingFormByDay from "../CarBookingForm/CarBookingFormByDay";
+import CarBookingFormPerDay from "../CarBookingForm/CarBookingFormPerDay";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { SiSpeedtest } from "react-icons/si";
 import { TbManualGearbox } from "react-icons/tb";
@@ -15,6 +15,8 @@ import Loader from "../../Loader/Loader";
 import { AiOutlineCheck } from "react-icons/ai";
 import type { RadioChangeEvent } from 'antd';
 import { ConfigProvider, Radio } from 'antd';
+import CarBookingFormPerHour from "../CarBookingForm/CarBookingFormPerHour";
+import CarBookingFormPerKm from "../CarBookingForm/CarBookingFormPerKm";
 
 const CarInfo: React.FC = () => {
   const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
@@ -153,7 +155,9 @@ const CarInfo: React.FC = () => {
                   <Radio value='km'><h3>Booking Per Km</h3></Radio>
                 </Radio.Group>
               </ConfigProvider>
-              <CarBookingFormByDay bookingFormValue={bookingFormValue} />
+              {bookingFormValue === 'day' && <CarBookingFormPerDay />}
+              {bookingFormValue === 'hour' && <CarBookingFormPerHour />}
+              {bookingFormValue === 'km' && <CarBookingFormPerKm />}
             </div>
           </div>
         </div >
