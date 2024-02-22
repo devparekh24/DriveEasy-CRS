@@ -10,18 +10,11 @@ import Loader from "../../Loader/Loader";
 const CarsShowcase = ({ filters }: { filters: any }) => {
 
   const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
-  // const { data: getAvailableCarData, isError: isErrorOnGetAvailableCar, isLoading: isLoadingOnGetAvailableCar, error: errorOnGetAvailableCar, isSuccess: isSuccessOnGetAvailableCar } = useGetAvailableCarsQuery({
-  //   pickupDate,
-  //   dropOffDate,
-  // });
   const dispatch = useAppDispatch();
   const cars = useAppSelector(state => state.car.cars)
-  console.log(cars)
-  console.log(data)
 
   const carData = async () => {
     try {
-      // if (isLoading) console.log('loading...')
       await data
       if (isError) {
         throw error
@@ -123,26 +116,6 @@ const CarsShowcase = ({ filters }: { filters: any }) => {
       default:
         break;
     }
-
-    // // Filter out cars with booked dates overlapping with the selected range
-    // result = result.filter((car: Car) => {
-    //   if (car.bookedDates) {
-    //     return car.bookedDates.every((booking: any) => {
-    //       const bookingStart = new Date(booking.startDate);
-    //       const bookingEnd = new Date(booking.endDate);
-
-    //       const selectedStartDate = new Date(pickupDate);
-    //       const selectedEndDate = new Date(dropOffDate);
-
-    //       // Check for date range overlap
-    //       return (
-    //         selectedEndDate < bookingStart || selectedStartDate > bookingEnd
-    //       );
-    //     });
-    //   }
-    //   // If the car has no booked dates, consider it available
-    //   return true;
-    // });
 
     return result;
   }, [cars, filters]);

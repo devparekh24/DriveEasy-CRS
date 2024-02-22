@@ -16,23 +16,6 @@ import { contactQueryApi } from "../services/contactQueryApi";
 import damageReportReducer from "../slices/damageReportSlice";
 import { damageReportApi } from "../services/damageReportApi";
 
-// import { persistStore, persistReducer } from "redux-persist";
-// import storage from "redux-persist/lib/storage";
-
-// const persistConfig = {
-//     key: 'root',
-//     version: 1,
-//     storage,
-//     whitelist: ['auth'],
-// }
-
-// const persistedAuthReducer = persistReducer(persistConfig, authReducer);
-// const persistedCarReducer = persistReducer(persistConfig, carReducer);
-// const persistedAddressReducer = persistReducer(persistConfig, addressReducer);
-// const persistedOrderReducer = persistReducer(persistConfig, orderReducer);
-// const persistedBookingReducer = persistReducer(persistConfig, bookingReducer);
-// const persistedUserReducer = persistReducer(persistConfig, userReducer);
-
 export const store = configureStore({
     reducer: {
         auth: authReducer,
@@ -62,25 +45,6 @@ export const store = configureStore({
             damageReportApi.middleware
         )
 })
-
-// const appReducer = combineReducers({
-//     state: (state = {}) => state,
-//     auth: authReducer,
-// })
-
-// const persistReducers = persistReducer(persistConfig, appReducer)
-// const persistedAuthApi = persistReducer(persistConfig, authApi.reducer);
-
-// export const store = configureStore({
-//     reducer: {
-//         [authApi.reducerPath]: persistedAuthApi,
-//     },
-//     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-//         serializableCheck: false,
-//     }).concat(authApi.middleware),
-// })
-
-// export const persistor = persistStore(store);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

@@ -21,7 +21,6 @@ const ForgotPassword = () => {
             if (isError) throw error;
         }
         catch (error: any) {
-            console.log(error)
             toast.error(error.data.message, {
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -34,7 +33,6 @@ const ForgotPassword = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(data)
             toast.success('Token sent to the email!', {
                 autoClose: 1500,
                 hideProgressBar: false,

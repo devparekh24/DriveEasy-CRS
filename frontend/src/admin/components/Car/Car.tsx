@@ -1,4 +1,3 @@
-// CarComponent.tsx
 import './car.css'
 import { FC, useEffect, useState } from 'react';
 import { Form, Input, Button, Upload, message, InputNumber, Select, ColorPicker, Modal, Space, DatePicker } from 'antd';
@@ -46,8 +45,6 @@ const AddCarModal: FC = () => {
 
     const onFinish = async (values: any) => {
         // Perform CRUD operation (e.g., send data to server)
-        // values.carImage = fileList[0].thumbUrl
-        console.log('Form values:', values);
         try {
             if (values) {
                 await addCar(values).unwrap();
@@ -57,14 +54,11 @@ const AddCarModal: FC = () => {
             message.error(error?.data?.message);
         }
 
-        console.log('Uploaded files:', fileList);
-
         form.resetFields();
         setFileList([]);
     };
 
     const onFileChange = ({ fileList }: any) => {
-        console.log(fileList)
         setFileList(fileList);
     };
 
@@ -72,14 +66,9 @@ const AddCarModal: FC = () => {
     const filterOption = (input: string, option?: { label: string; value: string }) =>
         (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
 
-    // const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
-    //     console.log(date, dateString);
-    // };
-
     useEffect(() => {
         setTimeout(() => {
             if (isSuccessOnAddCar) {
-                console.log(addCarData)
                 message.success('Car details submitted successfully!');
             }
         }, 2000)
@@ -236,7 +225,6 @@ const Car: FC = () => {
     const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
     const dispatch = useAppDispatch();
     const carsList = useAppSelector(state => state.car.cars)
-    // console.log(carsList)
     const [headers, setHeaders] = useState<string[]>([])
     const [tableData, setTableData] = useState<CarState[]>([]);
 
@@ -278,7 +266,6 @@ const Car: FC = () => {
         carData()
         if (isSuccess) {
             setTableData(Object.values(data?.data)[0]!)
-            // console.log()
             dispatch(setCars(data?.data))
         }
 

@@ -31,10 +31,6 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    // pickupTime: {
-    //     type: String,
-    //     // required: true
-    // },
     dropOffAddress: {
         type: String,
         required: true
@@ -43,10 +39,7 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         // required: true
     },
-    // dropOffTime: {
-    //     type: String,
-    //     // required: true
-    // },
+
     totalKm: {
         type: Number,
         required: true

@@ -93,17 +93,6 @@ export const MyProfileComponent = () => {
       const confirmPasswordInput = confirmPasswordRef.current?.value || ''
       const contactNumberInput = contactNumberRef.current?.value || ''
 
-      console.log(nameInput, emailInput, currentPasswordInput, newPasswordInput, confirmPasswordInput, contactNumberInput)
-
-      // if (newPasswordInput === currentPasswordInput) {
-      //   toast.error('New Password must be different form Current Password!', {
-      //     autoClose: 2000,
-      //     hideProgressBar: false,
-      //     closeOnClick: true,
-      //     pauseOnHover: true,
-      //     draggable: true,
-      //   })
-      // } else 
       if (newPasswordInput !== confirmPasswordInput) {
         toast.error('New Password & Confirm Password must be same!', {
           autoClose: 2000,
@@ -139,7 +128,6 @@ export const MyProfileComponent = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(data)
       const newToken = data?.token;
       if (newToken && newToken !== JSON.parse(localStorage.getItem("user")!).token) {
         // Token has changed, trigger logout
@@ -184,10 +172,9 @@ export const MyProfileComponent = () => {
   }, [dispatch, isSuccessOnGetUser, userData])
 
   const loginUser = useAppSelector(state => state.user.users)
-  console.log(loginUser)
 
   useEffect(() => {
-    // Update local state with the initial name and email from the user profile
+    // Update local state with the initial name email contactNumber from the user profile
     setName(loginUser.data?.name);
     setEmail(loginUser.data?.email);
     setContactNumber(loginUser.data?.contactNumber);
@@ -244,7 +231,6 @@ export const MyProfileComponent = () => {
             >
               <Button style={{ background: 'black', color: 'white' }}>Update</Button>
             </Popconfirm>
-            {/* <button type="submit">Update</button> */}
           </div>
         </form>
       </div>

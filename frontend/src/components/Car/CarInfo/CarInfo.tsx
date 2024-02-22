@@ -25,7 +25,6 @@ const CarInfo: React.FC = () => {
 
   const carData = async () => {
     try {
-      if (isLoading) console.log('loading...')
       if (isError) {
         throw error
       }
@@ -58,7 +57,6 @@ const CarInfo: React.FC = () => {
   const [bookingFormValue, setBookingFormValue] = useState<string>('day');
 
   const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value);
     setBookingFormValue(e.target.value);
   };
 
@@ -74,12 +72,9 @@ const CarInfo: React.FC = () => {
                 <img src={find_car?.image} alt={find_car?.image} />
               </div>
               <h1>{find_car?.carName} - {find_car?.companyName}</h1>
-              {/* <p>reviews</p> */}
               <div className="car-interior-info">
                 <div>
-                  {/* <IoPersonOutline className="car-info-icon" /> */}
                   <span>{find_car?.carNumberPlate}</span>
-                  {/* <p>Passengers</p> */}
                 </div>
                 <div>
                   <IoPersonOutline className="car-info-icon" />

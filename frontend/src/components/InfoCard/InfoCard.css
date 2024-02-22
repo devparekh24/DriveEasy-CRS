@@ -1,23 +1,9 @@
-/* @import "~ionicons/scss/ionicons"; */
-
-/* .cars-list {
-    width: 100%;
-    min-height: 100vh;
-    padding: 5rem 4rem;
-    text-align: center;
-    font-size: 1.2rem;
-}
-
-.cars-list h5 {
-    color: rgb(148, 147, 147);
-} */
 
 .app-wrapper {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-around;
-    /* height: 100vh; */
     padding: 2rem;
     overflow: auto;
 }
@@ -62,7 +48,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    /* border: 1px #1abc9c solid; */
     width: 150px;
     padding: 5px;
     font-size: 42px;
@@ -73,6 +58,5 @@
     transition: 0.5s;
     transform: scaleX(1.5, 0.8);
     top: -8px;
-    /* left: 3px; */
     box-shadow: 0px 10px 15px rgb(187, 187, 187);
 }

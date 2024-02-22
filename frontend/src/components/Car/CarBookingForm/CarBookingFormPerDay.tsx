@@ -6,7 +6,6 @@ import { DatePicker } from 'antd';
 import type { DatePickerProps, GetProps } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import { useBookCarMutation } from '../../../services/bookingApi';
 import useRazorpay from "react-razorpay";
 import razorpayImg from '../../../assets/DriveEasy.png';
 import { useAddOrderMutation } from '../../../services/orderApi';
@@ -79,10 +78,8 @@ const CarBookingFormPerDay = () => {
   const [Razorpay] = useRazorpay();
   const dispatch = useAppDispatch()
   const isLogin = useAppSelector(state => state.auth.isLoggedIn)
-  const [bookCar, { data: bookCarData, error: errorOnBookCar, isSuccess: isSuccessOnBookCar, isError: isErrorOnBookCar }] = useBookCarMutation();
   const [addOrder, { data: addOrderData, error: errorOnAddOrder, isError: isErrorOnAddOrder, isSuccess: isSuccessOnAddOrder }] = useAddOrderMutation()
   const [updateBookedCarDates, { data: updatedCarData, error: errorOnUpdateCar, isError: isErrorOnUpdateCar, isSuccess: isSuccessOnUpdateCar }] = useUpdateCarMutation()
-  // const [formData, setFormData] = useState<initialState>(initialState)
 
   const [formData, setFormData] = useState<initialState>({
     fullName: loginUser?.data?.name,
@@ -171,12 +168,12 @@ const CarBookingFormPerDay = () => {
       const order = await addOrder({ carId: find_car!._id, newOrder: { ...formData } }).unwrap();
 
       const options = {
-        key: 'rzp_test_rj5Bthp9EwXcYE', // Replace with your Razorpay key
-        amount: (formData?.totalAmount * 100).toString(), // Amount is in currency subunits. Default currency is INR.
+        key: 'rzp_test_rj5Bthp9EwXcYE', //Razorpay key
+        amount: (formData?.totalAmount * 100).toString(), 
         currency: 'INR',
         name: 'Drive Easy',
         description: 'Car Rental Booking',
-        order_id: order._id, // Pass the order ID obtained from the backend response
+        order_id: order._id, 
         image: razorpayImg,
         handler: function (response: any) {
           // Handle the successful payment response
@@ -214,7 +211,7 @@ const CarBookingFormPerDay = () => {
 
       rzp.open();
 
-      if (isErrorOnAddOrder || isErrorOnBookCar) throw errorOnAddOrder || errorOnBookCar
+      if (isErrorOnAddOrder) throw errorOnAddOrder
     } catch (error) {
       console.error('Error booking the car:', error);
       toast.error('Error booking the car!', {
@@ -369,15 +366,7 @@ const CarBookingFormPerDay = () => {
   }, [find_car, formData.dropOffDateAndTime, formData.pickupDateAndTime])
 
   useEffect(() => {
-    if (isSuccessOnBookCar) {
-      console.log(bookCarData)
-      setFormData(initialState)
-    }
-  }, [isSuccessOnBookCar])
-
-  useEffect(() => {
     if (isSuccessOnAddOrder) {
-      console.log(addOrderData)
       setTotalNumberOfDays(0)
       setFormData(initialState)
     }
@@ -385,7 +374,6 @@ const CarBookingFormPerDay = () => {
 
   useEffect(() => {
     if (isSuccessOnUpdateCar) {
-      console.log(updatedCarData)
       dispatch(updateCar({
         _id: find_car!._id, updatedCar: {
           bookedDates: [

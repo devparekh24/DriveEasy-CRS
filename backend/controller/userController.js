@@ -55,9 +55,7 @@ exports.uploadUserImage = catchAsyncErr(async (req, res, next) => {
     }
 
     const userImg = await cloudinary.uploader.upload(req.file.path, {
-        // width: 500,
         height: 300,
-        // crop: 'fill'
     })
 
     const updateUserImg = await User.findByIdAndUpdate(id, { $set: { image: userImg.url } }, { new: true })

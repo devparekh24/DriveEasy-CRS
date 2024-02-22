@@ -3,12 +3,8 @@ import InfoCard from '../InfoCard/InfoCard';
 import './HowItWorks.css';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-// import EditNoteIcon from '@mui/icons-material/EditNote';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-// import AddCardIcon from '@mui/icons-material/AddCard';
-// import PaymentIcon from '@mui/icons-material/Payment';
-// import 'ionicons';
 
 const HowItWorks: React.FC = () => {
     const steps = [

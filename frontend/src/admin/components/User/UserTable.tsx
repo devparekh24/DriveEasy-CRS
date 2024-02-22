@@ -66,8 +66,6 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>('');
 
-    // console.log(data)
-
     const [removeUser, { isError: isErrorOnRemoveUser, isLoading: isLoadingOnRemoveUser, error: errorOnRemoveUser, isSuccess: isSuccessOnRemoveUser }] = useRemoveUserMutation()
     const [updateUser, { isError: isErrorOnUpdateUser, isLoading: isLoadingOnUpdateUser, isSuccess: isSuccessOnUpdateUser, error: errorOnUpdateUser }] = useUpdateUserMutation()
 

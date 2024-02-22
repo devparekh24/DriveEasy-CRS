@@ -60,7 +60,6 @@ exports.login = catchAsyncErr(async (req, res, next) => {
 
 exports.logout = (req, res) => {
 
-    // console.log(req.cookies)
     res.clearCookie('jwt')
     res.status(200).json({
         status: "success",
@@ -70,9 +69,7 @@ exports.logout = (req, res) => {
 
 exports.isLoggedIn = catchAsyncErr(async (req, res, next) => {
 
-    // console.log(req.cookies)
     if (req.cookies.jwt) {
-        // try {
 
         //verify the token 
         const decode = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETKEY)
@@ -91,9 +88,7 @@ exports.isLoggedIn = catchAsyncErr(async (req, res, next) => {
         //there is a logged in user
         res.locals.user = currentUser
         return next() //access granted to the logged in user
-        // } catch (err) {
-        //     return next()
-        // }
+
     }
     next();
 })
@@ -108,14 +103,13 @@ exports.protectedRoute = catchAsyncErr(async (req, res, next) => {
     else if (req.cookies.jwt) {
         token = req.cookies.jwt
     }
-    // console.log(token)
+
     if (!token) {
         return next(new AppError('You aren\'t logged in!, Please login to get access', 401))
     }
 
     //verification of token 
     const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRETKEY)
-    // console.log(decode)
 
     //checking the existance of the user
     const currentUser = await User.findById(decode.id)
@@ -246,8 +240,6 @@ exports.updateMe = catchAsyncErr(async (req, res, next) => {
         user.confirmPassword = req.body.confirmPassword;
     }
 
-    // user.password = req.body.password;
-    // user.confirmPassword = req.body.confirmPassword;
     await user.save();
 
     //4. log user in, send JWT

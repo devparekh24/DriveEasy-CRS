@@ -72,8 +72,6 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>('');
 
-    // console.log(data)
-
     const [removeDamageReport, { isError: isErrorOnRemoveDamageReport, isLoading: isLoadingOnRemoveDamageReport, error: errorOnRemoveDamageReport, isSuccess: isSuccessOnRemoveDamageReport }] = useRemoveDamageReportMutation()
     const [updateDamageReport, { isError: isErrorOnUpdateDamageReport, isLoading: isLoadingOnUpdateDamageReport, isSuccess: isSuccessOnUpdateDamageReport, error: errorOnUpdateDamageReport }] = useUpdateDamageReportMutation()
 

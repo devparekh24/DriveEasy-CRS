@@ -19,7 +19,6 @@ const carSchema = new mongoose.Schema({
         unique: true,
         validate: {
             validator: function (value) {
-                //regular expression for car number plate validation
                 const regex = /^[A-Z]{2}[ -][0-9]{1,2}(?: [A-Z])?(?: [A-Z]*)? [0-9]{4}$/;
                 return regex.test(value);
             },
@@ -58,7 +57,6 @@ const carSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        // required: [true, 'Car must has an image']
     },
     fule: {
         type: String,
@@ -67,7 +65,6 @@ const carSchema = new mongoose.Schema({
     },
     whenWillCarAvailable: {
         type: String,
-        // required: [true, 'You have to mention that when will car available']
     },
     bookedDates: [
         {

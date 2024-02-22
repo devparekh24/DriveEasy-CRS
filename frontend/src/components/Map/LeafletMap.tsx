@@ -24,14 +24,12 @@ const Map: React.FC<MapProps> = ({ center }) => {
     let dropoffAdd = useAppSelector(state => state.address.dropoffAddress)
     const dispatch = useAppDispatch()
 
-    // let routingControl = null;
     const routingControlRef = useRef<any>(null);
     const mapRef = useRef<L.Map | null>(null);
     const startMarkerRef = useRef<any>(null);
     const endMarkerRef = useRef<any>(null);
 
     useEffect(() => {
-        console.log('useEffect....')
         // Create a Leaflet map centered at a default location
         const map = L.map('map', {
             scrollWheelZoom: false
@@ -87,11 +85,6 @@ const Map: React.FC<MapProps> = ({ center }) => {
 
                         // Add a marker at the user's location
                         marker.setLatLng([latitude, longitude])
-                        // console.log(center.latitude, center.longitude)
-                        // L.marker([latitude, longitude]).addTo(map)
-                        // .bindPopup('Admin - You are here!')
-                        // .openPopup();
-
                     },
                     () => {
                         alert('Could not get your location. Showing default location.');
@@ -115,18 +108,13 @@ const Map: React.FC<MapProps> = ({ center }) => {
                 routeWhileDragging: true
             }).addTo(mapRef.current!);
 
-            // console.log(routingControl) class of L.Routing.control
-
             routingControlRef.current = routingControl;
 
             // Event listener for route selection
             routingControl.on('routeselected', (event: any) => {
                 const selectedRoute = event.route;
-                console.log('Selected Route:', selectedRoute);
-
                 // Access the distance information
                 const distance = selectedRoute.summary.totalDistance;
-                console.log(`Total Distance: ${distance} meters`);
                 dispatch(setTotalKm({ totalKm: distance / 1000 }))
             });
         }
@@ -135,16 +123,6 @@ const Map: React.FC<MapProps> = ({ center }) => {
         // Event listener for search results
         const handleSelectedLocation = async (event: any) => {
             const { x, y, label } = event.location;
-            // const selectedLocation = L.latLng(y, x);
-
-            // Create a marker for the selected location
-            // const selectedMarker = L.marker(selectedLocation).addTo(map).bindPopup(label).openPopup();
-
-            // You can save the selectedLocation and selectedMarker in your state or perform any other logic here
-            // For example, you can use the useState hook to manage the state.
-
-            // console.log(`Location found at (${x}, ${y})`);
-
             // Remove existing markers
             if (startMarkerRef.current) {
                 mapRef.current!.removeLayer(startMarkerRef.current);
@@ -202,10 +180,7 @@ const Map: React.FC<MapProps> = ({ center }) => {
 
         // Initial call to get user's location
         getUserLocation();
-        // map.on('click', onMapClick);
-        // map.on('click', getBestRoute);
 
-        // onMapClick();
         return () => {
             map.off('click', getUserLocation);
             map.off('geosearch/showlocation', handleSelectedLocation);
@@ -258,7 +233,6 @@ const Map: React.FC<MapProps> = ({ center }) => {
 };
 
 const LeafletMap = () => {
-    console.log("object")
     const defaultLocation: Coordinates = { latitude: 21.1453459, longitude: 72.7541851 };
 
     return (

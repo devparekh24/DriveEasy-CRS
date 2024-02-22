@@ -43,7 +43,7 @@ const prodError = (err, res) => {
     else {
 
         //log the error 
-        console.error(err)
+        // console.error(err)
 
         //send generic error msg
         res.status(500).json({

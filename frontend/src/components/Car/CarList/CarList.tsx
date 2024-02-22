@@ -1,6 +1,5 @@
 import "./CarList.css";
-import { cars, carType } from "../../../data/cars";
-import { useNavigate } from "react-router-dom";
+import { cars } from "../../../data/cars";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 AOS.init({
@@ -15,14 +14,7 @@ interface Car {
   name: string;
 }
 
-interface CarType {
-  id: number | string;
-  image: string;
-  name: string;
-}
-
 const CarList = () => {
-  const navigate = useNavigate();
 
   return (
     <>
@@ -42,27 +34,6 @@ const CarList = () => {
           ))}
         </div>
       </div>
-      {/* <div className="find-car-list">
-        <h1>Find Car by Type</h1>
-        <h5>
-          We offer professional car rental services in our range of
-          high-end vehicles
-        </h5>
-
-        <div className="card-type-container">
-          {carType.map((car: CarType) => (
-            <div
-              className="car-card"
-              id={String(car.id)}
-              key={car.id}
-              onClick={() => navigate(`/${car.name}`)}
-            >
-              <img src={car.image} alt="" className="card-image" />
-              <div className="overlay">{car.name}</div>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </>
   )
 }

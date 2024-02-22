@@ -60,15 +60,12 @@
 /* car-info-form-col  */
 .car-info-form-col {
   width: 45%;
-  /* border: 1px solid red; */
   padding: 1rem;
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   margin-top: 45px;
-  /* align-items: center; */
   gap: 25px;
-  /* justify-content: center; */
 }
 
 .car-info-form-col form {
@@ -95,7 +92,6 @@
 }
 
 .car-info-form-col form div {
-  /* border: 1px solid black; */
   margin: 0.4rem 0;
   width: 100%;
   padding: 0 1.7rem;

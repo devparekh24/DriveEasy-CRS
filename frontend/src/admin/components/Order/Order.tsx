@@ -1,4 +1,3 @@
-// OrdersComponent.tsx
 import { useEffect, useState } from 'react';
 import DashBoardLayout from '../../pages/DashBoardLayout';
 import { useGetAllOrdersQuery } from '../../../services/orderApi';
@@ -54,9 +53,7 @@ const OrdersComponent = () => {
     useEffect(() => {
         orderData()
         if (isSuccess) {
-            console.log(data)
             setTableData(Object.values(data?.data)[0]!)
-            // console.log()
             dispatch(setOrders(data?.data))
         }
 

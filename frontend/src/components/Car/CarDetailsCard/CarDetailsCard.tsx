@@ -1,12 +1,8 @@
 import "./CarDetailsCard.css";
 import React from "react";
-import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { MdPersonOutline } from "react-icons/md";
-import { PiBagLight } from "react-icons/pi";
-import { VscSettings } from "react-icons/vsc";
 import { useNavigate } from "react-router-dom";
 import { SiSpeedtest } from "react-icons/si";
-import { GiGearStickPattern } from "react-icons/gi";
 import { TbManualGearbox } from "react-icons/tb";
 import { BiSolidCarMechanic } from "react-icons/bi";
 import { Car } from "../../../slices/carSlice";
@@ -44,22 +40,6 @@ const CarDetailsCard: React.FC<Car> = ({
           <h3>{carName}</h3>
           <p className="rating">
             <p>{carNumberPlate}</p>
-            {/* <span className="rating-icon">
-              <AiFillStar />
-            </span>
-            <span className="rating-icon">
-              <AiFillStar />
-            </span>
-            <span className="rating-icon">
-              <AiFillStar />
-            </span>
-            <span className="rating-icon">
-              <AiFillStar />
-            </span>
-            <span className="rating-icon">
-              <AiOutlineStar />
-            </span>
-            <span className="reviews">4 reviews</span> */}
           </p>
           <p className="info-icons">
             <span className="info-icon">

@@ -19,9 +19,7 @@ exports.uploadImage = catchAsyncErr(async (req, res, next) => {
     }
 
     const carImg = await cloudinary.uploader.upload(req.file.path, {
-        // width: 500,
         height: 300,
-        // crop: 'fill'
     })
 
     const updateCarImg = await Car.findByIdAndUpdate(id, { $set: { image: carImg.url } }, { new: true })

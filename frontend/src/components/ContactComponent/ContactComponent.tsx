@@ -5,9 +5,6 @@ import { MdEmail } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAddContactQueryMutation } from "../../services/contactQueryApi";
-import { setContactQueries } from "../../slices/contactQuerySlice";
-import { useAppDispatch } from "../../hooks/hooks";
-import Loader from "../Loader/Loader";
 
 interface Office {
   title: string;
@@ -40,7 +37,6 @@ export default function ContactComponent() {
 
   const [formData, setFormData] = useState<initialState>(initialState)
   const [addContactQuery, { data, isLoading, isError, error, isSuccess }] = useAddContactQueryMutation()
-  const dispatch = useAppDispatch()
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -52,7 +48,6 @@ export default function ContactComponent() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData)
 
     try {
       if (formData) {
@@ -64,7 +59,6 @@ export default function ContactComponent() {
       }
     }
     catch (error: any) {
-      console.log(error)
       if (error.data.error.code === 11000) {
         toast.error('You have already contacted us! Please use different Contact Number!', {
           autoClose: 2000,
@@ -95,8 +89,6 @@ export default function ContactComponent() {
         pauseOnHover: true,
         draggable: true,
       })
-      console.log(data)
-      // dispatch(setContactQueries())
       setFormData(initialState)
     }
 

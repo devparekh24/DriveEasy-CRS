@@ -36,13 +36,6 @@ header h3::first-letter {
   font-weight: 200;
 }
 
-/* 
-nav a {
-  margin: 0 1rem;
-  color: var(--textColor);
-  text-decoration: none;
-  font-weight: 600;
-} */
 
 nav a {
   margin: 0 1rem;
@@ -51,8 +44,6 @@ nav a {
   font-weight: 600;
   color: #fff;
   text-transform: uppercase;
-  /* text-decoration: none; */
-  /* letter-spacing: 0.15em; */
   display: inline-block;
   padding: 15px 20px;
   position: relative;
@@ -81,11 +72,6 @@ nav .active:after {
   left: 0;
 }
 
-
-/* nav a:hover {
-  color: var(--secondaryColor);
-} */
-
 header .nav-btn {
   padding: 5px;
   cursor: pointer;
@@ -93,7 +79,6 @@ header .nav-btn {
   border: none;
   outline: none;
   color: var(--textColor);
-  /* visibility: hidden; */
   display: none;
   opacity: 0;
   font-size: 1.8rem;
@@ -113,7 +98,6 @@ nav {
   }
 
   header .nav-btn {
-    /* visibility: visible; */
     display: block;
     opacity: 1;
   }
@@ -130,7 +114,6 @@ nav {
     justify-content: center;
     gap: 1.5rem;
     background-color: var(--mainColor);
-    /* background-color: black; */
     transition: 1s;
   }
 

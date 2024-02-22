@@ -29,45 +29,9 @@ const Footer = () => {
                         <IoLocationOutline className="footer-icon" />
                         Luxuria Business Hub, Dumas Rd, Surat
                     </p>
-                    {/* <p>
-                        <GiAlarmClock className="footer-icon" />
-                        Mon - Sat 8.00 - 18.00 Sunday CLOSED
-                    </p> */}
-                    {/* <p className="social-icons">
-                        <span className="social-media-icon facebook">
-                            <GrFacebookOption />
-                        </span>
-                        <span className="social-media-icon twitter">
-                            <AiOutlineTwitter />
-                        </span>
-                        <span className="social-media-icon youtube">
-                            <BsYoutube />
-                        </span>
-                        <span className="social-media-icon pinterest">
-                            <BiLogoPinterest />
-                        </span>
-                        <span className="social-media-icon instagram">
-                            <AiOutlineInstagram />
-                        </span>
-                    </p> */}
+
                 </div>
-                {/* <div className="footer-col">
-                    <h3>Newsletter</h3>
-                    <p>
-                        Don't miss a thing! Sign up to receive daily <br />
-                        deals
-                    </p>
-                    <div>
-                        <input
-                            type="email"
-                            name="email"
-                            id="email"
-                            placeholder="Your Email Address"
-                        />
-                        <button className="subscribe-btn">Subscribe</button>
-                    </div>
-                    <p></p>
-                </div> */}
+
             </div>
             <div className="footer-row-2">
                 <div style={{ display: 'flex' }}>

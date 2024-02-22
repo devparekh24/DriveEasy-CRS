@@ -68,8 +68,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
         value: DatePickerProps['value'],
         dateString: string,
     ) => {
-        console.log('Selected Time: ', value);
-        console.log('Formatted Selected Time: ', dateString);
     };
 
     const inputNode =
@@ -98,7 +96,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
                         label: 'EV',
                     }
                 ]} />
-            // <ImageUploader onUpload={(imgUrl) => form.setFieldsValue({ [dataIndex]: imgUrl })} />
         ) : dataIndex === 'transmission' && editing ? (
             <Select showSearch
                 placeholder="Select a transmission"
@@ -120,7 +117,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
                         label: 'Continuously Variable Transmission (CVT)',
                     },
                 ]} />
-            // <ImageUploader onUpload={(imgUrl) => form.setFieldsValue({ [dataIndex]: imgUrl })} />
         ) : dataIndex === 'whenWillCarAvailable' && editing ? (
             <Form.Item>
                 <DatePicker
@@ -179,8 +175,6 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>('');
 
-    // console.log(data)
-
     const [removeCar, { isError: isErrorOnRemoveCar, isLoading: isLoadingOnRemoveCar, error: errorOnRemoveCar, isSuccess: isSuccessOnRemoveCar }] = useRemoveCarMutation()
     const [updateCar, { isError: isErrorOnUpdateCar, isLoading: isLoadingOnUpdateCar, isSuccess: isSuccessOnUpdateCar, error: errorOnUpdateCar }] = useUpdateCarMutation()
 
@@ -206,7 +200,6 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
     const handleUpdate = async (record: Item) => {
         try {
             const updatedCar = await updateCar({ carId: record._id, updatedCar: record }).unwrap();
-            // Update the table data with the new car information
 
             const updatedData = formData?.map((item: any) => (item._id === updatedCar._id ? updatedCar : item));
             setFormData(updatedData);
@@ -233,7 +226,6 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
     const save = async (key: React.Key) => {
         try {
             const row = await (await form.validateFields()) as Item;
-            // console.log(row.whenWillCarAvailable)
             // Convert the 'whenWillCarAvailable' date to a string format
             if (row.whenWillCarAvailable instanceof Date) {
                 row.whenWillCarAvailable = dayjs(row.whenWillCarAvailable).format('YYYY-MM-DD');

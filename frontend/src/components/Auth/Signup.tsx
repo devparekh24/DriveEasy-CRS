@@ -38,12 +38,10 @@ const Signup = () => {
                 await signup({ name: userName, email, password, confirmPassword, contactNumber }).unwrap();
             }
             else if (isError) {
-                console.log(error)
                 throw error
             }
         }
         catch (error: any) {
-            console.log(error)
             if (error.data.error.code === 11000) {
                 toast.error('User is already exist!', {
                     autoClose: 2000,
@@ -74,7 +72,6 @@ const Signup = () => {
                 pauseOnHover: true,
                 draggable: true,
             })
-            console.log(signupData)
             dispatch(setUserSignup({ name: signupData.data.user.name, email: signupData.data.user.email, confirmPassword: signupData.data.user.confirmPassword, password: signupData.data.user.passsword, contactNumber: signupData.data.user.contactNumber, user: signupData.data.user }))
             navigate('/login')
         }
@@ -91,7 +88,6 @@ const Signup = () => {
             <div className="login-container">
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h1>Sign up</h1>
-                    {/* <p>create your account</p> */}
                     <div className="input-group">
                         <input type="text" id="username" name="username" placeholder="Username" ref={userNameRef} required />
                     </div>
@@ -111,7 +107,6 @@ const Signup = () => {
                     <button type="submit">Sign up</button>
                     <div className="bottom-text">
                         <p>Already have an account? <Link to="/login">Log in</Link></p>
-                        {/* <p><Link to="/forgot-password">Forgot password?</Link></p> */}
                     </div>
                 </form>
             </div>

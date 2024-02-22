@@ -15,9 +15,7 @@ import { RiLogoutCircleRLine } from "react-icons/ri";
 const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
     const isLogin = useAppSelector(state => state.auth.isLoggedIn);
-    // const authUser = useAppSelector(state => state.auth.user);
     const dispatch = useAppDispatch();
-    // const storedUser = localStorage.getItem('user');
 
     const [getUser, { data, isError, error, isSuccess }] = useGetUserMutation()
     const getCurrentUser = async () => {
@@ -48,12 +46,6 @@ const Navbar = () => {
     }, [dispatch, isSuccess, data])
 
     const loginUser = useAppSelector(state => state.user.users);
-    console.log(loginUser)
-    // const sr = JSON.parse(localStorage.getItem('user')!);
-    // console.log(sr.user)
-
-    // const user = Object.keys(loginUser).map(key => ({ id: Number(key), name: loginUser[key] }))
-    // console.log(Array.isArray(user))
 
     const showNavbar = () => {
         if (navRef.current) {
@@ -70,11 +62,9 @@ const Navbar = () => {
 
     useEffect(() => {
         setTimeout(() => {
-
             const storedUser = localStorage.getItem('user');
             if (storedUser) {
                 const user = JSON.parse(storedUser);
-                console.log(user)
                 dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId, user: loginUser! }));
             }
         }, 1500)
@@ -112,12 +102,10 @@ const Navbar = () => {
                         ) : (<NavLink to="/login">Login</NavLink>)
                     }
                     <button className="nav-btn nav-close-btn" onClick={showNavbar}>
-                        {/* <i className="bi bi-x"></i> */}
                         <GrFormClose className="close-btn-icon" />
                     </button>
                 </nav>
                 <button className="nav-btn" onClick={showNavbar}>
-                    {/* <i class="bi bi-list"></i> */}
                     <IoMenu />
                 </button>
             </header>

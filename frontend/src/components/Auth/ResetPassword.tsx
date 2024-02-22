@@ -33,7 +33,6 @@ const ResetPassword = () => {
             if (isError) throw error
         }
         catch (error: any) {
-            console.log(error)
             toast.error(error.data.message, {
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -46,7 +45,6 @@ const ResetPassword = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(data)
             toast.success('Password Reset Successful!', {
                 autoClose: 1500,
                 hideProgressBar: false,

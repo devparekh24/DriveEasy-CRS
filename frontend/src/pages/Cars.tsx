@@ -13,13 +13,9 @@ const Cars: React.FC = () => {
     startDate: null,
     endDate: null,
   });
-  // const [pickupDate, setPickupDate] = useState<string>('');
-  // const [dropOffDate, setDropOffDate] = useState<string>('');
 
   const handleFilterChange = (newFilters: any) => {
     setFilters(newFilters);
-    // setPickupDate(pickupDate)
-    // setDropOffDate(dropOffDate)
   };
 
   useEffect(() => {

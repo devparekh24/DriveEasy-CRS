@@ -41,7 +41,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, carId }) => {
                 onError(errorData);
             }
         } catch (error) {
-            console.error('Error during image upload:', error);
             message.error(`${file.name} file upload failed.`);
             onError(error);
         }

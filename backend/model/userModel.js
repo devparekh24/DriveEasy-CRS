@@ -21,13 +21,11 @@ const userSchema = new mongoose.Schema({
     },
     contactNumber: {
         type: Number,
-        // required: [true, 'User must has a contact number'],
         unique: true,
         minlength: [10, 'Contact number must be 10 digits long'],
         maxlength: [10, 'Contact number must be 10 digits long'],
         // validate: {
         //     validator: function (value) {
-        //         //regular expression for contact number validation
         //         const regex = /^\d{10}$/;
         //         return regex.test(value);
         //     },
@@ -42,7 +40,6 @@ const userSchema = new mongoose.Schema({
     },
     confirmPassword: {
         type: String,
-        // required: [true, 'Please confirm your password'],
         validate: {
             validator: function (pwd) {
                 return pwd === this.password
@@ -106,7 +103,6 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 
         const changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10)
 
-        console.log(changedTimeStamp, JWTTimestamp)
         return changedTimeStamp > JWTTimestamp;
     }
     return false;

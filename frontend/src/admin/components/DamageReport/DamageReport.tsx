@@ -34,12 +34,9 @@ const AddDamageReportModal: FC = () => {
     };
 
     const [form] = Form.useForm();
-    // const [fileList, setFileList] = useState<any[]>([]);
 
     const onFinish = async (values: any) => {
         // Perform CRUD operation (e.g., send data to server)
-        console.log('Form values:', values);
-
         try {
             if (values) {
                 await addDamageReport(values).unwrap();
@@ -48,9 +45,7 @@ const AddDamageReportModal: FC = () => {
         } catch (error) {
             message.error(error?.data?.message);
         }
-        // console.log('Uploaded files:', fileList);
         form.resetFields();
-        // setFileList([]);
     };
 
     const getData = async () => {
@@ -80,7 +75,6 @@ const AddDamageReportModal: FC = () => {
     useEffect(() => {
         setTimeout(() => {
             if (isSuccessOnAddDamageReport) {
-                console.log(addDamageReportData)
                 message.success('Damage Report submitted successfully!');
             }
         }, 1500)
@@ -168,10 +162,8 @@ const DamageReportingComponent = () => {
     }
 
     const damageReportsList = useAppSelector(state => state.damageReport.damageReports)
-    console.log(damageReportsList)
 
     const getHeaders = async () => {
-        console.log(damageReportsList)
         const columns = await Object.keys(data!.data!.data[0]!);
         const sortedHeaders = columns
             .filter((header) => (header !== '_id' && header !== 'description' && header !== 'id'))

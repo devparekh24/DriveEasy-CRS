@@ -25,7 +25,6 @@ const Login = () => {
             }
         }
         catch (error: any) {
-            // console.log(error)
             toast.error(error.data.message, {
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -47,7 +46,6 @@ const Login = () => {
                 pauseOnHover: true,
                 draggable: true,
             })
-            console.log(LoginData)
             dispatch(setUserLogin({ name: LoginData.data.user.name, token: LoginData.token, role: LoginData.data.user.role, userId: LoginData.data.user._id, user: LoginData.data.user }))
             navigate('/')
         }
@@ -63,7 +61,6 @@ const Login = () => {
         <div className="login">
             <div className="login-container">
                 <form className="login-form" onSubmit={handleSubmit}>
-                    {/* <h1>Welcome Back</h1> */}
                     <h1>Log in to DriveEasy</h1>
                     <p>Please login to your account</p>
                     <div className="input-group">

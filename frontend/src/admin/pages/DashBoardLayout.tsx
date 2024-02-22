@@ -9,31 +9,10 @@ import Avatar from '@mui/material/Avatar';
 import { MdOutlineContactPhone } from 'react-icons/md';
 import { useGetUserMutation } from '../../services/userApi';
 import { setUsers } from '../../slices/userSlice';
-// import AdminLoader from '../components/adminLoader/adminLoader';
 
 interface DashboardProps {
     children: React.ReactNode;
 }
-
-//custom hook
-// const useCurrentUser = () => {
-//     const [getUser, { data, isError, error, isSuccess, isLoading }] = useGetUserMutation();
-//     const userId = JSON.parse(localStorage.getItem('user')!).userId
-//     const handleCurrentUser = async () => {
-//         try {
-//             if (isError) throw error
-//             await getUser(userId).unwrap();
-//         } catch (error: any) {
-//             console.error(error);
-//         }
-//     };
-//     useEffect(() => {
-//         handleCurrentUser();
-//     }, []);
-
-//     return { data, isSuccess, isLoading };
-// };
-
 
 const DashBoardLayout = (props: DashboardProps) => {
 
@@ -67,16 +46,6 @@ const DashBoardLayout = (props: DashboardProps) => {
         }, 100)
 
     }, [dispatch, isSuccess, data])
-
-    //use of custom hook
-    // const dispatch = useAppDispatch();
-
-    // const { data, isLoading, isSuccess } = useCurrentUser()
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         dispatch(setUsers(data!.data))
-    //     }
-    // }, [dispatch, isSuccess, data])
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -138,11 +107,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                                 background: colorBgContainer,
                                 borderRadius: borderRadiusLG,
                             }}>
-                            {/* {isLoading ? (<AdminLoader />) :
-                                (<> */}
                             {props.children}
-                            {/* </>)
-                            } */}
                         </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>

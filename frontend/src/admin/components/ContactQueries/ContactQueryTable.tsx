@@ -24,7 +24,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
     children,
     ...restProps
 }) => {
-    // const [form] = Form.useForm();
     const inputNode =
         dataIndex === 'meeting' && editing ? (
             <Select showSearch
@@ -71,8 +70,6 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
     const [editingKey, setEditingKey] = useState('');
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>('');
-
-    // console.log(data)
 
     const [removeContactQuery, { isError: isErrorOnRemoveContactQuery, isLoading: isLoadingOnRemoveContactQuery, error: errorOnRemoveContactQuery, isSuccess: isSuccessOnRemoveContactQuery }] = useRemoveContactQueryMutation()
     const [updateContactQuery, { isError: isErrorOnUpdateContactQuery, isLoading: isLoadingOnUpdateContactQuery, isSuccess: isSuccessOnUpdateContactQuery, error: errorOnUpdateContactQuery }] = useUpdateContactQueryMutation()

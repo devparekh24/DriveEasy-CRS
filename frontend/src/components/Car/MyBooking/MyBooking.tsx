@@ -1,11 +1,10 @@
 import { useGetUserOrdersQuery, useRemoveOrderMutation } from "../../../services/orderApi";
-import React, { useState, useEffect } from 'react';
-// import { useEffect } from "react";
+import { useState, useEffect } from 'react';
 import { toast } from "react-toastify";
 import Loader from "../../Loader/Loader";
-import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, message } from 'antd';
+import { Form, Popconfirm, Table, message } from 'antd';
 import type { TableColumnsType } from 'antd';
-import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined, DeleteOutlined, } from '@ant-design/icons';
 import { BookingState, setBookingData } from "../../../slices/bookingSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import AdminLoader from "../../../admin/components/AdminLoader/AdminLoader";
@@ -95,7 +94,6 @@ const MyBooking = () => {
   const [tableData, setTableData] = useState<BookingState[]>([]);
   const bookingList = useAppSelector(state => state.booking.bookings)
   const dispatch = useAppDispatch()
-  console.log(bookingList)
 
   const getUserOrders = async () => {
     try {
@@ -132,7 +130,6 @@ const MyBooking = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log(data)
       const ordersData = data?.data?.orders || [];
       setTableData(ordersData);
       dispatch(setBookingData({ data: ordersData }));

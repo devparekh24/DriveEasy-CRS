@@ -63,8 +63,6 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
     const [shouldRefresh, setShouldRefresh] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>('');
 
-    // console.log(data)
-
     const [removeOrder, { isError: isErrorOnRemoveOrder, isLoading: isLoadingOnRemoveOrder, error: errorOnRemoveOrder, isSuccess: isSuccessOnRemoveOrder }] = useRemoveOrderMutation()
     const [updateOrder, { isError: isErrorOnUpdateOrder, isLoading: isLoadingOnUpdateOrder, isSuccess: isSuccessOnUpdateOrder, error: errorOnUpdateOrder }] = useUpdateOrderMutation()
 
@@ -90,8 +88,6 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
     const handleUpdate = async (record: Order) => {
         try {
             const updatedOrder = await updateOrder({ orderId: record._id, updatedOrder: record }).unwrap();
-            // Update the table data with the new car information
-
             const updatedData = formData?.map((item: any) => (item._id === updatedOrder._id ? updatedOrder : item));
             setFormData(updatedData);
             setEditingKey('');

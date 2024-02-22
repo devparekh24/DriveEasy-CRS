@@ -3,7 +3,6 @@ import DashBoardLayout from "../../pages/DashBoardLayout"
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine';
-import { Button } from 'antd';
 
 interface Coordinates {
     latitude: number;
@@ -15,9 +14,6 @@ interface MapProps {
 }
 
 const Map: React.FC<MapProps> = ({ center }) => {
-
-    // let startMarker: any, endMarker: any;
-    // let map = L.map('map').setView([center.latitude, center.longitude], 13);
 
     useEffect(() => {
 
@@ -42,8 +38,6 @@ const Map: React.FC<MapProps> = ({ center }) => {
 
                         // Add a marker at the user's location
                         marker.setLatLng([latitude, longitude])
-                            // console.log(center.latitude, center.longitude)
-                            // L.marker([latitude, longitude]).addTo(map)
                             .bindPopup('Admin - You are here!')
                             .openPopup();
 
@@ -57,61 +51,10 @@ const Map: React.FC<MapProps> = ({ center }) => {
             }
         };
 
-        // Trigger getUserLocation when the map is clicked
-        // map.on('click', getUserLocation);
-
-        // const onMapClick = (e: any) => {
-        //     const { lat, lng } = e.latlng;
-        //     // let popup = L.popup();
-        //     // popup
-        //     //     .setLatLng(e.latlng)
-        //     //     .setContent("You clicked the map at " + e.latlng.toString())
-        //     //     .openOn(map);
-
-        //     marker.setLatLng([lat, lng])
-        //         .addTo(map)
-
-        // }
-
-        // let startMarker: any, endMarker: any;
-
-        // function calculateRoute(startLatLng: L.LatLng, endLatLng: L.LatLng) {
-        //     L.Routing.control({
-        //         waypoints: [
-        //             L.latLng(startLatLng),
-        //             L.latLng(endLatLng)
-        //         ],
-        //         routeWhileDragging: true
-        //     }).addTo(map);
-        // }
-
-        // map.on('click', (e: L.LeafletMouseEvent) => {
-        //     const { lat, lng } = e.latlng;
-        //     // Remove existing markers
-        //     if (startMarker) {
-        //         map.removeLayer(startMarker);
-        //     }
-
-        //     if (endMarker) {
-        //         map.removeLayer(endMarker);
-        //     }
-        //     // Add new marker
-        //     if (!startMarker) {
-        //         startMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Starting Point!').openPopup();
-        //     } else if (!endMarker) {
-        //         endMarker = L.marker([lat, lng]).addTo(map).bindPopup('Your Ending Point!').openPopup();
-
-        //         // Calculate and display the route
-        //         calculateRoute(startMarker.getLatLng(), endMarker.getLatLng());
-        //     }
-        // });
 
         // Initial call to get user's location
         getUserLocation();
-        // map.on('click', onMapClick);
-        // map.on('click', getBestRoute);
 
-        // onMapClick();
         return () => {
             map.off('click', getUserLocation);
             map.remove();
@@ -120,12 +63,7 @@ const Map: React.FC<MapProps> = ({ center }) => {
     }, [center]);
 
     return (
-        <>
-            <div id="map" style={{ height: '550px' }} />
-            {/* <div className="clear-btn" style={{ marginTop: 8, display: 'flex', justifyContent: 'end' }}>
-                <Button type="primary" onClick={() => console.log('clear')} >Clear Route</Button>
-            </div> */}
-        </>
+        <div id="map" style={{ height: '550px' }} />
     );
 };
 

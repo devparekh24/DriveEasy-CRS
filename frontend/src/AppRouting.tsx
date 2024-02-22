@@ -3,7 +3,6 @@ import Home from "./pages/Home";
 import Cars from "./pages/Cars";
 import CarInfoPage from "./pages/CarInfoPage";
 import Contact from "./pages/Contact";
-// import CarDetails from "./pages/CarDetails"; 
 import MyBookingPage from "./pages/MyBookingPage";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
@@ -29,7 +28,6 @@ import AdminProfile from "./admin/components/AdminProfile/AdminProfile";
 const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => {
 
     const navigate = useNavigate()
-    // const isAuthenticated = useAppSelector(state => state.auth.isLoggedIn);
     const isAuthenticated = localStorage.getItem('isLogin')
 
     const userId = useAppSelector(state => state.auth.userId)
@@ -65,7 +63,6 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
 
 const AppRouting = () => {
     const isAdmin = useAppSelector(state => state.auth.isAdmin)
-    console.log(isAdmin)
     return (
         <>
             <ToastContainer />
@@ -88,14 +85,12 @@ const AppRouting = () => {
                         <Route path="/cars" element={< Cars />} />
                         <Route path="/booking" element={<ProtectedRoute element={< MyBookingPage />} />} />
                         <Route path="/cars/:id" element={< CarInfoPage />} />
-                        <Route path="/:type/:carName/:id" element={<ProtectedRoute element={< CarInfoPage />} />} />
                         <Route path="/contact" element={< Contact />} />
                         <Route path="/my-profile" element={<ProtectedRoute element={< MyProfile />} />} />
                         <Route path="/login" element={< Login />} />
                         <Route path="/signup" element={< Signup />} />
                         <Route path="/forgot-password" element={< ForgotPassword />} />
                         <Route path="/reset-password/:token" element={< ResetPassword />} />
-                        {/* <Route path="/cars/:carName/:id" element={<CarDetails />} /> */}
                         <Route path='*' element={<PageNotFound />} />
                     </>)}
 
