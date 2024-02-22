@@ -8,12 +8,29 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'User must has a name']
     },
+    image: {
+        type: String,
+        default: '/broken-image.jpg'
+    },
     email: {
         type: String,
         required: [true, 'User must has a email'],
         validate: [isEmail, 'Please enter valid email!'],
         unique: true,
         lowercase: true
+    },
+    contactNumber: {
+        type: Number,
+        unique: true,
+        minlength: [10, 'Contact number must be 10 digits long'],
+        maxlength: [10, 'Contact number must be 10 digits long'],
+        // validate: {
+        //     validator: function (value) {
+        //         const regex = /^\d{10}$/;
+        //         return regex.test(value);
+        //     },
+        //     message: 'Invalid length of contact number'
+        // }
     },
     password: {
         type: String,
@@ -23,7 +40,6 @@ const userSchema = new mongoose.Schema({
     },
     confirmPassword: {
         type: String,
-        required: [true, 'Please confirm your password'],
         validate: {
             validator: function (pwd) {
                 return pwd === this.password
@@ -33,7 +49,7 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'admin','collaborator'],
+        enum: ['user', 'admin'],
         default: 'user'
     },
     active: {
@@ -87,7 +103,6 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 
         const changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10)
 
-        console.log(changedTimeStamp, JWTTimestamp)
         return changedTimeStamp > JWTTimestamp;
     }
     return false;

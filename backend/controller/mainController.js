@@ -13,8 +13,6 @@ exports.getAll = (Model, populateOptions) => catchAsyncErr(async (req, res, next
         .limitfields()
         .paginate();
 
-    // const doc = await features.query.explain(); // exp for indexes in DB
-
     if (populateOptions) {
         doc = await features.query.populate(populateOptions);
     } else {

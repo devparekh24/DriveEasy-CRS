@@ -11,22 +11,42 @@ const orderSchema = new mongoose.Schema({
         ref: 'Car',
         required: true
     },
-    rentalStartDate: {
+    fullName: {
+        type: String,
+        required: true
+    },
+    emailAddress: {
+        type: String,
+        required: true
+    },
+    phoneNo: {
+        type: String,
+        required: true
+    },
+    pickupAddress: {
+        type: String,
+        required: true
+    },
+    pickupDateAndTime: {
         type: Date,
         required: true
     },
-    rentalEndDate: {
-        type: Date,
+    dropOffAddress: {
+        type: String,
         required: true
     },
-    totalCost: {
+    dropOffDateAndTime: {
+        type: Date,
+        // required: true
+    },
+
+    totalKm: {
         type: Number,
         required: true
     },
-    status: {
-        type: String,
-        enum: ['pending', 'active', 'completed', 'canceled'],
-        default: 'pending'
+    totalAmount: {
+        type: Number,
+        required: true
     },
 });
 

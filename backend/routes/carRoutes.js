@@ -1,19 +1,35 @@
 const express = require('express')
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
 const carController = require('../controller/carController')
 const authController = require('./../controller/authController')
+const multer = require('multer')
+const storage = multer.diskStorage({})
 
-router.use(authController.protectedRoute)
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+        cb(null, true)
+    }
+    else {
+        cb('invalid image file', false)
+    }
+};
+
+const uploads = multer({ storage, fileFilter })
+
+// router.use(authController.protectedRoute)
+
+router.put('/:id/img-upload', authController.protectedRoute, authController.restrictTo('admin'), uploads.single('image'), carController.uploadImage)
+router.get('/available-cars',carController.getAvailableCars)
 
 router
     .route('/')
     .get(carController.getAllCars)
-    .post(authController.restrictTo('admin'), carController.createCar)
+    .post(authController.protectedRoute,authController.restrictTo('admin'), carController.createCar)
 
 router
     .route('/:id')
     .get(carController.getCar)
-    .patch(authController.restrictTo('admin'), carController.updateCar)
-    .delete(authController.restrictTo('admin'), carController.deleteCar)
+    .put(carController.updateCar)
+    .delete(authController.protectedRoute,authController.restrictTo('admin'), carController.deleteCar)
 
 module.exports = router

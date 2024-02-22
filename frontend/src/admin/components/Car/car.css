@@ -1,0 +1,6 @@
+.ant-modal-title {
+    display: flex;
+    justify-content: center;
+    font: 1.5em sans-serif;
+    text-decoration: underline 2px;
+}

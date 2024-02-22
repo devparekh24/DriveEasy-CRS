@@ -32,6 +32,7 @@ exports.signup = catchAsyncErr(async (req, res, next) => {
         email: req.body.email,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
+        contactNumber: req.body.contactNumber,
         role: req.body.role,
     })
     createSendToken(newUser, 201, res);
@@ -59,7 +60,6 @@ exports.login = catchAsyncErr(async (req, res, next) => {
 
 exports.logout = (req, res) => {
 
-    // console.log(req.cookies)
     res.clearCookie('jwt')
     res.status(200).json({
         status: "success",
@@ -69,9 +69,7 @@ exports.logout = (req, res) => {
 
 exports.isLoggedIn = catchAsyncErr(async (req, res, next) => {
 
-    // console.log(req.cookies)
     if (req.cookies.jwt) {
-        // try {
 
         //verify the token 
         const decode = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETKEY)
@@ -90,9 +88,7 @@ exports.isLoggedIn = catchAsyncErr(async (req, res, next) => {
         //there is a logged in user
         res.locals.user = currentUser
         return next() //access granted to the logged in user
-        // } catch (err) {
-        //     return next()
-        // }
+
     }
     next();
 })
@@ -107,14 +103,13 @@ exports.protectedRoute = catchAsyncErr(async (req, res, next) => {
     else if (req.cookies.jwt) {
         token = req.cookies.jwt
     }
-    // console.log(token)
+
     if (!token) {
         return next(new AppError('You aren\'t logged in!, Please login to get access', 401))
     }
 
     //verification of token 
     const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRETKEY)
-    // console.log(decode)
 
     //checking the existance of the user
     const currentUser = await User.findById(decode.id)
@@ -144,7 +139,7 @@ exports.forgotPassword = catchAsyncErr(async (req, res, next) => {
     await user.save({ validateBeforeSave: false })
 
     //send to the user email
-    const resetURL = `${req.protocol}://${req.get('host')}/users/resetpassword/${resetToken}`;
+    const resetURL = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
 
     const message = `<body style="font-family: Arial, sans-serif;">
 
@@ -217,18 +212,34 @@ exports.resetPassword = catchAsyncErr(async (req, res, next) => {
     createSendToken(user, 200, res);
 })
 
-exports.updatePassword = catchAsyncErr(async (req, res, next) => {
+exports.updateMe = catchAsyncErr(async (req, res, next) => {
     //1. get user from collection
     const user = await User.findById(req.user.id).select('+password')
 
-    //2. check if posted currentpassword is correct 
-    if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
-        return next(new AppError('Your current Password is Wrong!', 401))
+    //3. if so then update profile
+    if (req.body.name) {
+        user.name = req.body.name;
     }
 
-    //3. if so then update password
-    user.password = req.body.password;
-    user.confirmPassword = req.body.confirmPassword;
+    if (req.body.email) {
+        user.email = req.body.email;
+    }
+
+    if (req.body.contactNumber) {
+        user.contactNumber = req.body.contactNumber;
+    }
+
+    if (req.body.password && req.body.confirmPassword) {
+
+        //2. check if posted currentpassword is correct 
+        if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
+            return next(new AppError('Your current Password is Wrong!', 401))
+        }
+
+        user.password = req.body.password;
+        user.confirmPassword = req.body.confirmPassword;
+    }
+
     await user.save();
 
     //4. log user in, send JWT

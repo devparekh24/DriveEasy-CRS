@@ -2,18 +2,41 @@ const express = require('express')
 const router = express.Router()
 const userController = require('./../controller/userController')
 const authController = require('./../controller/authController')
+const orderRouter = require('./orderRoutes')
+const multer = require('multer')
+const storage = multer.diskStorage({})
+
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+        cb(null, true)
+    }
+    else {
+        cb('invalid image file', false)
+    }
+};
+
+const uploads = multer({
+    storage,
+    fileFilter,
+    limits: { fieldSize: 10000000 } //bytes - 10MB
+})
+
+//nested route
+router.use('/:userId/orders', orderRouter)
 
 router.use(authController.protectedRoute)
 
-router.patch('/updateMyPassword', authController.updatePassword)
+router.patch('/updateMe', authController.updateMe)
 
 router.get('/logout', authController.logout)
 
 router.delete('/deleteMe', userController.deleteMe)
 
-router.use(authController.protectedRoute, authController.restrictTo('admin'))
+router.use(authController.protectedRoute)
 
 router.patch('/:id', userController.changeUserRole)
+
+router.put('/:id/user-img-upload', uploads.single('image'), userController.uploadUserImage)
 
 router
     .route('/')
