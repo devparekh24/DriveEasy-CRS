@@ -139,7 +139,8 @@ exports.forgotPassword = catchAsyncErr(async (req, res, next) => {
     await user.save({ validateBeforeSave: false })
 
     //send to the user email
-    const resetURL = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
+    // const resetURL = `${req.protocol}://localhost:5173/reset-password/${resetToken}`;
+    const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     const message = `<body style="font-family: Arial, sans-serif;">
 

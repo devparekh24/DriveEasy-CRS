@@ -8,7 +8,7 @@ import { RootState } from "../store/store";
 export const carApi = createApi({
     reducerPath: 'carApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8000',
+        baseUrl: import.meta.env.VITE_API_URL,
         prepareHeaders: (headers, { getState }) => {
             const isAdmin = (getState() as RootState).auth.isAdmin;
             if (isAdmin) {

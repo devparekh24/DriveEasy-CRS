@@ -20,7 +20,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onUpload, carId }) => {
             const formData = new FormData();
             formData.append('image', file);
 
-            const response = await fetch(`http://localhost:8000/cars/${carId}/img-upload`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/cars/${carId}/img-upload`, {
                 method: 'PUT',
                 headers: {
                     Authorization: `Bearer ${authToken}`,
