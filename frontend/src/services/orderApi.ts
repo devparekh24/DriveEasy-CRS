@@ -8,7 +8,7 @@ const getUserId = () => JSON.parse(localStorage.getItem('user')!).id;
 export const orderApi = createApi({
     reducerPath: 'orderApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8000',
+        baseUrl: import.meta.env.VITE_API_URL,
         prepareHeaders: (headers) => {
             const authToken = getAuthToken();
             if (authToken) {

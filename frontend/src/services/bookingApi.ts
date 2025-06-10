@@ -17,7 +17,7 @@ const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
 
 export const bookingApi = createApi({
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8000',
+        baseUrl: import.meta.env.VITE_API_URL,
         prepareHeaders: (headers) => {
             const authToken = getAuthToken();
             if (authToken) {
