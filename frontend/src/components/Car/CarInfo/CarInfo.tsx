@@ -44,7 +44,7 @@ const CarInfo: React.FC = () => {
   useEffect(() => {
     carData()
     if (isSuccess && data && (data as any).data) {
-      dispatch(setCars({ data: (data as any).data }))
+      dispatch(setCars({ data: (data as any).data?.data || [] }))
     }
   }, [dispatch, isSuccess, carData])
 

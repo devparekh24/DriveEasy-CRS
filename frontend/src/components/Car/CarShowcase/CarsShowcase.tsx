@@ -34,7 +34,7 @@ const CarsShowcase = ({ filters }: { filters: any }) => {
   useEffect(() => {
     carData()
     if (isSuccess) {
-      dispatch(setCars({ data: (data as any).data }))
+      dispatch(setCars({ data: (data as any).data?.data || [] }))
     }
   }, [dispatch, isSuccess, carData])
 
