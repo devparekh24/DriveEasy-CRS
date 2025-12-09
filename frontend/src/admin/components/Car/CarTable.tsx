@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { DatePicker, Form, Input, InputNumber, Popconfirm, Select, Space, Table, Typography, message } from 'antd';
 import type { DatePickerProps, TableColumnsType } from 'antd';

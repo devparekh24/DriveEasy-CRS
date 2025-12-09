@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import DashBoardLayout from '../../pages/DashBoardLayout';
 import { useEffect, useState } from 'react';

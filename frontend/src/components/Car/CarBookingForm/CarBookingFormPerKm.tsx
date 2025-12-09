@@ -82,9 +82,9 @@ const CarBookingFormPerKm = () => {
     const [updateBookedCarDates, { data: updatedCarData, error: errorOnUpdateCar, isError: isErrorOnUpdateCar, isSuccess: isSuccessOnUpdateCar }] = useUpdateCarMutation()
 
     const [formData, setFormData] = useState<initialState>({
-        fullName: loginUser?.data?.name,
-        emailAddress: loginUser?.data?.email,
-        phoneNo: loginUser?.data?.contactNumber,
+        fullName: (loginUser[0] as any)?.name,
+        emailAddress: (loginUser[0] as any)?.email,
+        phoneNo: (loginUser[0] as any)?.contactNumber,
         pickupAddress: addressState?.pickupAddress,
         dropOffAddress: addressState?.dropoffAddress,
         dropOffDateAndTime: '',
@@ -108,11 +108,10 @@ const CarBookingFormPerKm = () => {
 
     const onChange = (
         value: DatePickerProps['value'] | RangePickerProps['value'],
-        dateString: [string, string] | string,
     ) => {
 
-        if (value) {
-            const pickupDate = value?.toDate();
+        if (value && typeof value === 'object' && 'toDate' in value) {
+            const pickupDate = value.toDate();
             setFormData(prevData => ({
                 ...prevData,
                 pickupDateAndTime: pickupDate!,
@@ -134,7 +133,7 @@ const CarBookingFormPerKm = () => {
                 }
             }).unwrap();
             if (isErrorOnUpdateCar) throw errorOnUpdateCar
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.data?.message, {
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -159,7 +158,7 @@ const CarBookingFormPerKm = () => {
                 currency: 'INR',
                 name: 'Drive Easy',
                 description: 'Car Rental Booking',
-                order_id: order._id, 
+                order_id: order._id,
                 image: razorpayImg,
                 handler: function (response: any) {
                     // Handle the successful payment response

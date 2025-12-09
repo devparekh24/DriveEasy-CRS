@@ -82,9 +82,9 @@ const CarBookingFormPerDay = () => {
   const [updateBookedCarDates, { data: updatedCarData, error: errorOnUpdateCar, isError: isErrorOnUpdateCar, isSuccess: isSuccessOnUpdateCar }] = useUpdateCarMutation()
 
   const [formData, setFormData] = useState<initialState>({
-    fullName: loginUser?.data?.name,
-    emailAddress: loginUser?.data?.email,
-    phoneNo: loginUser?.data?.contactNumber,
+    fullName: (loginUser[0] as any)?.name,
+    emailAddress: (loginUser[0] as any)?.email,
+    phoneNo: (loginUser[0] as any)?.contactNumber,
     pickupAddress: addressState?.pickupAddress,
     dropOffAddress: addressState?.dropoffAddress,
     dropOffDateAndTime: '',
@@ -151,7 +151,7 @@ const CarBookingFormPerDay = () => {
       }).unwrap();
       if (isErrorOnUpdateCar) throw errorOnUpdateCar
     } catch (error) {
-      toast.error(error?.data?.message, {
+      toast.error((error as any)?.data?.message, {
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -169,11 +169,11 @@ const CarBookingFormPerDay = () => {
 
       const options = {
         key: 'rzp_test_rj5Bthp9EwXcYE', //Razorpay key
-        amount: (formData?.totalAmount * 100).toString(), 
+        amount: (formData?.totalAmount * 100).toString(),
         currency: 'INR',
         name: 'Drive Easy',
         description: 'Car Rental Booking',
-        order_id: order._id, 
+        order_id: order._id,
         image: razorpayImg,
         handler: function (response: any) {
           // Handle the successful payment response

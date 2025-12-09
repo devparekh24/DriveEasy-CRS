@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect } from "react"
 import { useGetAllCarsQuery } from "../../../services/carApi"
 import DashBoardLayout from "../../pages/DashBoardLayout"

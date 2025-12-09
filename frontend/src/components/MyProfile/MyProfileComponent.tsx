@@ -28,7 +28,7 @@ export const MyProfileComponent = () => {
 
   const userId = JSON.parse(localStorage.getItem('user')!).userId;
 
-  const [updateMe, { data, isError, error, isLoading, isSuccess }] = useUpdateMeMutation()
+  const [updateMe, { data, isLoading, isSuccess }] = useUpdateMeMutation()
 
   const handleValidation = () => {
 
@@ -164,8 +164,8 @@ export const MyProfileComponent = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      if (isSuccessOnGetUser) {
-        dispatch(setUsers(userData!.data))
+      if (isSuccessOnGetUser && userData && (userData as any).data) {
+        dispatch(setUsers([(userData as any).data]))
       }
     }, 100)
 
@@ -175,9 +175,12 @@ export const MyProfileComponent = () => {
 
   useEffect(() => {
     // Update local state with the initial name email contactNumber from the user profile
-    setName(loginUser.data?.name);
-    setEmail(loginUser.data?.email);
-    setContactNumber(loginUser.data?.contactNumber);
+    const currentUser = loginUser[0];
+    if (currentUser) {
+      setName(currentUser.name);
+      setEmail(currentUser.email);
+      setContactNumber((currentUser as any).contactNumber);
+    }
   }, [loginUser]);
 
   return (
@@ -186,7 +189,7 @@ export const MyProfileComponent = () => {
         <form className="myprofile-form">
           <div className="input-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 style={{ marginBottom: 15 }}>My Profile</h2>
-            <Avatar src={loginUser.data?.image}
+            <Avatar src={loginUser[0]?.image}
               sx={{ width: 100, height: 100 }} style={{ marginBottom: 20 }} />
             <MyProfileImgUploader onUpload={(imgUrl) => setImage(imgUrl)} url={`http://localhost:8000/users/${userId}/user-img-upload`} />
           </div>

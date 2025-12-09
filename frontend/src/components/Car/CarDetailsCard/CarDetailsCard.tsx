@@ -9,12 +9,8 @@ import { Car } from "../../../slices/carSlice";
 
 const CarDetailsCard: React.FC<Car> = ({
   _id,
-  availability,
   capacity,
   carName,
-  color,
-  companyName,
-  fule,
   image,
   mileage,
   transmission,
@@ -23,8 +19,6 @@ const CarDetailsCard: React.FC<Car> = ({
   rentPricePerDay,
   rentPricePerHour,
   rentPricePerKm,
-  whenWillCarAvailable,
-  bookedDates
 }) => {
   const navigate = useNavigate();
 

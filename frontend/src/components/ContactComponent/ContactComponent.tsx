@@ -36,7 +36,7 @@ const initialState: initialState = {
 export default function ContactComponent() {
 
   const [formData, setFormData] = useState<initialState>(initialState)
-  const [addContactQuery, { data, isLoading, isError, error, isSuccess }] = useAddContactQueryMutation()
+  const [addContactQuery, { isError, error, isSuccess }] = useAddContactQueryMutation()
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;

@@ -38,8 +38,8 @@ const Navbar = () => {
 
     useEffect(() => {
         setTimeout(() => {
-            if (isSuccess) {
-                dispatch(setUsers(data!.data))
+            if (isSuccess && data && (data as any).data) {
+                dispatch(setUsers([(data as any).data]))
             }
         }, 1500)
 
@@ -65,7 +65,7 @@ const Navbar = () => {
             const storedUser = localStorage.getItem('user');
             if (storedUser) {
                 const user = JSON.parse(storedUser);
-                dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId, user: loginUser! }));
+                dispatch(setUserLogin({ name: user.name, token: user.token, role: user.role, userId: user.userId, user: user.user }));
             }
         }, 1500)
     }, [dispatch, setUserLogin]);
@@ -93,7 +93,7 @@ const Navbar = () => {
                         isLogin ? (
                             <>
                                 <Link to="/my-profile">
-                                    <Avatar src={loginUser.data?.image} />
+                                    <Avatar src={loginUser[0]?.image} />
                                 </Link>
                                 <NavLink to="/login" onClick={handleLogout}>
                                     <RiLogoutCircleRLine style={{ marginTop: 8, fontSize: 25 }} />

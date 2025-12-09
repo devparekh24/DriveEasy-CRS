@@ -41,7 +41,7 @@ const DashBoardLayout = (props: DashboardProps) => {
     useEffect(() => {
         setTimeout(() => {
             if (isSuccess) {
-                dispatch(setUsers(data!.data))
+                dispatch(setUsers([(data as any).data]))
             }
         }, 100)
 
@@ -64,7 +64,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                     breakpoint="lg"
                     collapsedWidth="0">
                     <div className="demo-logo-vertical" style={{ margin: 55 }} >
-                        <Avatar src={loginUser?.data?.image} sx={{ width: 57, height: 57 }} />
+                        <Avatar src={loginUser[0]?.image} sx={{ width: 57, height: 57 }} />
                     </div>
                     <Menu theme="dark" mode="inline">
                         <Menu.Item key="1" icon={<HomeOutlined />}>

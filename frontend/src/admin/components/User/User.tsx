@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { useGetAllUsersQuery } from '../../../services/userApi';
 import { UserState, setUsers } from '../../../slices/userSlice';

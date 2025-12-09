@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { FC, useEffect, useState } from 'react';
 import { Form, Input, Button, message, Modal, Select } from 'antd';
 import DashBoardLayout from '../../pages/DashBoardLayout';

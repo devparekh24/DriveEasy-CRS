@@ -14,7 +14,13 @@ const damageReportRouter = require('./routes/damageReportRoutes')
 app.use(express.json())
 app.use(cookieParser())
 app.use(bodyParser.json())
-app.use(cors())
+// CORS configuration for production
+const corsOptions = {
+    origin: process.env.FRONTEND_URL || '*',
+    credentials: true,
+    optionsSuccessStatus: 200
+}
+app.use(cors(corsOptions))
 app.use('/', authRouter)
 app.use('/users', userRouter)
 app.use('/cars', carRouter)

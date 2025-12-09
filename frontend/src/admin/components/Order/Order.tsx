@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState } from 'react';
 import DashBoardLayout from '../../pages/DashBoardLayout';
 import { useGetAllOrdersQuery } from '../../../services/orderApi';

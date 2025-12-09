@@ -21,7 +21,7 @@ const MyBookingTable = ({ headers, tableData }: { headers: string[]; tableData: 
       }
       if (isErrorOnRemoveOrder) throw errorOnRemoveOrder
     }
-    catch (error) {
+    catch (error: any) {
       message.error(error?.data?.message);
     }
   };
@@ -129,8 +129,8 @@ const MyBooking = () => {
   }, [bookingList])
 
   useEffect(() => {
-    if (isSuccess) {
-      const ordersData = data?.data?.orders || [];
+    if (isSuccess && data && (data as any).data && (data as any).data.orders) {
+      const ordersData = (data as any).data.orders || [];
       setTableData(ordersData);
       dispatch(setBookingData({ data: ordersData }));
     }
