@@ -191,7 +191,7 @@ export const MyProfileComponent = () => {
             <h2 style={{ marginBottom: 15 }}>My Profile</h2>
             <Avatar src={loginUser[0]?.image}
               sx={{ width: 100, height: 100 }} style={{ marginBottom: 20 }} />
-            <MyProfileImgUploader onUpload={(imgUrl) => setImage(imgUrl)} url={`http://localhost:8000/users/${userId}/user-img-upload`} />
+            <MyProfileImgUploader onUpload={(imgUrl) => setImage(imgUrl)} url={`${import.meta.env.VITE_API_URL}/users/${userId}/user-img-upload`} />
           </div>
           <div className="myprofile-form-content">
             <div className="myprofile-form-content-left">
