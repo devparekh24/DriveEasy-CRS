@@ -157,7 +157,51 @@
   margin: 0 0.3rem 0 0;
 }
 
-@media screen and (max-width: 950px) {
+/* Tablet styles */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  .car-info {
+    padding: 3rem 2rem;
+  }
+
+  .car-info-row {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .car-info-text-col {
+    width: 55%;
+  }
+
+  .car-info-form-col {
+    width: 45%;
+  }
+
+  .car-interior-info {
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .car-interior-info div {
+    flex: 1 1 45%;
+    justify-content: center;
+  }
+
+  .include {
+    flex-wrap: wrap;
+  }
+
+  .include div {
+    width: 48%;
+    margin: 0.5rem 0;
+  }
+
+  .car-image {
+    height: 250px;
+  }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 767px) {
   .car-info {
     padding: 2rem 1rem;
   }
@@ -168,13 +212,26 @@
 
   .car-interior-info {
     flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .car-interior-info div {
+    justify-content: flex-start;
+    padding: 0.3rem 0;
   }
 
   .car-info-text-col {
     width: 100%;
+    padding: 0.5rem;
   }
 
   .car-info-form-col {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .car-info-form-col form {
     width: 100%;
   }
 
@@ -187,4 +244,39 @@
     margin: 0.4rem 0;
   }
 
+  .car-image {
+    height: 200px;
+  }
+
+  .car-route-map {
+    margin-top: 1rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media screen and (max-width: 480px) {
+  .car-info {
+    padding: 1.5rem 0.8rem;
+  }
+
+  .car-info h1 {
+    font-size: 1.3rem;
+  }
+
+  .car-info h3 {
+    font-size: 1rem;
+  }
+
+  .car-image {
+    height: 180px;
+  }
+
+  .car-info-icon {
+    font-size: 1.2rem;
+  }
+
+  .car-interior-info div span,
+  .car-interior-info div p {
+    font-size: 0.9rem;
+  }
 }

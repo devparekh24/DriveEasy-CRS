@@ -9,10 +9,40 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-evenly;
+  gap: 1.5rem;
 }
 
-@media screen and (max-width: 720px) {
+/* Tablet styles */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+  .cars-showcase {
+    padding: 2.5rem 2rem;
+  }
+
+  .list-row {
+    justify-content: space-around;
+    gap: 1.2rem;
+  }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 767px) {
   .cars-showcase {
     padding: 2rem 1rem;
+  }
+
+  .list-row {
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media screen and (max-width: 480px) {
+  .cars-showcase {
+    padding: 1.5rem 0.8rem;
+  }
+
+  .list-row {
+    gap: 0.8rem;
   }
 }

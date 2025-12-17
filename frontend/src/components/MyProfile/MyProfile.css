@@ -20,6 +20,7 @@
     justify-content: space-evenly;
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .myprofile-form-content-left,
@@ -106,34 +107,114 @@ input:focus {
     margin: 0rem 0.3rem -0.2rem 0rem;
 }
 
-@media screen and (max-width: 720px) {
+/* Tablet styles */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
+    .myprofile-component {
+        padding: 6rem 2rem;
+        min-height: 60vh;
+    }
+
+    .myprofile-form-content {
+        gap: 0.8rem;
+    }
+
+    .myprofile-form-content-left,
+    .myprofile-form-content-right {
+        width: 48%;
+    }
+
+    .myprofile-component .myprofile-box {
+        width: 45%;
+        height: 180px;
+        padding: 1.5rem;
+    }
+
+    .myprofile-header {
+        margin-top: 40px;
+    }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 767px) {
     .myprofile-component {
         flex-direction: column;
-        padding: 3rem 2rem;
-        height: 114vh;
+        padding: 5rem 1.5rem 3rem;
+        min-height: 100vh;
     }
 
     .myprofile-component .myprofile-box {
         width: 90%;
-        margin-top: 50px;
-    }
-}
-
-@media screen and (max-width: 460px) {
-
-    .myprofile-component {
-        height: 150vh;
+        height: auto;
+        min-height: 160px;
+        margin-top: 1.5rem;
+        padding: 1.5rem;
     }
 
     .myprofile-form-content {
         flex-direction: column;
-        flex-wrap: wrap;
-        width: 90%;
+        gap: 0.5rem;
     }
 
     .myprofile-form-content-left,
     .myprofile-form-content-right {
         width: 100%;
+        padding: 0.3rem;
+    }
+
+    .myprofile-form-container {
+        padding: 1.5rem;
+    }
+
+    .myprofile-header {
+        margin-top: 30px;
+    }
+
+    .input-group #email,
+    input,
+    .input-group #message {
+        font-size: 15px;
+        padding: 12px;
+    }
+}
+
+/* Extra small mobile devices */
+@media screen and (max-width: 480px) {
+    .myprofile-component {
+        padding: 4rem 1rem 2rem;
+        min-height: 100vh;
+    }
+
+    .myprofile-component .myprofile-box {
+        width: 95%;
+        padding: 1.2rem;
+    }
+
+    .myprofile-form-content-left,
+    .myprofile-form-content-right {
         padding: 0;
+    }
+
+    .myprofile-form-container {
+        padding: 1.2rem;
+    }
+
+    .myprofile-header {
+        margin-top: 25px;
+    }
+
+    .myprofile-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .input-group #email,
+    input,
+    .input-group #message {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .myprofile-update-btn {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }

@@ -91,10 +91,32 @@ nav {
   z-index: 1000;
 }
 
-@media only screen and (max-width: 950px) {
+/* Tablet styles */
+@media only screen and (max-width: 1024px) and (min-width: 768px) {
+  header {
+    padding: 0 2rem;
+  }
+
+  header h3 {
+    font-size: 1.8rem;
+  }
+
+  nav a {
+    margin: 0 0.7rem;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile and small tablet styles */
+@media only screen and (max-width: 767px) {
   header {
     padding: 0 1rem;
     z-index: 1000;
+  }
+
+  header h3 {
+    font-size: 1.5rem;
   }
 
   header .nav-btn {
@@ -107,14 +129,15 @@ nav {
     top: 0;
     left: 100%;
     height: 100%;
-    width: 30%;
+    width: 70%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
     background-color: var(--mainColor);
-    transition: 1s;
+    transition: 0.5s;
+    z-index: 1001;
   }
 
   header .responsive_nav {
@@ -129,7 +152,24 @@ nav {
   }
 
   nav a {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: white;
+    width: 80%;
+    text-align: center;
+  }
+}
+
+/* Extra small mobile devices */
+@media only screen and (max-width: 480px) {
+  header {
+    padding: 0 0.8rem;
+  }
+
+  header h3 {
+    font-size: 1.3rem;
+  }
+
+  header nav {
+    width: 80%;
   }
 }

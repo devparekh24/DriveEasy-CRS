@@ -107,27 +107,96 @@
   transition: 0.3s;
 }
 
-@media screen and (max-width: 1024px) {
+/* Tablet styles */
+@media screen and (max-width: 1024px) and (min-width: 768px) {
   .hero-section {
-    font-size: 1.5rem;
-    height: 110vh;
-    padding: 1rem 1.5rem;
+    font-size: 1.7rem;
+    height: 100vh;
+    padding: 1rem 2rem;
   }
 
   .hero-section h1 {
-    line-height: 50px;
+    line-height: 55px;
+  }
+
+  .hero-section h6 {
+    margin: 1.2rem 0;
+    font-size: 1.3rem;
+  }
+
+  .search-fields {
+    width: 90%;
+    flex-direction: row;
+    gap: 0.8rem;
+  }
+
+  .search-fields .search-col {
+    width: 48%;
+    margin-bottom: 0.8rem;
+  }
+
+  .dropbtn,
+  .search-btn {
+    width: 100%;
+  }
+}
+
+/* Mobile styles */
+@media screen and (max-width: 767px) {
+  .hero-section {
+    font-size: 1.3rem;
+    height: auto;
+    min-height: 100vh;
+    padding: 1rem 1rem;
+    background-attachment: scroll;
+  }
+
+  .hero-section h1 {
+    line-height: 40px;
+    font-size: 1.8rem;
   }
 
   .hero-section h6 {
     margin: 1.5rem 0;
+    font-size: 1rem;
   }
 
   .search-fields {
+    width: 95%;
     flex-direction: column;
+    gap: 0.5rem;
   }
 
   .search-fields .search-col {
     width: 100%;
     margin-bottom: 0.5rem;
+  }
+
+  .dropbtn,
+  .search-btn {
+    width: 100%;
+    padding: 0.8rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media screen and (max-width: 480px) {
+  .hero-section {
+    font-size: 1.1rem;
+    padding: 0.8rem;
+  }
+
+  .hero-section h1 {
+    line-height: 35px;
+    font-size: 1.5rem;
+  }
+
+  .hero-section h6 {
+    font-size: 0.9rem;
+  }
+
+  .dropbtn,
+  .search-btn {
+    font-size: 0.9rem;
   }
 }
