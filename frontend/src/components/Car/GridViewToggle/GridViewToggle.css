@@ -68,6 +68,13 @@
     }
 }
 
+/* Hide 3x3 button on mobile */
+@media screen and (max-width: 599px) {
+    .grid-toggle-btn:last-child {
+        display: none;
+    }
+}
+
 /* Extra small mobile devices */
 @media screen and (max-width: 480px) {
     .grid-toggle-btn {

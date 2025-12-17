@@ -94,12 +94,20 @@
   }
 
   .list-row {
-    gap: 1rem;
+    gap: 0.8rem;
   }
 
-  /* All grids become 1x1 on mobile */
-  .list-row.grid-3x3,
-  .list-row.grid-2x2,
+  /* 3x3 becomes 2x2 on mobile */
+  .list-row.grid-3x3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 2x2 stays 2x2 on mobile */
+  .list-row.grid-2x2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 1x1 stays 1x1 on mobile */
   .list-row.grid-1x1 {
     grid-template-columns: 1fr;
   }
