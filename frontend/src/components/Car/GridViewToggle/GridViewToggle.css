@@ -41,6 +41,118 @@
     border-color: #222;
 }
 
+/* Desktop/Mobile visibility */
+.desktop-only {
+    display: flex;
+}
+
+.mobile-only {
+    display: none;
+}
+
+/* Floating Action Button Container */
+.grid-fab-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+/* Main FAB Button */
+.grid-fab-main {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #000 0%, #333 100%);
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1001;
+}
+
+.grid-fab-main:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.grid-fab-main.open {
+    transform: rotate(180deg);
+    background: linear-gradient(135deg, #333 0%, #000 100%);
+}
+
+/* FAB Option Buttons */
+.grid-fab-option {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid #ddd;
+    color: #666;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    bottom: 0;
+    right: 0;
+}
+
+/* Radial menu positions */
+.grid-fab-option-1 {
+    animation: slideOut1 0.3s forwards;
+}
+
+.grid-fab-option-2 {
+    animation: slideOut2 0.3s forwards;
+}
+
+@keyframes slideOut1 {
+    from {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-80px, -10px) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut2 {
+    from {
+        transform: translate(0, 0) scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-60px, -60px) scale(1);
+        opacity: 1;
+    }
+}
+
+.grid-fab-option:hover {
+    transform: scale(1.15);
+    border-color: #000;
+    background-color: #f5f5f5;
+    color: #000;
+}
+
+.grid-fab-option.active {
+    background-color: #000;
+    border-color: #000;
+    color: white;
+}
+
 /* Tablet styles */
 @media screen and (max-width: 1024px) and (min-width: 768px) {
     .grid-view-toggle {
@@ -68,10 +180,31 @@
     }
 }
 
-/* Hide 3x3 button on mobile */
+/* Show FAB on mobile, hide desktop toggle */
 @media screen and (max-width: 599px) {
-    .grid-toggle-btn:last-child {
+    .desktop-only {
         display: none;
+    }
+
+    .mobile-only {
+        display: block;
+    }
+
+    .grid-fab-container {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .grid-fab-main {
+        width: 56px;
+        height: 56px;
+        font-size: 1.6rem;
+    }
+
+    .grid-fab-option {
+        width: 46px;
+        height: 46px;
+        font-size: 1.2rem;
     }
 }
 
@@ -81,5 +214,17 @@
         width: 38px;
         height: 38px;
         font-size: 1rem;
+    }
+
+    .grid-fab-main {
+        width: 52px;
+        height: 52px;
+        font-size: 1.5rem;
+    }
+
+    .grid-fab-option {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
     }
 }
