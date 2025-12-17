@@ -8,6 +8,7 @@ import { QuestionCircleOutlined, DeleteOutlined, } from '@ant-design/icons';
 import { BookingState, setBookingData } from "../../../slices/bookingSlice";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import AdminLoader from "../../../admin/components/AdminLoader/AdminLoader";
+import './MyBooking.css';
 
 const MyBookingTable = ({ headers, tableData }: { headers: string[]; tableData: BookingState[] }) => {
 
@@ -142,11 +143,13 @@ const MyBooking = () => {
         isLoading ? (
           <Loader />
         ) : (
-          < div className="cars-showcase" >
+          <div className="cars-showcase" >
             <div className="list-row">
               {
                 tableData.length > 0 ? (
-                  <MyBookingTable headers={headers} tableData={tableData} />
+                  <div className="booking-table-container">
+                    <MyBookingTable headers={headers} tableData={tableData} />
+                  </div>
                 ) : (
                   <h3>You haven't booked any car, yet!</h3>
                 )

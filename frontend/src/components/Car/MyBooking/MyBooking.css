@@ -1,0 +1,43 @@
+/* Booking table container */
+.booking-table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 1rem 0;
+}
+
+/* Custom scrollbar styling for booking table */
+.booking-table-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.booking-table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.booking-table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.booking-table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Ensure table is responsive */
+.ant-table-wrapper {
+    width: 100%;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 767px) {
+    .booking-table-container {
+        margin: 0.5rem 0;
+    }
+
+    /* Make scrollbar more visible on mobile */
+    .booking-table-container::-webkit-scrollbar {
+        height: 10px;
+    }
+}
