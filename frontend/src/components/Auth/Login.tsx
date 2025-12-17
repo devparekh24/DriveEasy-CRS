@@ -5,6 +5,7 @@ import { useAppDispatch } from '../../hooks/hooks'
 import { useLoginMutation } from '../../services/authApi'
 import { toast } from 'react-toastify'
 import { setUserLogin } from '../../slices/authSlice'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const Login = () => {
 
@@ -12,7 +13,7 @@ const Login = () => {
     const passwordRef = useRef<HTMLInputElement | null>(null)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const [login, { data: LoginData, isSuccess }] = useLoginMutation()
+    const [login, { data: LoginData, isSuccess, isLoading }] = useLoginMutation()
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -25,7 +26,8 @@ const Login = () => {
             }
         }
         catch (error: any) {
-            toast.error(error.data.message, {
+            const errorMessage = error?.data?.message || 'Something went wrong. Please try again.';
+            toast.error(errorMessage, {
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -64,12 +66,21 @@ const Login = () => {
                     <h1>Log in to DriveEasy</h1>
                     <p>Please login to your account</p>
                     <div className="input-group">
-                        <input type="email" id="email" name="email" placeholder="Email" ref={emailRef} required />
+                        <input type="email" id="email" name="email" placeholder="Email" ref={emailRef} required disabled={isLoading} />
                     </div>
                     <div className="input-group">
-                        <input type="password" id="password" name="password" placeholder="Password" ref={passwordRef} required />
+                        <input type="password" id="password" name="password" placeholder="Password" ref={passwordRef} required disabled={isLoading} />
                     </div>
-                    <button type="submit">Login</button>
+                    <button type="submit" disabled={isLoading} className={isLoading ? 'loading' : ''}>
+                        {isLoading ? (
+                            <>
+                                <AiOutlineLoading3Quarters className="spinner" />
+                                Logging in...
+                            </>
+                        ) : (
+                            'Login'
+                        )}
+                    </button>
                     <div className="bottom-text">
                         <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
                         <p><Link to="/forgot-password">Forgot password?</Link></p>

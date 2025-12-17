@@ -3,7 +3,7 @@ import './auth.css'
 import { Link } from 'react-router-dom'
 import { useForgotPasswordMutation } from '../../services/authApi';
 import { toast } from 'react-toastify';
-import Loader from '../Loader/Loader';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 const ForgotPassword = () => {
 
@@ -21,7 +21,8 @@ const ForgotPassword = () => {
             if (isError) throw error;
         }
         catch (error: any) {
-            toast.error(error.data.message, {
+            const errorMessage = error?.data?.message || 'Something went wrong. Please try again.';
+            toast.error(errorMessage, {
                 autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -48,22 +49,29 @@ const ForgotPassword = () => {
     }, []);
 
     return (
-        isLoading ? (<Loader />) : (
-            <div className="login">
-                <div className="login-container">
-                    <form className="login-form" onSubmit={handleSubmit}>
-                        <h1>Forgot Your Password</h1>
-                        <div className="input-group">
-                            <input type="email" id="email" name="email" placeholder="Email" ref={emailRef} required />
-                        </div>
-                        <button type="submit">Submit</button>
-                        <div className="bottom-text">
-                            <p>Already have an account? <Link to="/login">Log in</Link></p>
-                        </div>
-                    </form>
-                </div>
+        <div className="login">
+            <div className="login-container">
+                <form className="login-form" onSubmit={handleSubmit}>
+                    <h1>Forgot Your Password</h1>
+                    <div className="input-group">
+                        <input type="email" id="email" name="email" placeholder="Email" ref={emailRef} required disabled={isLoading} />
+                    </div>
+                    <button type="submit" disabled={isLoading} className={isLoading ? 'loading' : ''}>
+                        {isLoading ? (
+                            <>
+                                <AiOutlineLoading3Quarters className="spinner" />
+                                Sending...
+                            </>
+                        ) : (
+                            'Submit'
+                        )}
+                    </button>
+                    <div className="bottom-text">
+                        <p>Already have an account? <Link to="/login">Log in</Link></p>
+                    </div>
+                </form>
             </div>
-        )
+        </div>
     )
 }
 

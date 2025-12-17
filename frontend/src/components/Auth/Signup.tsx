@@ -5,6 +5,7 @@ import './auth.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { setUserSignup } from '../../slices/authSlice'
+import { AiOutlineLoading3Quarters } from 'react-icons/ai'
 
 const Signup = () => {
     const userNameRef = useRef<HTMLInputElement | null>(null)
@@ -14,7 +15,7 @@ const Signup = () => {
     const contactNumberRef = useRef<HTMLInputElement | null>(null)
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const [signup, { data: signupData, isSuccess, isError, error }] = useSignupMutation()
+    const [signup, { data: signupData, isSuccess, isError, error, isLoading }] = useSignupMutation()
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -33,6 +34,7 @@ const Signup = () => {
                     pauseOnHover: true,
                     draggable: true,
                 })
+                return;
             }
             if (userName && email && contactNumber && password === confirmPassword) {
                 await signup({ name: userName, email, password, confirmPassword, contactNumber }).unwrap();
@@ -42,24 +44,21 @@ const Signup = () => {
             }
         }
         catch (error: any) {
-            if (error.data.error.code === 11000) {
-                toast.error('User is already exist!', {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                })
+            let errorMessage = 'Something went wrong. Please try again.';
+
+            if (error?.data?.error?.code === 11000) {
+                errorMessage = 'User already exists!';
+            } else if (error?.data?.message) {
+                errorMessage = error.data.message;
             }
-            else {
-                toast.error(error.data.message, {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                })
-            }
+
+            toast.error(errorMessage, {
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            })
         }
     }
 
@@ -89,22 +88,31 @@ const Signup = () => {
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h1>Sign up</h1>
                     <div className="input-group">
-                        <input type="text" id="username" name="username" placeholder="Username" ref={userNameRef} required />
+                        <input type="text" id="username" name="username" placeholder="Username" ref={userNameRef} required disabled={isLoading} />
                     </div>
                     <div className="input-group">
-                        <input type="email" id="email" name="Email" placeholder="Email" ref={emailRef} required />
+                        <input type="email" id="email" name="Email" placeholder="Email" ref={emailRef} required disabled={isLoading} />
                     </div>
                     <div className="input-group">
-                        <input type="number" id="cono" name="contactNumber" placeholder="Contact Number" ref={contactNumberRef} required />
+                        <input type="number" id="cono" name="contactNumber" placeholder="Contact Number" ref={contactNumberRef} required disabled={isLoading} />
                     </div>
 
                     <div className="input-group">
-                        <input type="password" id="password" name="password" placeholder="Password" ref={passwordRef} minLength={8} required />
+                        <input type="password" id="password" name="password" placeholder="Password" ref={passwordRef} minLength={8} required disabled={isLoading} />
                     </div>
                     <div className="input-group">
-                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" ref={confirmPasswordRef} required />
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" ref={confirmPasswordRef} required disabled={isLoading} />
                     </div>
-                    <button type="submit">Sign up</button>
+                    <button type="submit" disabled={isLoading} className={isLoading ? 'loading' : ''}>
+                        {isLoading ? (
+                            <>
+                                <AiOutlineLoading3Quarters className="spinner" />
+                                Signing up...
+                            </>
+                        ) : (
+                            'Sign up'
+                        )}
+                    </button>
                     <div className="bottom-text">
                         <p>Already have an account? <Link to="/login">Log in</Link></p>
                     </div>
