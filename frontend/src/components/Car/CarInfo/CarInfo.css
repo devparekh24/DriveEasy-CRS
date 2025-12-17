@@ -49,6 +49,28 @@
   margin: 0 0.5rem;
 }
 
+/* Go Back Button */
+.go-back-btn {
+  cursor: pointer;
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: inline-block;
+  padding: 0.5rem 0;
+  transition: all 0.3s ease;
+}
+
+.go-back-btn:hover {
+  color: #333;
+  transform: translateX(-5px);
+}
+
+.go-back-btn u {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
 .car-info-icon {
   font-size: 1.5rem;
 }
@@ -198,6 +220,11 @@
   .car-image {
     height: 250px;
   }
+
+  .go-back-btn {
+    font-size: 1.05rem;
+    margin-bottom: 0.9rem;
+  }
 }
 
 /* Mobile styles */
@@ -265,6 +292,12 @@
 
   .car-info h3 {
     font-size: 1rem;
+  }
+
+  .go-back-btn {
+    font-size: 1rem;
+    padding: 0.6rem 0;
+    margin-bottom: 0.8rem;
   }
 
   .car-image {

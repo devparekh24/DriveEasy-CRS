@@ -24,6 +24,17 @@
   grid-template-columns: 1fr;
 }
 
+/* Large tablet and small desktop */
+@media screen and (max-width: 1200px) and (min-width: 1025px) {
+  .cars-showcase {
+    padding: 2.8rem 3rem;
+  }
+
+  .list-row {
+    gap: 1.3rem;
+  }
+}
+
 /* Tablet styles */
 @media screen and (max-width: 1024px) and (min-width: 768px) {
   .cars-showcase {
@@ -50,8 +61,34 @@
   }
 }
 
+/* Medium tablet and large mobile */
+@media screen and (max-width: 767px) and (min-width: 600px) {
+  .cars-showcase {
+    padding: 2rem 1.5rem;
+  }
+
+  .list-row {
+    gap: 1rem;
+  }
+
+  /* 3x3 becomes 2x2 on medium tablet */
+  .list-row.grid-3x3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 2x2 stays 2x2 on medium tablet */
+  .list-row.grid-2x2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 1x1 stays 1x1 */
+  .list-row.grid-1x1 {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Mobile styles */
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 599px) {
   .cars-showcase {
     padding: 2rem 1rem;
   }

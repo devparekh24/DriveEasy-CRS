@@ -67,7 +67,7 @@ const CarInfo: React.FC = () => {
         <div className="car-info">
           <div className="car-info-row">
             <div className="car-info-text-col">
-              <h3 onClick={() => navigate('/cars')} style={{ cursor: 'pointer' }}> <u>Go Back</u></h3>
+              <h3 onClick={() => navigate('/cars')} className="go-back-btn"> <u>Go Back</u></h3>
               <div className="car-image">
                 <img src={find_car?.image} alt={find_car?.image} />
               </div>
