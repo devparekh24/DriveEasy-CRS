@@ -115,32 +115,50 @@
   .CarDetailsCard {
     width: 100%;
     max-width: 100%;
-    height: 18rem;
-    min-height: 18rem;
+    height: 19.5rem;
+    min-height: 19.5rem;
+    border-radius: 8px;
   }
 
   .card-details-image {
-    height: 10rem;
+    height: 11rem;
+    object-fit: cover;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
   }
 
   .car-details-text {
-    height: 8rem;
-    padding: 0.5rem 0.6rem;
+    height: 8.5rem;
+    padding: 0.5rem 0.7rem;
+    overflow: hidden;
   }
 
   .car-details-text-right h3 {
-    margin: 4px;
-    font-size: 0.9rem;
+    margin: 3px 5px;
+    font-size: 0.95rem;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .rating {
+    margin: 0.4rem 0;
+  }
+
+  .price span {
+    font-size: 0.65rem;
   }
 
   .info-icons span {
-    margin-right: 1rem;
-    font-size: 1rem;
+    margin-right: 1.2rem;
+    font-size: 1.05rem;
   }
 
   .info span {
-    margin-right: 0.8rem;
-    font-size: 0.7rem;
+    margin-right: 0.9rem;
+    font-size: 0.72rem;
+    top: -6px;
   }
 }
 
@@ -149,31 +167,43 @@
   .CarDetailsCard {
     width: 100%;
     max-width: 100%;
-    height: 17rem;
-    min-height: 17rem;
+    height: 18.5rem;
+    min-height: 18.5rem;
+    border-radius: 8px;
   }
 
   .card-details-image {
-    height: 9.5rem;
+    height: 10.5rem;
+    object-fit: cover;
   }
 
   .car-details-text {
-    height: 7.5rem;
-    padding: 0.4rem 0.5rem;
+    height: 8rem;
+    padding: 0.4rem 0.6rem;
   }
 
   .car-details-text-right h3 {
-    margin: 3px;
-    font-size: 0.85rem;
+    margin: 2px 4px;
+    font-size: 0.88rem;
+    line-height: 1.2;
+  }
+
+  .rating {
+    margin: 0.3rem 0;
+  }
+
+  .price span {
+    font-size: 0.6rem;
   }
 
   .info-icons span {
-    margin-right: 0.8rem;
-    font-size: 0.95rem;
+    margin-right: 1rem;
+    font-size: 1rem;
   }
 
   .info span {
-    margin-right: 0.6rem;
-    font-size: 0.65rem;
+    margin-right: 0.7rem;
+    font-size: 0.68rem;
+    top: -6px;
   }
 }
