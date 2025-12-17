@@ -5,11 +5,23 @@
 
 .list-row {
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-evenly;
+  display: grid;
   gap: 1.5rem;
+}
+
+/* 3x3 Grid (Default) */
+.list-row.grid-3x3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* 2x2 Grid */
+.list-row.grid-2x2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 1x1 Grid */
+.list-row.grid-1x1 {
+  grid-template-columns: 1fr;
 }
 
 /* Tablet styles */
@@ -19,8 +31,22 @@
   }
 
   .list-row {
-    justify-content: space-around;
     gap: 1.2rem;
+  }
+
+  /* 3x3 becomes 2x2 on tablet */
+  .list-row.grid-3x3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 2x2 stays 2x2 on tablet */
+  .list-row.grid-2x2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 1x1 stays 1x1 on tablet */
+  .list-row.grid-1x1 {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -31,8 +57,14 @@
   }
 
   .list-row {
-    justify-content: center;
     gap: 1rem;
+  }
+
+  /* All grids become 1x1 on mobile */
+  .list-row.grid-3x3,
+  .list-row.grid-2x2,
+  .list-row.grid-1x1 {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -157,6 +157,13 @@ nav {
     width: 80%;
     text-align: center;
   }
+
+  /* Center avatar in mobile menu */
+  nav a[href="/my-profile"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 /* Extra small mobile devices */

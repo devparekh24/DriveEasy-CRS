@@ -7,7 +7,12 @@ import { useGetAllCarsQuery } from "../../../services/carApi";
 import { toast } from "react-toastify";
 import Loader from "../../Loader/Loader";
 
-const CarsShowcase = ({ filters }: { filters: any }) => {
+interface CarsShowcaseProps {
+  filters: any;
+  gridView: '1x1' | '2x2' | '3x3';
+}
+
+const CarsShowcase: React.FC<CarsShowcaseProps> = ({ filters, gridView }) => {
 
   const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
   const dispatch = useAppDispatch();
@@ -124,7 +129,7 @@ const CarsShowcase = ({ filters }: { filters: any }) => {
     isLoading ? (<Loader />) :
       (
         <div className="cars-showcase">
-          <div className="list-row">
+          <div className={`list-row grid-${gridView}`}>
             {filteredCars.length === 0 ? (<h3>No car found!</h3>) :
               (<>
                 {filteredCars.map((car: Car) => (
