@@ -235,15 +235,18 @@ const DashBoardLayout = (props: DashboardProps) => {
             }}>
                 {/* Top Header Navigation Bar with Toggle Button */}
                 <Header style={{
+                    position: 'static',
                     padding: '0 16px',
                     background: '#ffffff',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                    zIndex: 99,
+                    zIndex: 1,
                     height: 56,
-                    lineHeight: '56px'
+                    minHeight: 56,
+                    lineHeight: '56px',
+                    flex: '0 0 auto'
                 }}>
                     <Button
                         type="text"
@@ -255,7 +258,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                     <div style={{ width: 32 }} />
                 </Header>
 
-                <Content style={{ margin: isMobile ? '12px 8px 8px' : '24px 16px 16px', flex: '1 0 auto', display: 'flex', flexDirection: 'column' }}>
+                <Content style={{ margin: isMobile ? '16px 12px 12px' : '24px 16px 16px', flex: '1 0 auto', display: 'flex', flexDirection: 'column' }}>
                     <div
                         style={{
                             padding: isMobile ? 12 : 24,

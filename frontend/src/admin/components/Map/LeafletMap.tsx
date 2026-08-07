@@ -16,6 +16,14 @@ import {
 import { useGetAllCarsQuery } from '../../../services/carApi';
 import { isV2Enabled } from '../../../utils/featureFlags';
 
+// Fix Leaflet default marker icon paths for production bundler builds (Vite / Vercel)
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+    shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
+
 interface Coordinates {
     latitude: number;
     longitude: number;
@@ -136,9 +144,14 @@ const SimpleBaselineMap: React.FC<{ center: Coordinates }> = ({ center }) => {
     useEffect(() => {
         let map = L.map('simple-map').setView([center.latitude, center.longitude], 13);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
         }).addTo(map);
+
+        const timer = setTimeout(() => {
+            map.invalidateSize();
+        }, 250);
 
         const marker = L.marker([center.latitude, center.longitude]).addTo(map);
 
@@ -155,6 +168,7 @@ const SimpleBaselineMap: React.FC<{ center: Coordinates }> = ({ center }) => {
         }
 
         return () => {
+            clearTimeout(timer);
             map.remove();
         };
     }, [center]);
@@ -242,10 +256,14 @@ const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter })
                 zoomControl: true
             });
 
-            L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
                 maxZoom: 19
             }).addTo(map);
+
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 250);
 
             mapRef.current = map;
         }
@@ -461,9 +479,9 @@ const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter })
                         className="admin-card-hover"
                         bordered={false}
                         bodyStyle={{ padding: 0 }}
-                        style={{ borderRadius: 12, overflow: 'hidden', minHeight: 520 }}
+                        style={{ borderRadius: 12, overflow: 'hidden', minHeight: 520, position: 'relative', zIndex: 1 }}
                     >
-                        <div id="fleet-map" style={{ height: '540px', width: '100%' }} />
+                        <div id="fleet-map" style={{ height: '540px', width: '100%', borderRadius: 12, overflow: 'hidden' }} />
                     </Card>
 
                     <Card

@@ -10,6 +10,23 @@
     border-color: #1890ff !important;
 }
 
+/* Prevent Leaflet Map tiles from spilling out of cards or floating over footers */
+.leaflet-container {
+    z-index: 1 !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+    max-width: 100% !important;
+}
+
+.leaflet-pane {
+    z-index: 1 !important;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+    z-index: 2 !important;
+}
+
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
