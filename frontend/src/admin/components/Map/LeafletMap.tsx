@@ -41,6 +41,7 @@ export interface CarFleetMarker {
     fuelLevel: string;
     driverName: string;
     locationName: string;
+    image?: string;
     isLiveFeed?: boolean;
 }
 
@@ -57,7 +58,8 @@ const DUMMY_FLEET: CarFleetMarker[] = [
         speed: '58 km/h',
         fuelLevel: '78% Fuel',
         driverName: 'Rahul Sharma',
-        locationName: 'Station Road, Surat'
+        locationName: 'Station Road, Surat',
+        image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500&auto=format&fit=crop'
     },
     {
         id: 'fleet-2',
@@ -70,7 +72,8 @@ const DUMMY_FLEET: CarFleetMarker[] = [
         speed: '0 km/h (Parked)',
         fuelLevel: '92% Fuel',
         driverName: 'Unassigned (Parked)',
-        locationName: 'Dumas Road, Surat'
+        locationName: 'Dumas Road, Surat',
+        image: 'https://images.unsplash.com/photo-1541348263662-e08266f92f0a?w=500&auto=format&fit=crop'
     },
     {
         id: 'fleet-3',
@@ -83,7 +86,8 @@ const DUMMY_FLEET: CarFleetMarker[] = [
         speed: '42 km/h',
         fuelLevel: '65% Fuel',
         driverName: 'Priya Patel',
-        locationName: 'Katargam Hub, Surat'
+        locationName: 'Katargam Hub, Surat',
+        image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=500&auto=format&fit=crop'
     },
     {
         id: 'fleet-4',
@@ -96,7 +100,8 @@ const DUMMY_FLEET: CarFleetMarker[] = [
         speed: '0 km/h (Charging)',
         fuelLevel: '88% EV Charge',
         driverName: 'Unassigned (Charging)',
-        locationName: 'Magdalla Port EV Station'
+        locationName: 'Magdalla Port EV Station',
+        image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=500&auto=format&fit=crop'
     },
     {
         id: 'fleet-5',
@@ -109,7 +114,8 @@ const DUMMY_FLEET: CarFleetMarker[] = [
         speed: '72 km/h',
         fuelLevel: '54% Fuel',
         driverName: 'Amit Verma',
-        locationName: 'Kamrej Expressway'
+        locationName: 'Kamrej Expressway',
+        image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=500&auto=format&fit=crop'
     },
     {
         id: 'fleet-6',
@@ -122,7 +128,8 @@ const DUMMY_FLEET: CarFleetMarker[] = [
         speed: '0 km/h (In Service)',
         fuelLevel: '30% Fuel',
         driverName: 'Surat Service Hub',
-        locationName: 'Vesu Service Station'
+        locationName: 'Vesu Service Station',
+        image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500&auto=format&fit=crop'
     },
     {
         id: 'fleet-7',
@@ -135,7 +142,8 @@ const DUMMY_FLEET: CarFleetMarker[] = [
         speed: '35 km/h',
         fuelLevel: '82% Fuel',
         driverName: 'Sneha Desai',
-        locationName: 'Adajan Ring Road'
+        locationName: 'Adajan Ring Road',
+        image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=500&auto=format&fit=crop'
     }
 ];
 
@@ -205,9 +213,14 @@ const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter })
             const liveSpeed = car.currentLocation?.speed ?? car.speed;
             const liveLocation = car.currentLocation?.address ?? car.locationName ?? car.address;
             const hasRealGps = typeof liveLat === 'number' && typeof liveLng === 'number';
-
             const isBooked = car.bookedDates && car.bookedDates.length > 0;
             const isAvail = car.availability !== false && !isBooked;
+
+            let rawImg = car.image || car.carImage || preset.image;
+            if (rawImg && typeof rawImg === 'string' && rawImg.startsWith('http://res.cloudinary.com')) {
+                rawImg = rawImg.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
+            }
+            const carImage = (rawImg && rawImg !== '/broken-image.jpg' && rawImg !== 'undefined' && rawImg !== 'null') ? rawImg : preset.image;
 
             return {
                 id: car._id || `car-${index}`,
@@ -221,6 +234,7 @@ const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter })
                 fuelLevel: car.fule ? `${car.fule} (85%)` : preset.fuelLevel,
                 driverName: isBooked ? 'Active Renter' : 'Parked / Unassigned',
                 locationName: liveLocation || preset.locationName,
+                image: carImage,
                 isLiveFeed: hasRealGps || isLivePolling
             } as CarFleetMarker;
         });
@@ -304,7 +318,12 @@ const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter })
             });
 
             const popupContent = `
-                <div style="font-family: sans-serif; min-width: 200px; padding: 4px;">
+                <div style="font-family: sans-serif; width: 220px; padding: 4px;">
+                    ${car.image ? `
+                        <div style="width: 100%; height: 60px; border-radius: 8px; overflow: hidden; margin-bottom: 8px; background: #f8fafc; border: 1px solid #e2e8f0;">
+                            <img src="${car.image}" alt="${car.carName}" style="width: 100%; height: 100%; object-fit: cover;" onError="this.style.display='none'" />
+                        </div>
+                    ` : ''}
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                         <strong style="font-size: 15px; color: #1e293b;">${car.carName}</strong>
                         <span style="
@@ -487,8 +506,8 @@ const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter })
                     <Card
                         className="admin-card-hover"
                         title={
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                                <span style={{ fontWeight: 600, fontSize: 16 }}>Tracked Vehicles ({filteredFleet.length})</span>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '4px 0' }}>
+                                <span style={{ fontWeight: 700, fontSize: 16, color: '#0f172a' }}>Tracked Vehicles ({filteredFleet.length})</span>
                                 <Input
                                     placeholder="Search by car name, plate or location..."
                                     prefix={<SearchOutlined />}
@@ -505,8 +524,9 @@ const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter })
                             </div>
                         }
                         bordered={false}
+                        headStyle={{ padding: '16px 20px 12px 20px', borderBottom: '1px solid #f1f5f9' }}
                         style={{ borderRadius: 12, height: 540, overflow: 'hidden' }}
-                        bodyStyle={{ height: '400px', overflowY: 'auto', padding: '12px 16px' }}
+                        bodyStyle={{ height: '375px', overflowY: 'auto', padding: '16px 20px' }}
                     >
                         {filteredFleet.length === 0 ? (
                             <div style={{ textAlign: 'center', padding: 30, color: '#8c8c8c' }}>
@@ -531,18 +551,38 @@ const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter })
                                                 background: isSelected ? '#e0f2fe' : '#f8fafc',
                                                 cursor: 'pointer',
                                                 transition: 'all 0.2s ease',
+                                                display: 'flex',
+                                                gap: 12,
+                                                alignItems: 'center'
                                             }}
                                         >
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                                                <span style={{ fontWeight: 700, fontSize: 14, color: '#0f172a' }}>{car.carName}</span>
-                                                <Tag color={tagColor}>{car.status}</Tag>
-                                            </div>
-                                            <div style={{ fontSize: 12, color: '#64748b', display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                                                <span>🏷️ {car.plateNumber}</span>
-                                                <span>⚡ {car.speed}</span>
-                                            </div>
-                                            <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
-                                                <EnvironmentOutlined /> {car.locationName}
+                                            {/* {car.image && (
+                                                <img
+                                                    src={car.image}
+                                                    alt={car.carName}
+                                                    style={{
+                                                        width: 52,
+                                                        height: 52,
+                                                        borderRadius: 6,
+                                                        objectFit: 'cover',
+                                                        border: '1px solid #cbd5e1',
+                                                        flexShrink: 0
+                                                    }}
+                                                    onError={(e: any) => { e.target.style.display = 'none'; }}
+                                                />
+                                            )} */}
+                                            <div style={{ flex: 1, minWidth: 0 }}>
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                                                    <span style={{ fontWeight: 700, fontSize: 14, color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{car.carName}</span>
+                                                    <Tag color={tagColor} style={{ margin: 0 }}>{car.status}</Tag>
+                                                </div>
+                                                <div style={{ fontSize: 12, color: '#64748b', display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                                                    <span>🏷️ {car.plateNumber}</span>
+                                                    <span>⚡ {car.speed}</span>
+                                                </div>
+                                                <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}>
+                                                    <EnvironmentOutlined /> {car.locationName}
+                                                </div>
                                             </div>
                                         </div>
                                     );

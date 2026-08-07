@@ -27,6 +27,21 @@
     z-index: 2 !important;
 }
 
+/* Border around selected tabs in Segmented filter controls */
+.ant-segmented-item {
+    border: 1.5px solid transparent !important;
+    border-radius: 6px !important;
+}
+
+.ant-segmented-item-selected {
+    border: 2px solid #1890ff !important;
+    border-radius: 6px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2) !important;
+    color: #1890ff !important;
+    font-weight: 700 !important;
+}
+
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -69,7 +84,8 @@
         margin-bottom: 14px !important;
     }
 
-    .modal-btn h2, .modal-btn h3 {
+    .modal-btn h2,
+    .modal-btn h3 {
         font-size: 18px !important;
         margin: 0 !important;
     }
@@ -96,7 +112,7 @@
 }
 
 /* Custom styling for all Admin Tables - Zebra striping, high contrast & pagination fix */
-.admin-table-styled .ant-table-thead > tr > th {
+.admin-table-styled .ant-table-thead>tr>th {
     background: #e2e8f0 !important;
     color: #0f172a !important;
     font-weight: 700 !important;
@@ -107,17 +123,17 @@
 
 /* Alternating zebra row colors */
 .admin-table-styled .even-row,
-.admin-table-styled .ant-table-tbody > tr:nth-child(even) > td {
+.admin-table-styled .ant-table-tbody>tr:nth-child(even)>td {
     background-color: #f8fafc !important;
 }
 
 .admin-table-styled .odd-row,
-.admin-table-styled .ant-table-tbody > tr:nth-child(odd) > td {
+.admin-table-styled .ant-table-tbody>tr:nth-child(odd)>td {
     background-color: #ffffff !important;
 }
 
 /* Row hover highlight */
-.admin-table-styled .ant-table-tbody > tr:hover > td {
+.admin-table-styled .ant-table-tbody>tr:hover>td {
     background-color: #e0f2fe !important;
     transition: background-color 0.2s ease !important;
 }
