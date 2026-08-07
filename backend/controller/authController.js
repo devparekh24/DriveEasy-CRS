@@ -13,7 +13,13 @@ const signToken = id => {
 const createSendToken = (user, statusCode, res) => {
 
     const token = signToken(user._id);
-    res.cookie('jwt', token)
+    const cookieOptions = {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === 'production',
+    };
+    res.cookie('jwt', token, cookieOptions)
     user.password = undefined
 
     res.status(statusCode).json({
@@ -59,7 +65,11 @@ exports.login = catchAsyncErr(async (req, res, next) => {
 
 exports.logout = (req, res) => {
 
-    res.clearCookie('jwt')
+    res.clearCookie('jwt', {
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+        secure: process.env.NODE_ENV === 'production',
+    })
     res.status(200).json({
         status: "success",
         meassage: "Logged Out Successfully!"
@@ -205,8 +215,7 @@ exports.resetPassword = catchAsyncErr(async (req, res, next) => {
     user.passwordResetExpires = undefined;
     await user.save()
 
-    //3.Update changedPasswordAt Property for user
-    user.passwordChangedAt = Date.now()
+    //3. passwordChangedAt is automatically set by the pre('save') middleware
 
     //4. log the user in, send JWT
     createSendToken(user, 200, res);

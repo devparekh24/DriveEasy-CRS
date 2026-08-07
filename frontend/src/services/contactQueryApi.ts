@@ -6,6 +6,7 @@ export const contactQueryApi = createApi({
     reducerPath: 'contactQueryApi',
     baseQuery: fetchBaseQuery({
         baseUrl: import.meta.env.VITE_API_URL,
+        credentials: 'include',
         prepareHeaders: (headers, { getState }) => {
             const isAdmin = (getState() as RootState).auth.isAdmin;
             if (isAdmin) {

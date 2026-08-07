@@ -1,9 +1,26 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+const getAuthToken = () => {
+    try {
+        const item = localStorage.getItem('user');
+        return item ? JSON.parse(item)?.token : null;
+    } catch {
+        return null;
+    }
+};
+
 export const authApi = createApi({
     reducerPath: 'authApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: import.meta.env.VITE_API_URL
+        baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000',
+        credentials: 'include',
+        prepareHeaders: (headers) => {
+            const authToken = getAuthToken();
+            if (authToken) {
+                headers.set('Authorization', `Bearer ${authToken}`);
+            }
+            return headers;
+        },
     }),
     tagTypes: ['Auth'],
     endpoints: (builder) => ({
@@ -46,7 +63,15 @@ export const authApi = createApi({
             }),
             invalidatesTags: ['Auth']
         }),
+
+        logout: builder.mutation<void, void>({
+            query: () => ({
+                url: '/users/logout',
+                method: 'GET',
+            }),
+            invalidatesTags: ['Auth']
+        }),
     })
 })
 
-export const { useLoginMutation, useSignupMutation, useForgotPasswordMutation, useResetPasswordMutation } = authApi
+export const { useLoginMutation, useSignupMutation, useForgotPasswordMutation, useResetPasswordMutation, useLogoutMutation } = authApi

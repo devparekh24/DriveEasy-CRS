@@ -22,14 +22,36 @@ export interface AuthState {
     isLoggedIn: boolean;
     isAdmin: boolean;
 }
-const initialState: AuthState = {
-    name: null,
-    token: null,
-    user: null,
-    userId: null,
-    isLoggedIn: false,
-    isAdmin: false
-}
+// Restore auth state from localStorage on app load
+const loadAuthFromStorage = (): AuthState => {
+    try {
+        const storedUser = localStorage.getItem('user');
+        const isLogin = localStorage.getItem('isLogin');
+        if (storedUser && isLogin === 'true') {
+            const parsed = JSON.parse(storedUser);
+            return {
+                name: parsed.name || null,
+                token: parsed.token || null,
+                user: parsed.user || null,
+                userId: parsed.userId || null,
+                isLoggedIn: true,
+                isAdmin: parsed.role === 'admin',
+            };
+        }
+    } catch {
+        // If localStorage is corrupted, fall back to defaults
+    }
+    return {
+        name: null,
+        token: null,
+        user: null,
+        userId: null,
+        isLoggedIn: false,
+        isAdmin: false,
+    };
+};
+
+const initialState: AuthState = loadAuthFromStorage();
 const authSlice = createSlice({
     name: 'auth',
     initialState,

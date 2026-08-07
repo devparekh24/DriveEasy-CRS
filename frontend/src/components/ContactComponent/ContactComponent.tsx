@@ -17,7 +17,7 @@ const offices: Office[] = [{
   title: "Surat Office",
   phoneNumber: "1234567890",
   emailAddress: "driveeasy@gmail.com",
-  address: "Luxuria Business Hub, Dumas Rd, Surat",
+  address: "Surat",
 }];
 
 interface initialState {

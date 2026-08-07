@@ -14,6 +14,7 @@ export const damageReportApi = createApi({
     reducerPath: 'damageReportApi',
     baseQuery: fetchBaseQuery({
         baseUrl: import.meta.env.VITE_API_URL,
+        credentials: 'include',
         prepareHeaders: (headers) => {
             const authToken = getAuthToken();
             if (authToken) {

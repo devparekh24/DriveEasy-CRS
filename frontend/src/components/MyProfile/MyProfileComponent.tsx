@@ -31,7 +31,8 @@ export const MyProfileComponent = () => {
   const [image, setImage] = useState<string | undefined>("");
   const [contactNumber, setContactNumber] = useState<number | undefined>();
 
-  const userId = JSON.parse(localStorage.getItem('user')!).userId;
+  const storedUser = localStorage.getItem('user');
+  const userId = storedUser ? JSON.parse(storedUser)?.userId : null;
 
   const [updateMe, { data, isLoading, isSuccess }] = useUpdateMeMutation()
 

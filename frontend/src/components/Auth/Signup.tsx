@@ -66,14 +66,14 @@ const Signup = () => {
         catch (error: any) {
             let errorMessage = 'Something went wrong. Please try again.';
 
-            if (error?.data?.error?.code === 11000) {
-                errorMessage = 'User with this email or phone number already exists!';
+            if (error?.data?.error?.code === 11000 || error?.data?.message?.includes('already exists') || error?.data?.message?.includes('Duplicate')) {
+                errorMessage = error?.data?.message || 'User with this email or phone number already exists!';
             } else if (error?.data?.message) {
                 errorMessage = error.data.message;
             }
 
             toast.error(errorMessage, {
-                autoClose: 2000,
+                autoClose: 3000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -83,7 +83,7 @@ const Signup = () => {
     }
 
     useEffect(() => {
-        if (isSuccess) {
+        if (isSuccess && signupData?.data?.user) {
             toast.success('Signup Successful!', {
                 autoClose: 1500,
                 hideProgressBar: false,
@@ -91,11 +91,19 @@ const Signup = () => {
                 pauseOnHover: true,
                 draggable: true,
             })
-            dispatch(setUserSignup({ name: signupData.data.user.name, email: signupData.data.user.email, confirmPassword: signupData.data.user.confirmPassword, password: signupData.data.user.passsword, contactNumber: signupData.data.user.contactNumber, user: signupData.data.user }))
+            const user = signupData.data.user;
+            dispatch(setUserSignup({
+                name: user.name || '',
+                email: user.email || '',
+                confirmPassword: '',
+                password: '',
+                contactNumber: user.contactNumber || 0,
+                user: user
+            }))
             navigate('/login')
         }
 
-    }, [isSuccess])
+    }, [isSuccess, signupData, dispatch, navigate])
 
 
     useEffect(() => {
