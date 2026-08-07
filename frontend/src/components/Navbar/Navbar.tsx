@@ -81,10 +81,8 @@ const Navbar = () => {
     return (
         <div>
             <header>
-                <div className="logo" style={{ display: 'flex', gap: 10 }}>
-                    <div>
-                        <SiMediamarkt />
-                    </div>
+                <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <SiMediamarkt style={{ fontSize: 40, color: '#ffffff' }} />
                     <div data-aos="fade-right">
                         <h3>DriveEasy</h3>
                     </div>

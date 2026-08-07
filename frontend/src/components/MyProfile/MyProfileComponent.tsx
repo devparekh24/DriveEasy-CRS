@@ -212,10 +212,10 @@ export const MyProfileComponent = () => {
               sx={{
                 width: 100,
                 height: 100,
-                border: '3px solid #1890ff',
-                boxShadow: '0 6px 16px rgba(24, 144, 255, 0.3)',
-                bgcolor: '#1890ff',
-                color: '#fff',
+                border: '3px solid #343a40',
+                boxShadow: '0 6px 16px rgba(0, 0, 0, 0.25)',
+                bgcolor: '#1e293b',
+                color: '#ffffff',
                 fontSize: '36px',
                 fontWeight: 600,
               }}
