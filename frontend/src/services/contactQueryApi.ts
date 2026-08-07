@@ -9,9 +9,18 @@ export const contactQueryApi = createApi({
         prepareHeaders: (headers, { getState }) => {
             const isAdmin = (getState() as RootState).auth.isAdmin;
             if (isAdmin) {
-                const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+                const getAuthToken = () => {
+                    try {
+                        const item = localStorage.getItem('user');
+                        return item ? JSON.parse(item)?.token : null;
+                    } catch {
+                        return null;
+                    }
+                };
                 const authToken = getAuthToken();
-                headers.set('Authorization', `Bearer ${authToken}`);
+                if (authToken) {
+                    headers.set('Authorization', `Bearer ${authToken}`);
+                }
             }
             return headers;
         },

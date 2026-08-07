@@ -14,6 +14,8 @@ import { toast } from 'react-toastify';
 import { useUpdateCarMutation } from '../../../services/carApi';
 import { updateCar } from '../../../slices/carSlice';
 
+import { validateName, validateEmail, validatePhone } from '../../../utils/validation';
+
 interface BookedDate {
     startDate: Date | string;
     endDate: Date | string;
@@ -247,70 +249,42 @@ const CarBookingFormPerHour = () => {
         const phoneNo = phoneNoRef!.current!.value!
 
         const handleValidation = () => {
-            // Name validation
-            const nameRegex = /^[a-zA-Z]{1,}(?: [a-zA-Z]+){0,2}$/;
-            if (!fullName!.trim()) {
-                toast.error('Full Name is required', {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                })
-                return false
-            } else if (!nameRegex.test(fullName!)) {
-                toast.error('Invalid characters in Full Name', {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                })
-                return false
+            const fullName = fullNameRef.current?.value || formData.fullName || '';
+            const emailAddress = emailAddressRef.current?.value || formData.emailAddress || '';
+            const phoneNo = phoneNoRef.current?.value || formData.phoneNo || '';
+            const pickupAddress = pickupAddressRef.current?.value || formData.pickupAddress || addressState.pickupAddress || '';
+            const dropOffAddress = dropOffAddressRef.current?.value || formData.dropOffAddress || addressState.dropoffAddress || '';
+
+            const nameVal = validateName(fullName);
+            if (!nameVal.isValid) {
+                toast.error(nameVal.message, { autoClose: 2000 });
+                return false;
             }
 
-            // Phone number validation
-            const phoneRegex = /^\d{10}$/;
-            if (!phoneNo!.trim()) {
-                toast.error('Phone Number is required', {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                })
-                return false
-            } else if (!phoneRegex.test(phoneNo!)) {
-                toast.error('Phone number must be 10 digit long only', {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                })
-                return false
+            const emailVal = validateEmail(emailAddress);
+            if (!emailVal.isValid) {
+                toast.error(emailVal.message, { autoClose: 2000 });
+                return false;
             }
 
-            if (!emailAddress!.trim()) {
-                toast.error('Email Address is required', {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                })
-                return false
+            const phoneVal = validatePhone(phoneNo);
+            if (!phoneVal.isValid) {
+                toast.error(phoneVal.message, { autoClose: 2000 });
+                return false;
             }
 
-            // RangePicker validation
+            if (!pickupAddress || !pickupAddress.trim()) {
+                toast.error('Pickup address is required', { autoClose: 2000 });
+                return false;
+            }
+
+            if (!dropOffAddress || !dropOffAddress.trim()) {
+                toast.error('Drop-off address is required', { autoClose: 2000 });
+                return false;
+            }
+
             if (!formData.pickupDateAndTime || !formData.dropOffDateAndTime) {
-                toast.error('Please select valid pickup and drop-off dates.', {
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                });
+                toast.error('Please select valid pickup and drop-off dates.', { autoClose: 2000 });
                 return false;
             }
 
@@ -421,13 +395,15 @@ const CarBookingFormPerHour = () => {
                 <div>
                     <label htmlFor="phoneNo">Phone Number</label>
                     <input
-                        type="number"
+                        type="tel"
                         maxLength={10}
-                        minLength={10}
-                        placeholder="Enter Contact Number"
+                        placeholder="Enter Contact Number (10 digits)"
                         name="phoneNo"
                         id="phoneNo"
-                        onChange={handleChange}
+                        onChange={(e) => {
+                            const cleaned = e.target.value.replace(/\D/g, '').slice(0, 10);
+                            setFormData((prev) => ({ ...prev, phoneNo: cleaned }));
+                        }}
                         value={formData.phoneNo}
                         ref={phoneNoRef}
                     />

@@ -2,8 +2,25 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Order } from "../slices/orderSlice";
 
 
-const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token;
-const getUserId = () => JSON.parse(localStorage.getItem('user')!).id;
+const getAuthToken = () => {
+    try {
+        const item = localStorage.getItem('user');
+        return item ? JSON.parse(item)?.token : null;
+    } catch {
+        return null;
+    }
+};
+
+const getUserId = () => {
+    try {
+        const item = localStorage.getItem('user');
+        if (!item) return null;
+        const parsed = JSON.parse(item);
+        return parsed?.userId || parsed?.user?._id || parsed?.id || null;
+    } catch {
+        return null;
+    }
+};
 
 export const orderApi = createApi({
     reducerPath: 'orderApi',

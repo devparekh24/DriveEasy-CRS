@@ -24,6 +24,8 @@ export interface Car {
     transmission: string;
     whenWillCarAvailable: string;
     bookedDates: BookedDate[];
+    isBookedForPeriod?: boolean;
+    conflictingBookings?: BookedDate[];
 }
 
 export interface CarState {

@@ -17,11 +17,23 @@ const orderSchema = new mongoose.Schema({
     },
     emailAddress: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: function (val) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+            },
+            message: 'Please enter a valid email address'
+        }
     },
     phoneNo: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: function (val) {
+                return /^[6-9]\d{9}$/.test(val);
+            },
+            message: 'Phone number must be a valid 10-digit mobile number'
+        }
     },
     pickupAddress: {
         type: String,

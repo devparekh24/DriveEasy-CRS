@@ -5,6 +5,8 @@ import { useForgotPasswordMutation } from '../../services/authApi';
 import { toast } from 'react-toastify';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
+import { validateEmail } from '../../utils/validation';
+
 const ForgotPassword = () => {
 
     const emailRef = useRef<HTMLInputElement | null>(null)
@@ -14,10 +16,14 @@ const ForgotPassword = () => {
         event.preventDefault();
         const email = emailRef.current?.value || ''
 
+        const emailVal = validateEmail(email);
+        if (!emailVal.isValid) {
+            toast.error(emailVal.message, { autoClose: 2000 });
+            return;
+        }
+
         try {
-            if (email) {
-                await forgotPassword({ email }).unwrap();
-            }
+            await forgotPassword({ email }).unwrap();
             if (isError) throw error;
         }
         catch (error: any) {

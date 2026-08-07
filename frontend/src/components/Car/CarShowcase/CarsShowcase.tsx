@@ -3,7 +3,7 @@ import CarDetailsCard from "../CarDetailsCard/CarDetailsCard";
 import { useAppDispatch, useAppSelector } from "../../../hooks/hooks";
 import { useEffect, useMemo } from "react";
 import { Car, setCars } from "../../../slices/carSlice";
-import { useGetAllCarsQuery } from "../../../services/carApi";
+import { useGetAllCarsQuery, useGetCarsWithAvailabilityQuery } from "../../../services/carApi";
 import { toast } from "react-toastify";
 import Loader from "../../Loader/Loader";
 
@@ -14,38 +14,66 @@ interface CarsShowcaseProps {
 
 const CarsShowcase: React.FC<CarsShowcaseProps> = ({ filters, gridView }) => {
 
-  const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
-  const dispatch = useAppDispatch();
-  const cars = useAppSelector(state => state.car.cars)
+  const hasDateFilter = filters.startDate && filters.endDate;
 
-  const carData = async () => {
-    try {
-      await data
-      if (isError) {
-        throw error
-      }
-    }
-    catch (error: any) {
-      toast.error(error?.data?.message, {
+  // Fetch all cars (used when no date filter is applied)
+  const {
+    data: allCarsData,
+    isError: isAllCarsError,
+    isLoading: isAllCarsLoading,
+    error: allCarsError,
+    isSuccess: isAllCarsSuccess,
+  } = useGetAllCarsQuery(undefined, { skip: !!hasDateFilter });
+
+  // Fetch cars with availability annotations (used when date filter is applied)
+  const {
+    data: availabilityCarsData,
+    isError: isAvailabilityError,
+    isLoading: isAvailabilityLoading,
+    error: availabilityError,
+    isSuccess: isAvailabilitySuccess,
+  } = useGetCarsWithAvailabilityQuery(
+    { pickupDate: filters.startDate, dropOffDate: filters.endDate },
+    { skip: !hasDateFilter }
+  );
+
+  const dispatch = useAppDispatch();
+  const cars = useAppSelector(state => state.car.cars);
+
+  // Determine which data source to use
+  const isLoading = hasDateFilter ? isAvailabilityLoading : isAllCarsLoading;
+  const isError = hasDateFilter ? isAvailabilityError : isAllCarsError;
+  const error = hasDateFilter ? availabilityError : allCarsError;
+  const data = hasDateFilter ? availabilityCarsData : allCarsData;
+  const isSuccess = hasDateFilter ? isAvailabilitySuccess : isAllCarsSuccess;
+
+  useEffect(() => {
+    if (isError && error) {
+      toast.error((error as any)?.data?.message || 'Failed to fetch cars', {
         autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-      })
+      });
     }
-  }
+  }, [isError, error]);
 
   useEffect(() => {
-    carData()
-    if (isSuccess) {
-      dispatch(setCars({ data: (data as any).data?.data || [] }))
+    if (isSuccess && data) {
+      dispatch(setCars({ data: (data as any).data?.data || [] }));
     }
-  }, [dispatch, isSuccess, carData])
+  }, [dispatch, isSuccess, data]);
 
   const filteredCars = useMemo(() => {
     let result = [...cars];
-    result = result.filter((car: Car) => car.availability);
+
+    // Only filter out unavailable cars when NO date filter is applied
+    // When date filter IS applied, we show all cars (booked ones get a badge)
+    if (!hasDateFilter) {
+      result = result.filter((car: Car) => car.availability);
+    }
+
     // Apply filters based on the selected values of rentPrice
     switch (filters.sortBy) {
       case 'dailyPriceHighToLow':
@@ -90,7 +118,7 @@ const CarsShowcase: React.FC<CarsShowcaseProps> = ({ filters, gridView }) => {
         break;
     }
 
-    // Apply filters based on the selected values of transmission
+    // Apply filters based on the selected values of fuel
     switch (filters.fuel) {
       case 'petrol':
         result = result.filter((item: Car) => item.fule === 'Petrol');
@@ -152,6 +180,8 @@ const CarsShowcase: React.FC<CarsShowcaseProps> = ({ filters, gridView }) => {
                     carNumberPlate={car.carNumberPlate}
                     whenWillCarAvailable={car.whenWillCarAvailable}
                     bookedDates={car.bookedDates}
+                    isBookedForPeriod={car.isBookedForPeriod}
+                    conflictingBookings={car.conflictingBookings}
                   />
                 ))
                 }

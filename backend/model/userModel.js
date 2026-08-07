@@ -22,15 +22,13 @@ const userSchema = new mongoose.Schema({
     contactNumber: {
         type: Number,
         unique: true,
-        minlength: [10, 'Contact number must be 10 digits long'],
-        maxlength: [10, 'Contact number must be 10 digits long'],
-        // validate: {
-        //     validator: function (value) {
-        //         const regex = /^\d{10}$/;
-        //         return regex.test(value);
-        //     },
-        //     message: 'Invalid length of contact number'
-        // }
+        required: [true, 'User must have a contact number'],
+        validate: {
+            validator: function (value) {
+                return /^[6-9]\d{9}$/.test(value.toString());
+            },
+            message: 'Contact number must be a valid 10-digit mobile number'
+        }
     },
     password: {
         type: String,

@@ -7,12 +7,116 @@
   position: relative;
   margin-bottom: 0;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .CarDetailsCard:hover {
   top: -6px;
   box-shadow: 0 0 30px silver;
   transition: 0.5s;
+}
+
+/* Booked card styling */
+.car-card-booked {
+  border-color: #e74c3c;
+  opacity: 0.85;
+}
+
+.car-card-booked:hover {
+  opacity: 1;
+}
+
+/* Booked overlay */
+.booked-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.06);
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 10px;
+}
+
+/* Booked badge container */
+.booked-badge-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+}
+
+/* Booked badge */
+.booked-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.4);
+  cursor: default;
+}
+
+/* Tooltip (hidden by default) */
+.booked-tooltip {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #2c3e50;
+  color: #ecf0f1;
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  min-width: 240px;
+  max-width: 320px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* Tooltip arrow */
+.booked-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  background: #2c3e50;
+  transform: rotate(45deg);
+  border-radius: 2px;
+}
+
+/* Show tooltip on hover */
+.booked-badge-container:hover .booked-tooltip {
+  display: block;
+}
+
+.booked-tooltip-title {
+  font-weight: 700;
+  font-size: 0.82rem;
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.booked-tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0;
+  font-size: 0.76rem;
+}
+
+.booked-tooltip-arrow {
+  color: #e74c3c;
+  font-weight: 700;
 }
 
 .card-details-image {
@@ -108,6 +212,10 @@
     margin-right: 1rem;
     font-size: 0.75rem;
   }
+
+  .booked-tooltip {
+    min-width: 200px;
+  }
 }
 
 /* Mobile styles - optimized for 2x2 grid */
@@ -158,6 +266,17 @@
     font-size: 0.72rem;
     top: -6px;
   }
+
+  .booked-badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .booked-tooltip {
+    min-width: 180px;
+    font-size: 0.72rem;
+    right: -5px;
+  }
 }
 
 /* Extra small mobile devices */
@@ -205,5 +324,16 @@
     margin-right: 0.7rem;
     font-size: 0.68rem;
     top: -6px;
+  }
+
+  .booked-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  .booked-tooltip {
+    min-width: 160px;
+    font-size: 0.68rem;
+    padding: 0.5rem 0.7rem;
   }
 }

@@ -11,8 +11,8 @@ const Cars: React.FC = () => {
     transmission: '',
     seatingCapacity: '',
     fuel: '',
-    startDate: null,
-    endDate: null,
+    startDate: '',
+    endDate: '',
   });
 
   const [gridView, setGridView] = useState<'1x1' | '2x2' | '3x3'>('3x3');

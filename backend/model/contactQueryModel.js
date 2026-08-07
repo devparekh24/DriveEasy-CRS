@@ -12,9 +12,13 @@ const contactQuerySchema = new mongoose.Schema({
     },
     contactNo: {
         type: String,
-        required: [true, 'User must has a contact number'],
-        minlength: [10, 'Contact number must be 10 digits long'],
-        maxlength: [10, 'Contact number must be 10 digits long'],
+        required: [true, 'User must have a contact number'],
+        validate: {
+            validator: function (value) {
+                return /^[6-9]\d{9}$/.test(value);
+            },
+            message: 'Contact number must be a valid 10-digit mobile number'
+        },
         unique: true,
     },
     message: {

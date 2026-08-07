@@ -13,7 +13,14 @@ interface BookingData {
     totalAmount: string;
 }
 
-const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+const getAuthToken = () => {
+    try {
+        const item = localStorage.getItem('user');
+        return item ? JSON.parse(item)?.token : null;
+    } catch {
+        return null;
+    }
+};
 
 export const bookingApi = createApi({
     baseQuery: fetchBaseQuery({

@@ -33,6 +33,8 @@ const initialState: initialState = {
   message: ''
 }
 
+import { validateName, validateEmail, validatePhone } from "../../utils/validation";
+
 export default function ContactComponent() {
 
   const [formData, setFormData] = useState<initialState>(initialState)
@@ -49,17 +51,34 @@ export default function ContactComponent() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      if (formData) {
+    const nameVal = validateName(formData.name);
+    if (!nameVal.isValid) {
+      toast.error(nameVal.message, { autoClose: 2000 });
+      return;
+    }
 
-        await addContactQuery(formData).unwrap();
-      }
-      else if (isError) {
-        throw error
-      }
+    const emailVal = validateEmail(formData.email);
+    if (!emailVal.isValid) {
+      toast.error(emailVal.message, { autoClose: 2000 });
+      return;
+    }
+
+    const phoneVal = validatePhone(formData.contactNo);
+    if (!phoneVal.isValid) {
+      toast.error(phoneVal.message, { autoClose: 2000 });
+      return;
+    }
+
+    if (!formData.message || !formData.message.trim()) {
+      toast.error('Message cannot be empty', { autoClose: 2000 });
+      return;
+    }
+
+    try {
+      await addContactQuery(formData).unwrap();
     }
     catch (error: any) {
-      if (error.data.error.code === 11000) {
+      if (error?.data?.error?.code === 11000) {
         toast.error('You have already contacted us! Please use different Contact Number!', {
           autoClose: 2000,
           hideProgressBar: false,
@@ -69,7 +88,7 @@ export default function ContactComponent() {
         })
       }
       else {
-        toast.error(error.data.error.errors.contactNo.message, {
+        toast.error(error?.data?.message || 'Failed to send message', {
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -115,7 +134,19 @@ export default function ContactComponent() {
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="input-group">
               <input type="text" id="fname" name="name" placeholder="Enter Name" value={formData.name} onChange={handleChange} required />
-              <input type="Number" id="contactNo" name="contactNo" placeholder="Enter Contact Number" value={formData.contactNo} onChange={handleChange} minLength={10} maxLength={10} required />
+              <input
+                type="tel"
+                id="contactNo"
+                name="contactNo"
+                placeholder="Enter Contact Number (10 digits)"
+                value={formData.contactNo}
+                onChange={(e) => {
+                  const cleaned = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  setFormData((prev) => ({ ...prev, contactNo: cleaned }));
+                }}
+                maxLength={10}
+                required
+              />
             </div>
             <div className="input-group">
               <input type="email" id="email" name="email" placeholder="Enter Email" value={formData.email} onChange={handleChange} required />

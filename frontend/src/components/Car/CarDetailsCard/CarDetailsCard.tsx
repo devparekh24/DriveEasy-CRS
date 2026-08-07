@@ -7,6 +7,17 @@ import { TbManualGearbox } from "react-icons/tb";
 import { BiSolidCarMechanic } from "react-icons/bi";
 import { Car } from "../../../slices/carSlice";
 
+const formatDate = (dateStr: string | Date) => {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 const CarDetailsCard: React.FC<Car> = ({
   _id,
   capacity,
@@ -19,6 +30,8 @@ const CarDetailsCard: React.FC<Car> = ({
   rentPricePerDay,
   rentPricePerHour,
   rentPricePerKm,
+  isBookedForPeriod,
+  conflictingBookings,
 }) => {
   const navigate = useNavigate();
 
@@ -27,14 +40,43 @@ const CarDetailsCard: React.FC<Car> = ({
   };
 
   return (
-    <div className="CarDetailsCard" id={_id} onClick={handleNavigate}>
+    <div
+      className={`CarDetailsCard ${isBookedForPeriod ? 'car-card-booked' : ''}`}
+      id={_id}
+      onClick={handleNavigate}
+    >
+      {/* Booked badge */}
+      {isBookedForPeriod && (
+        <div className="booked-badge-container">
+          <span className="booked-badge">Booked</span>
+          {/* Tooltip */}
+          <div className="booked-tooltip">
+            <div className="booked-tooltip-title">🚫 Unavailable</div>
+            {conflictingBookings && conflictingBookings.length > 0 ? (
+              conflictingBookings.map((booking, idx) => (
+                <div key={idx} className="booked-tooltip-row">
+                  <span>{formatDate(booking.startDate)}</span>
+                  <span className="booked-tooltip-arrow">→</span>
+                  <span>{formatDate(booking.endDate)}</span>
+                </div>
+              ))
+            ) : (
+              <div className="booked-tooltip-row">Booked for the selected period</div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Booked overlay */}
+      {isBookedForPeriod && <div className="booked-overlay" />}
+
       <img src={image} alt="" className="card-details-image" />
       <div className="car-details-text">
         <div className="car-details-text-left">
           <h3>{carName}</h3>
-          <p className="rating">
+          <div className="rating">
             <p>{carNumberPlate}</p>
-          </p>
+          </div>
           <p className="info-icons">
             <span className="info-icon">
               <MdPersonOutline />

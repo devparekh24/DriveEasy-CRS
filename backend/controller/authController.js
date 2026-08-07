@@ -36,7 +36,6 @@ exports.signup = catchAsyncErr(async (req, res, next) => {
         role: req.body.role,
     })
     createSendToken(newUser, 201, res);
-    next()
 })
 
 exports.login = catchAsyncErr(async (req, res, next) => {

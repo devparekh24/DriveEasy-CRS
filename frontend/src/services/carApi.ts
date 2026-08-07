@@ -12,9 +12,18 @@ export const carApi = createApi({
         prepareHeaders: (headers, { getState }) => {
             const isAdmin = (getState() as RootState).auth.isAdmin;
             if (isAdmin) {
-                const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
+                const getAuthToken = () => {
+                    try {
+                        const item = localStorage.getItem('user');
+                        return item ? JSON.parse(item)?.token : null;
+                    } catch {
+                        return null;
+                    }
+                };
                 const authToken = getAuthToken();
-                headers.set('Authorization', `Bearer ${authToken}`);
+                if (authToken) {
+                    headers.set('Authorization', `Bearer ${authToken}`);
+                }
             }
             return headers;
         },
@@ -72,6 +81,13 @@ export const carApi = createApi({
             }),
             invalidatesTags: ['Car']
         }),
+        getCarsWithAvailability: builder.query<any[], { pickupDate?: string; dropOffDate?: string }>({
+            query: ({ pickupDate, dropOffDate }) => ({
+                url: '/cars/cars-availability',
+                params: { pickupDate, dropOffDate },
+            }),
+            providesTags: ['Car'],
+        }),
 
     })
 })
@@ -84,4 +100,5 @@ export const {
     useRemoveCarMutation,
     useUploadCarImageMutation,
     useGetAvailableCarsQuery,
+    useGetCarsWithAvailabilityQuery,
 } = carApi

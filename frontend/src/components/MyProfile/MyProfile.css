@@ -34,6 +34,38 @@
     justify-content: space-evenly;
 }
 
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.password-input-wrapper input {
+    padding-right: 48px !important;
+    width: 100%;
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    user-select: none;
+    z-index: 2;
+}
+
+.password-toggle-icon:hover {
+    color: #000;
+}
+
 .input-group #name,
 input {
     margin-bottom: 0;

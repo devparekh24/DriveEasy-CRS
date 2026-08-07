@@ -57,7 +57,6 @@ exports.createOne = (Model) => catchAsyncErr(async (req, res, next) => {
             data: newModel
         }
     })
-    next()
 })
 
 exports.updateOne = (Model) => catchAsyncErr(async (req, res, next) => {

@@ -33,32 +33,73 @@ exports.uploadImage = catchAsyncErr(async (req, res, next) => {
     })
 })
 
-exports.updateCar = mainController.updateOne(Car, async (req) => {
-
+exports.updateCar = catchAsyncErr(async (req, res, next) => {
     const { id } = req.params;
-    const car = await Car.findByIdAndUpdate(id);
+    const car = await Car.findById(id);
 
     if (!car) {
-        return next(new AppError('No Car Found!', 404))
+        return next(new AppError('No Car Found!', 404));
     }
 
-    // Check if the car is available for the requested booking dates
-    const { startDate, endDate } = req.body;
-    if (car.isBookedFor(startDate, endDate)) {
-        return next(new AppError('Car is already booked for the requested time period', 400))    
-    } 
-    
-    // Add the booked dates to the car
-    car.bookedDates.push({ startDate, endDate });
-    await car.save()
+    const { startDate, endDate, bookedDates, ...otherUpdates } = req.body;
+
+    if (startDate && endDate) {
+        if (car.isBookedFor(startDate, endDate)) {
+            return next(new AppError('Car is already booked for the requested time period', 400));
+        }
+        car.bookedDates.push({ startDate, endDate });
+    } else if (bookedDates && Array.isArray(bookedDates)) {
+        car.bookedDates = bookedDates;
+    }
+
+    Object.assign(car, otherUpdates);
+    await car.save();
 
     res.status(200).json({
         status: 'success',
         data: {
             data: car
         }
-    })
+    });
+});
 
+exports.getCarsWithAvailability = catchAsyncErr(async (req, res, next) => {
+    const { pickupDate, dropOffDate } = req.query;
+
+    const cars = await Car.find({ availability: true });
+
+    if (!pickupDate || !dropOffDate) {
+        return res.status(200).json({
+            status: 'success',
+            data: { data: cars }
+        });
+    }
+
+    const requestedStart = new Date(pickupDate);
+    const requestedEnd = new Date(dropOffDate);
+
+    const carsWithAvailability = cars.map(car => {
+        const carObj = car.toObject();
+        const conflictingBookings = (carObj.bookedDates || []).filter(booking => {
+            const bookingStart = new Date(booking.startDate);
+            const bookingEnd = new Date(booking.endDate);
+            return bookingStart < requestedEnd && bookingEnd > requestedStart;
+        });
+
+        return {
+            ...carObj,
+            isBookedForPeriod: conflictingBookings.length > 0,
+            conflictingBookings,
+        };
+    });
+
+    // Sort: available cars first, then booked ones
+    carsWithAvailability.sort((a, b) => Number(a.isBookedForPeriod) - Number(b.isBookedForPeriod));
+
+    res.status(200).json({
+        status: 'success',
+        data: { data: carsWithAvailability }
+    });
 });
 
 exports.getAvailableCars = catchAsyncErr( async (req, res, next) => {
@@ -122,7 +163,5 @@ exports.getAvailableCars = catchAsyncErr( async (req, res, next) => {
             data : availableCars,
         },
     });
-    
-    if(error) next(error);
 })
 

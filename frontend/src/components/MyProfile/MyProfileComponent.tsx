@@ -9,6 +9,8 @@ import { Button, Popconfirm, message } from 'antd';
 import MyProfileImgUploader from "../ImageUploader/MyProfileImgUploader";
 import { useGetUserMutation } from "../../services/userApi";
 import { setUsers } from "../../slices/userSlice";
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import { validateName, validateEmail, validatePhone, validatePassword, validateConfirmPassword } from "../../utils/validation"
 
 export const MyProfileComponent = () => {
 
@@ -18,6 +20,9 @@ export const MyProfileComponent = () => {
   const newPasswordRef = useRef<HTMLInputElement | null>(null)
   const confirmPasswordRef = useRef<HTMLInputElement | null>(null)
   const contactNumberRef = useRef<HTMLInputElement | null>(null)
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -31,54 +36,47 @@ export const MyProfileComponent = () => {
   const [updateMe, { data, isLoading, isSuccess }] = useUpdateMeMutation()
 
   const handleValidation = () => {
-
-    if (name! || contactNumber!) {
-      const nameRegex = /^[A-Za-z][A-Za-z]+$/;
-      if (!name!.trim()) {
-        toast.error('Name is not Empty!', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      } else if (!nameRegex.test(name!)) {
-        toast.error('Invalid characters in Name!', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      }
-
-      // Phone number validation
-      const phoneRegex = /^\d{10}$/;
-      if (!contactNumber?.toString().trim()) {
-        toast.error('Phone Number is not Empty!', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      } else if (!phoneRegex.test(contactNumber.toString())) {
-        toast.error('phone number must be 10 digit long only', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-        return false
-      }
-      return true
+    const nameVal = validateName(name || '');
+    if (!nameVal.isValid) {
+      toast.error(nameVal.message, { autoClose: 2000 });
+      return false;
     }
 
-  }
+    const emailVal = validateEmail(email || '');
+    if (!emailVal.isValid) {
+      toast.error(emailVal.message, { autoClose: 2000 });
+      return false;
+    }
+
+    const phoneVal = validatePhone(contactNumber || '');
+    if (!phoneVal.isValid) {
+      toast.error(phoneVal.message, { autoClose: 2000 });
+      return false;
+    }
+
+    const currentPasswordInput = currentPasswordRef.current?.value || '';
+    const newPasswordInput = newPasswordRef.current?.value || '';
+    const confirmPasswordInput = confirmPasswordRef.current?.value || '';
+
+    if (newPasswordInput || confirmPasswordInput || currentPasswordInput) {
+      if (!currentPasswordInput) {
+        toast.error('Current password is required to change password', { autoClose: 2000 });
+        return false;
+      }
+      const newPwdVal = validatePassword(newPasswordInput);
+      if (!newPwdVal.isValid) {
+        toast.error(newPwdVal.message, { autoClose: 2000 });
+        return false;
+      }
+      const confirmVal = validateConfirmPassword(newPasswordInput, confirmPasswordInput);
+      if (!confirmVal.isValid) {
+        toast.error(confirmVal.message, { autoClose: 2000 });
+        return false;
+      }
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (event: any) => {
 
@@ -93,28 +91,17 @@ export const MyProfileComponent = () => {
       const confirmPasswordInput = confirmPasswordRef.current?.value || ''
       const contactNumberInput = contactNumberRef.current?.value || ''
 
-      if (newPasswordInput !== confirmPasswordInput) {
-        toast.error('New Password & Confirm Password must be same!', {
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        })
-      }
       try {
-        if (nameInput || emailInput || contactNumberInput || (currentPasswordInput && newPasswordInput && confirmPasswordInput)) {
-          await updateMe({
-            name: nameInput,
-            email: emailInput,
-            currentPassword: currentPasswordInput,
-            password: newPasswordInput,
-            confirmPassword: confirmPasswordInput,
-            contactNumber: +contactNumberInput
-          }).unwrap();
-        }
+        await updateMe({
+          name: nameInput,
+          email: emailInput,
+          currentPassword: currentPasswordInput,
+          password: newPasswordInput,
+          confirmPassword: confirmPasswordInput,
+          contactNumber: +contactNumberInput
+        }).unwrap();
       } catch (error: any) {
-        toast.error(error.data.message, {
+        toast.error(error?.data?.message || 'Failed to update profile', {
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
@@ -212,15 +199,60 @@ export const MyProfileComponent = () => {
             <div className="myprofile-form-content-right">
               <div className="input-group">
                 <label htmlFor="currentPassword">Current Password</label>
-                <input type="password" id="currentPassword" name="currentPassword" placeholder="Current Password" ref={currentPasswordRef} />
+                <div className="password-input-wrapper">
+                  <input
+                    type={showCurrentPassword ? "text" : "password"}
+                    id="currentPassword"
+                    name="currentPassword"
+                    placeholder="Current Password"
+                    ref={currentPasswordRef}
+                  />
+                  <span
+                    className="password-toggle-icon"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    title={showCurrentPassword ? "Hide password" : "Show password"}
+                  >
+                    {showCurrentPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                  </span>
+                </div>
               </div>
               <div className="input-group">
                 <label htmlFor="newPassword">New Password</label>
-                <input type="password" id="newPassword" name="newPassword" placeholder="New Password" ref={newPasswordRef} />
+                <div className="password-input-wrapper">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    id="newPassword"
+                    name="newPassword"
+                    placeholder="New Password"
+                    ref={newPasswordRef}
+                  />
+                  <span
+                    className="password-toggle-icon"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    title={showNewPassword ? "Hide password" : "Show password"}
+                  >
+                    {showNewPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                  </span>
+                </div>
               </div>
               <div className="input-group">
                 <label htmlFor="confirmPassword">Confirm Password</label>
-                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" ref={confirmPasswordRef} />
+                <div className="password-input-wrapper">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder="Confirm Password"
+                    ref={confirmPasswordRef}
+                  />
+                  <span
+                    className="password-toggle-icon"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    title={showConfirmPassword ? "Hide password" : "Show password"}
+                  >
+                    {showConfirmPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

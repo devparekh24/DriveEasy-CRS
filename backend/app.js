@@ -16,7 +16,8 @@ const allowedOrigins = [
     process.env.FRONTEND_URL,
     'http://localhost:5173',
     'http://localhost:5174',
-    'https://drive-easy-crs.vercel.app' // Add your Vercel URL here
+    'https://drive-easy-crs.vercel.app',
+    'https://driveeasycrs.netlify.app'
 ].filter(Boolean); // Remove undefined values
 
 console.log('Allowed CORS origins:', allowedOrigins);
@@ -38,7 +39,7 @@ app.use(cors({
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'X-User-Id'],
     exposedHeaders: ['Set-Cookie'],
 }));
 

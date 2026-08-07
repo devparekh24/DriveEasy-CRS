@@ -36,7 +36,8 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
 
         const checkAuthentication = async () => {
             try {
-                const storedUserIdToken = await JSON.parse(localStorage.getItem('user')!).userId;
+                const userStorage = localStorage.getItem('user');
+                const storedUserIdToken = userStorage ? JSON.parse(userStorage)?.userId : null;
                 if (storedUserIdToken && storedUserIdToken !== userId) { }
 
                 else if (!isAuthenticated) {
