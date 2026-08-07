@@ -9,7 +9,7 @@ import { useGetAllContactQueriesQuery } from '../../../services/contactQueryApi'
 import { ContactQueryState, setContactQueries } from '../../../slices/contactQuerySlice';
 
 const ContactQuery = () => {
-    const { data, isError, isLoading, error, isSuccess } = useGetAllContactQueriesQuery();
+    const { data, isError, isLoading, error, isSuccess } = useGetAllContactQueriesQuery(undefined, { refetchOnMountOrArgChange: true });
     const dispatch = useAppDispatch();
     const contactQueriesList = useAppSelector(state => state.contactQuery.contactQueries)
 

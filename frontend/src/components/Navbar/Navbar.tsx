@@ -21,29 +21,34 @@ const Navbar = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    const [getUser, { data, isError, error, isSuccess }] = useGetUserMutation()
+    const [getUser, { data, isSuccess }] = useGetUserMutation()
     const [logoutApi] = useLogoutMutation()
+
+    const authUserId = useAppSelector(state => state.auth.userId);
+    const authToken = useAppSelector(state => state.auth.token);
+    const authState = useAppSelector(state => state.auth);
+    const loginUser = useAppSelector(state => state.user.users);
 
     const getCurrentUser = async () => {
         try {
             const userStorage = localStorage.getItem('user');
             if (!userStorage) return;
-            const userId = JSON.parse(userStorage)?.userId;
-            if (userId) {
-                await getUser(userId).unwrap()
+            const parsed = JSON.parse(userStorage);
+            const targetId = authUserId || parsed?.userId;
+            if (targetId) {
+                await getUser(targetId).unwrap();
             }
         }
         catch (error: any) {
-            const errorMessage = error?.data?.message || 'Failed to fetch user data';
-            message.error(errorMessage)
+            // fail silently
         }
     }
 
     useEffect(() => {
-        if (isLogin) {
-            getCurrentUser()
+        if (isLogin && authUserId) {
+            getCurrentUser();
         }
-    }, [isLogin])
+    }, [isLogin, authUserId, authToken]);
 
     useEffect(() => {
         if (isSuccess && data) {
@@ -54,7 +59,8 @@ const Navbar = () => {
         }
     }, [dispatch, isSuccess, data]);
 
-    const loginUser = useAppSelector(state => state.user.users);
+    const activeUserObj: any = loginUser.find((u: any) => (u._id || u.id) === authUserId) || (loginUser[0] && (loginUser[0]._id === authUserId || (loginUser[0] as any).id === authUserId) ? loginUser[0] : null);
+    const currentUser = (activeUserObj?.data && typeof activeUserObj.data === 'object' && !Array.isArray(activeUserObj.data) ? activeUserObj.data : activeUserObj) || authState.user || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!)?.user : null);
 
     const showNavbar = () => {
         if (navRef.current) {
@@ -85,17 +91,28 @@ const Navbar = () => {
     return (
         <div>
             <header>
-                <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <SiMediamarkt style={{ fontSize: 40, color: '#ffffff' }} />
-                    <div data-aos="fade-right">
-                        <h3>DriveEasy</h3>
-                    </div>
-                </div>
+                <Link to='/' className="logo">
+                    Drive<span className="logo-easy">Easy</span>
+                </Link>
+
                 <nav ref={navRef}>
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/cars">Cars</NavLink>
-                    <NavLink to="/booking">Booking</NavLink>
-                    <NavLink to="/contact">Contact</NavLink>
+                    <NavLink to='/'>Home</NavLink>
+                    <NavLink to='/cars'>Cars</NavLink>
+                    <NavLink to='/about'>About Us</NavLink>
+                    <NavLink to='/contact'>Contact Us</NavLink>
+                    {
+                        isLogin && (
+                            <NavLink to='/mybookings'>My Bookings</NavLink>
+                        )
+                    }
+
+                    <button
+                        className="nav-btn nav-close-btn"
+                        onClick={showNavbar}>
+                        <GrFormClose className="close-btn-icon" />
+                    </button>
+                </nav>
+                <div className="login-reg">
                     {
                         isLogin ? (
                             <>
@@ -103,10 +120,6 @@ const Navbar = () => {
                                     <Avatar
                                         src={
                                             (() => {
-                                                const storedUser = localStorage.getItem('user');
-                                                const authUser = storedUser ? JSON.parse(storedUser)?.user : null;
-                                                const rawUser: any = loginUser[0];
-                                                const currentUser = (rawUser?.data && typeof rawUser.data === 'object' && !Array.isArray(rawUser.data) ? rawUser.data : rawUser) || authUser;
                                                 let rawImg = currentUser?.image || currentUser?.user?.image;
                                                 if (rawImg && typeof rawImg === 'string' && rawImg.startsWith('http://res.cloudinary.com')) {
                                                     rawImg = rawImg.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
@@ -124,7 +137,7 @@ const Navbar = () => {
                                             fontWeight: 600
                                         }}
                                     >
-                                        {(((loginUser[0] as any)?.data ? (loginUser[0] as any)?.data?.name : loginUser[0]?.name) || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!)?.name : 'U'))?.charAt(0).toUpperCase()}
+                                        {(currentUser?.name || authState.name || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!)?.name : 'U'))?.charAt(0).toUpperCase()}
                                     </Avatar>
                                 </Link>
                                 <button
@@ -152,7 +165,7 @@ const Navbar = () => {
                     <button className="nav-btn nav-close-btn" onClick={showNavbar}>
                         <GrFormClose className="close-btn-icon" />
                     </button>
-                </nav>
+                </div>
                 <button className="nav-btn" onClick={showNavbar}>
                     <IoMenu />
                 </button>

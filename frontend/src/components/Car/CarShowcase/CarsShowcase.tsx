@@ -23,7 +23,7 @@ const CarsShowcase: React.FC<CarsShowcaseProps> = ({ filters, gridView }) => {
     isLoading: isAllCarsLoading,
     error: allCarsError,
     isSuccess: isAllCarsSuccess,
-  } = useGetAllCarsQuery(undefined, { skip: !!hasDateFilter });
+  } = useGetAllCarsQuery(undefined, { skip: !!hasDateFilter, refetchOnMountOrArgChange: true });
 
   // Fetch cars with availability annotations (used when date filter is applied)
   const {
@@ -34,7 +34,7 @@ const CarsShowcase: React.FC<CarsShowcaseProps> = ({ filters, gridView }) => {
     isSuccess: isAvailabilitySuccess,
   } = useGetCarsWithAvailabilityQuery(
     { pickupDate: filters.startDate, dropOffDate: filters.endDate },
-    { skip: !hasDateFilter }
+    { skip: !hasDateFilter, refetchOnMountOrArgChange: true }
   );
 
   const dispatch = useAppDispatch();

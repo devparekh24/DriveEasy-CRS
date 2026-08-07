@@ -27,10 +27,10 @@ const HomeAdmin: React.FC = () => {
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState("");
 
-    const { data: carsData, refetch: refetchCars } = useGetAllCarsQuery();
-    const { data: ordersData, refetch: refetchOrders, isLoading: isLoadingOrders } = useGetAllOrdersQuery();
-    const { data: usersData, refetch: refetchUsers } = useGetAllUsersQuery();
-    const { data: damageData, refetch: refetchDamage } = useGetAllDamageReportsQuery();
+    const { data: carsData, refetch: refetchCars } = useGetAllCarsQuery(undefined, { refetchOnMountOrArgChange: true });
+    const { data: ordersData, refetch: refetchOrders, isLoading: isLoadingOrders } = useGetAllOrdersQuery(undefined, { refetchOnMountOrArgChange: true });
+    const { data: usersData, refetch: refetchUsers } = useGetAllUsersQuery(undefined, { refetchOnMountOrArgChange: true });
+    const { data: damageData, refetch: refetchDamage } = useGetAllDamageReportsQuery(undefined, { refetchOnMountOrArgChange: true });
 
     const handleRefreshAll = () => {
         refetchCars();

@@ -17,8 +17,8 @@ const AddDamageReportModal: FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [addDamageReport, { data: addDamageReportData, isError: isErrorOnAddDamageReport, isSuccess: isSuccessOnAddDamageReport, error: errorOnAddDamageReport }] = useAddDamageReportMutation()
     const dispatch = useAppDispatch()
-    const { data: carsData, isError: isErrorOnGetAllCars, isSuccess: isSuccessOnGetAllCars, error: errorOnGetAllCars } = useGetAllCarsQuery();
-    const { data: usersData, isError: isErrorOnGetAllUsers, isSuccess: isSuccessOnGetAllUsers, error: errorOnGetAllUsers } = useGetAllUsersQuery();
+    const { data: carsData, isError: isErrorOnGetAllCars, isSuccess: isSuccessOnGetAllCars, error: errorOnGetAllCars } = useGetAllCarsQuery(undefined, { refetchOnMountOrArgChange: true });
+    const { data: usersData, isError: isErrorOnGetAllUsers, isSuccess: isSuccessOnGetAllUsers, error: errorOnGetAllUsers } = useGetAllUsersQuery(undefined, { refetchOnMountOrArgChange: true });
     const carsList = useAppSelector(state => state.car.cars)
     const usersList = useAppSelector(state => state.user.users)
 
@@ -144,7 +144,7 @@ const AddDamageReportModal: FC = () => {
 
 const DamageReportingComponent = () => {
 
-    const { data, isError, isLoading, error, isSuccess } = useGetAllDamageReportsQuery();
+    const { data, isError, isLoading, error, isSuccess } = useGetAllDamageReportsQuery(undefined, { refetchOnMountOrArgChange: true });
     const dispatch = useAppDispatch();
 
     const [headers, setHeaders] = useState<string[]>([])
