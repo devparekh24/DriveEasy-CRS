@@ -1,13 +1,153 @@
-.cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: baseline;
-    gap: 20px;
+.admin-card-hover {
+    border: 1.5px solid #343a40 !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border-radius: 12px !important;
 }
 
-@media screen and (max-width: 600px) {
-    .cards {
-        flex-direction: column;
-        align-items: center;
+.admin-card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12) !important;
+    border-color: #1890ff !important;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+@media screen and (max-width: 768px) {
+    .cards-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     }
+}
+
+/* Custom styling for all Admin Tables - Zebra striping, high contrast & pagination fix */
+.admin-table-styled .ant-table-thead > tr > th {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+    font-size: 13px !important;
+    letter-spacing: 0.3px !important;
+}
+
+/* Alternating zebra row colors */
+.admin-table-styled .even-row,
+.admin-table-styled .ant-table-tbody > tr:nth-child(even) > td {
+    background-color: #f8fafc !important;
+}
+
+.admin-table-styled .odd-row,
+.admin-table-styled .ant-table-tbody > tr:nth-child(odd) > td {
+    background-color: #ffffff !important;
+}
+
+/* Row hover highlight */
+.admin-table-styled .ant-table-tbody > tr:hover > td {
+    background-color: #e0f2fe !important;
+    transition: background-color 0.2s ease !important;
+}
+
+/* Fixed Pagination Alignment & Consistent Button Box Styling */
+.admin-table-styled .ant-pagination {
+    margin-top: 18px !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.admin-table-styled .ant-pagination-item,
+.admin-table-styled .ant-pagination-prev,
+.admin-table-styled .ant-pagination-next {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 32px !important;
+    height: 32px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 6px !important;
+    box-sizing: border-box !important;
+    vertical-align: middle !important;
+}
+
+.admin-table-styled .ant-pagination-item {
+    border: 1px solid #d9d9d9 !important;
+    background: #ffffff !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+}
+
+.admin-table-styled .ant-pagination-item a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    color: #1e293b !important;
+    padding: 0 4px !important;
+    font-size: 14px !important;
+}
+
+.admin-table-styled .ant-pagination-item-active {
+    background: #1890ff !important;
+    border-color: #1890ff !important;
+}
+
+.admin-table-styled .ant-pagination-item-active a {
+    color: #ffffff !important;
+}
+
+/* Prev / Next Button Uniform Box Styling */
+.admin-table-styled .ant-pagination-prev .ant-pagination-item-link,
+.admin-table-styled .ant-pagination-next .ant-pagination-item-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 6px !important;
+    border: 1px solid #d9d9d9 !important;
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    font-size: 12px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease !important;
+}
+
+/* Disabled Prev / Next arrow styling */
+.admin-table-styled .ant-pagination-disabled .ant-pagination-item-link {
+    background-color: #f5f5f5 !important;
+    border-color: #d9d9d9 !important;
+    color: rgba(0, 0, 0, 0.25) !important;
+    cursor: not-allowed !important;
+}
+
+/* Hover state for active Prev / Next and page items */
+.admin-table-styled .ant-pagination-prev:not(.ant-pagination-disabled):hover .ant-pagination-item-link,
+.admin-table-styled .ant-pagination-next:not(.ant-pagination-disabled):hover .ant-pagination-item-link,
+.admin-table-styled .ant-pagination-item:not(.ant-pagination-item-active):hover {
+    border-color: #1890ff !important;
+    color: #1890ff !important;
+    background-color: #e0f2fe !important;
+}
+
+/* Page size select dropdown box alignment */
+.admin-table-styled .ant-pagination-options .ant-select-selector {
+    height: 32px !important;
+    border-radius: 6px !important;
+    border-color: #d9d9d9 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.admin-table-styled .ant-pagination-total-text {
+    font-size: 13px !important;
+    color: #475569 !important;
+    font-weight: 500 !important;
+    margin-right: 12px !important;
 }

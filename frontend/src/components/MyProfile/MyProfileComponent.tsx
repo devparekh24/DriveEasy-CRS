@@ -151,25 +151,55 @@ export const MyProfileComponent = () => {
   }, [image])
 
   useEffect(() => {
-    setTimeout(() => {
-      if (isSuccessOnGetUser && userData && (userData as any).data) {
-        dispatch(setUsers([(userData as any).data]))
+    if (isSuccessOnGetUser && userData) {
+      const userObj = (userData as any)?.data?.data || (userData as any)?.data;
+      if (userObj) {
+        dispatch(setUsers([userObj]));
       }
-    }, 100)
+    }
+  }, [dispatch, isSuccessOnGetUser, userData]);
 
-  }, [dispatch, isSuccessOnGetUser, userData])
+  const loginUser = useAppSelector(state => state.user.users);
 
-  const loginUser = useAppSelector(state => state.user.users)
+  const authState = useAppSelector(state => state.auth);
+  const rawUser: any = loginUser[0];
+  const currentUser = (rawUser?.data && typeof rawUser.data === 'object' && !Array.isArray(rawUser.data) ? rawUser.data : rawUser) || authState.user || (storedUser ? JSON.parse(storedUser)?.user : null);
 
   useEffect(() => {
     // Update local state with the initial name email contactNumber from the user profile
-    const currentUser = loginUser[0];
     if (currentUser) {
       setName(currentUser.name);
       setEmail(currentUser.email);
-      setContactNumber((currentUser as any).contactNumber);
+      setContactNumber(currentUser.contactNumber);
     }
-  }, [loginUser]);
+  }, [currentUser]);
+
+  let rawImg = image || currentUser?.image || (currentUser as any)?.user?.image;
+  if (rawImg && typeof rawImg === 'string' && rawImg.startsWith('http://res.cloudinary.com')) {
+    rawImg = rawImg.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
+  }
+  const avatarSrc = (rawImg && rawImg !== '/broken-image.jpg' && rawImg !== 'undefined' && rawImg !== 'null') ? rawImg : undefined;
+  const displayName = name || currentUser?.name || authState.name || 'User';
+
+  const handleImageUpload = (imgUrl: string) => {
+    let cleanUrl = imgUrl;
+    if (cleanUrl && typeof cleanUrl === 'string' && cleanUrl.startsWith('http://res.cloudinary.com')) {
+      cleanUrl = cleanUrl.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
+    }
+    setImage(cleanUrl);
+
+    // Sync Redux users slice immediately
+    const updatedUser = { ...(loginUser[0] || currentUser || {}), image: cleanUrl };
+    dispatch(setUsers([updatedUser]));
+
+    // Sync localStorage immediately
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      parsed.user = { ...(parsed.user || {}), image: cleanUrl };
+      localStorage.setItem('user', JSON.stringify(parsed));
+    }
+  };
 
   return (
     <div className="myprofile-component">
@@ -177,9 +207,23 @@ export const MyProfileComponent = () => {
         <form className="myprofile-form">
           <div className="input-group" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <h2 style={{ marginBottom: 15 }}>My Profile</h2>
-            <Avatar src={loginUser[0]?.image}
-              sx={{ width: 100, height: 100 }} style={{ marginBottom: 20 }} />
-            <MyProfileImgUploader onUpload={(imgUrl) => setImage(imgUrl)} url={`${import.meta.env.VITE_API_URL}/users/${userId}/user-img-upload`} />
+            <Avatar
+              src={avatarSrc}
+              sx={{
+                width: 100,
+                height: 100,
+                border: '3px solid #1890ff',
+                boxShadow: '0 6px 16px rgba(24, 144, 255, 0.3)',
+                bgcolor: '#1890ff',
+                color: '#fff',
+                fontSize: '36px',
+                fontWeight: 600,
+              }}
+              style={{ marginBottom: 20 }}
+            >
+              {displayName.charAt(0).toUpperCase()}
+            </Avatar>
+            <MyProfileImgUploader onUpload={handleImageUpload} url={`${import.meta.env.VITE_API_URL}/users/${userId}/user-img-upload`} />
           </div>
           <div className="myprofile-form-content">
             <div className="myprofile-form-content-left">

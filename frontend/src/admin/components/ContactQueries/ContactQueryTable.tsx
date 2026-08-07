@@ -239,6 +239,7 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
                     <AdminLoader />
                 ) : (
                     <Table
+                        className="admin-table-styled"
                         components={{
                             body: {
                                 cell: EditableCell,
@@ -247,8 +248,13 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
                         bordered
                         dataSource={filteredData}
                         columns={mergedColumns}
-                        rowClassName="editable-row"
-                        pagination={{ pageSize: 10 }}
+                        rowClassName={(_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")}
+                        pagination={{
+                            pageSize: 10,
+                            showSizeChanger: true,
+                            pageSizeOptions: ["10", "20", "50"],
+                            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} queries`,
+                        }}
                         scroll={{ y: 460 }}
                     />
                 )

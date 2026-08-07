@@ -1,30 +1,24 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Car } from "../slices/carSlice";
-import { RootState } from "../store/store";
 
-
-// const getAuthToken = () => JSON.parse(localStorage.getItem('user')!).token
 
 export const carApi = createApi({
     reducerPath: 'carApi',
     baseQuery: fetchBaseQuery({
         baseUrl: import.meta.env.VITE_API_URL,
         credentials: 'include',
-        prepareHeaders: (headers, { getState }) => {
-            const isAdmin = (getState() as RootState).auth.isAdmin;
-            if (isAdmin) {
-                const getAuthToken = () => {
-                    try {
-                        const item = localStorage.getItem('user');
-                        return item ? JSON.parse(item)?.token : null;
-                    } catch {
-                        return null;
-                    }
-                };
-                const authToken = getAuthToken();
-                if (authToken) {
-                    headers.set('Authorization', `Bearer ${authToken}`);
+        prepareHeaders: (headers) => {
+            const getAuthToken = () => {
+                try {
+                    const item = localStorage.getItem('user');
+                    return item ? JSON.parse(item)?.token : null;
+                } catch {
+                    return null;
                 }
+            };
+            const authToken = getAuthToken();
+            if (authToken) {
+                headers.set('Authorization', `Bearer ${authToken}`);
             }
             return headers;
         },

@@ -32,8 +32,6 @@ router.get('/logout', authController.logout)
 
 router.delete('/deleteMe', userController.deleteMe)
 
-router.use(authController.protectedRoute)
-
 router.patch('/:id', userController.changeUserRole)
 
 router.put('/:id/user-img-upload', uploads.single('image'), userController.uploadUserImage)

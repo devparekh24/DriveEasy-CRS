@@ -58,13 +58,15 @@ exports.uploadUserImage = catchAsyncErr(async (req, res, next) => {
         height: 300,
     })
 
-    const updateUserImg = await User.findByIdAndUpdate(id, { $set: { image: userImg.url } }, { new: true })
+    const imageUrl = userImg.secure_url || userImg.url;
+    const updateUserImg = await User.findByIdAndUpdate(id, { $set: { image: imageUrl } }, { new: true })
     if (!updateUserImg) {
         return next(new AppError('No User Found!', 404))
     }
 
     res.status(200).json({
         status: 'success',
+        url: updateUserImg.image,
         message: 'Image Uploaded Successfully!'
     })
 })

@@ -44,13 +44,13 @@ const Navbar = () => {
     }, [isLogin])
 
     useEffect(() => {
-        setTimeout(() => {
-            if (isSuccess && data && (data as any).data) {
-                dispatch(setUsers([(data as any).data]))
+        if (isSuccess && data) {
+            const userObj = (data as any)?.data?.data || (data as any)?.data;
+            if (userObj) {
+                dispatch(setUsers([userObj]));
             }
-        }, 1500)
-
-    }, [dispatch, isSuccess, data])
+        }
+    }, [dispatch, isSuccess, data]);
 
     const loginUser = useAppSelector(state => state.user.users);
 
@@ -58,35 +58,33 @@ const Navbar = () => {
         if (navRef.current) {
             navRef.current.classList.toggle("responsive_nav");
             // Add event listeners to toggle the navigation menu
-            const navLinks = document.querySelectorAll('header nav a');
-            navLinks.forEach((link: any) => {
-                link.addEventListener('click', () => {
-                    navRef?.current?.classList.remove("responsive_nav");
+            const navLinks = navRef.current.querySelectorAll("a");
+            navLinks.forEach((link) => {
+                link.addEventListener("click", () => {
+                    navRef.current?.classList.remove("responsive_nav");
                 });
             });
         }
     };
 
-    // Auth state is now initialized from localStorage in authSlice,
-    // so no delayed restore is needed here.
-
     const handleLogout = async () => {
         try {
-            // Call backend to clear the JWT cookie
-            await logoutApi().unwrap()
+            await logoutApi().unwrap();
         } catch {
-            // Even if the backend call fails, still clear local state
+            // proceed even if API fails
         }
-        dispatch(logout())
-        dispatch(setUsers([]))
-        navigate('/login')
-    }
+        dispatch(logout());
+        dispatch(setUsers([]));
+        navigate("/login");
+    };
 
     return (
         <div>
             <header>
-                <div className="title">
-                    <SiMediamarkt style={{ fontSize: 40, margin: 5 }} />
+                <div className="logo" style={{ display: 'flex', gap: 10 }}>
+                    <div>
+                        <SiMediamarkt />
+                    </div>
                     <div data-aos="fade-right">
                         <h3>DriveEasy</h3>
                     </div>
@@ -100,10 +98,51 @@ const Navbar = () => {
                         isLogin ? (
                             <>
                                 <Link to="/my-profile">
-                                    <Avatar src={loginUser[0]?.image} />
+                                    <Avatar
+                                        src={
+                                            (() => {
+                                                const storedUser = localStorage.getItem('user');
+                                                const authUser = storedUser ? JSON.parse(storedUser)?.user : null;
+                                                const rawUser: any = loginUser[0];
+                                                const currentUser = (rawUser?.data && typeof rawUser.data === 'object' && !Array.isArray(rawUser.data) ? rawUser.data : rawUser) || authUser;
+                                                let rawImg = currentUser?.image || currentUser?.user?.image;
+                                                if (rawImg && typeof rawImg === 'string' && rawImg.startsWith('http://res.cloudinary.com')) {
+                                                    rawImg = rawImg.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
+                                                }
+                                                return (rawImg && rawImg !== '/broken-image.jpg' && rawImg !== 'undefined' && rawImg !== 'null') ? rawImg : undefined;
+                                            })()
+                                        }
+                                        sx={{
+                                            width: 38,
+                                            height: 38,
+                                            border: '2px solid #1890ff',
+                                            bgcolor: '#1890ff',
+                                            color: '#fff',
+                                            fontSize: '16px',
+                                            fontWeight: 600
+                                        }}
+                                    >
+                                        {(((loginUser[0] as any)?.data ? (loginUser[0] as any)?.data?.name : loginUser[0]?.name) || (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!)?.name : 'U'))?.charAt(0).toUpperCase()}
+                                    </Avatar>
                                 </Link>
-                                <button onClick={handleLogout} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                                    <RiLogoutCircleRLine style={{ marginTop: 8, fontSize: 25, color: 'inherit' }} />
+                                <button
+                                    onClick={handleLogout}
+                                    title="Logout"
+                                    className="nav-logout-btn"
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        padding: '6px',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginLeft: '12px',
+                                        color: '#ffffff',
+                                        transition: 'all 0.2s ease',
+                                    }}
+                                >
+                                    <RiLogoutCircleRLine style={{ fontSize: 26 }} />
                                 </button>
                             </>
                         ) : (<NavLink to="/login">Login</NavLink>)

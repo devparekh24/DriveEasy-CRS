@@ -180,3 +180,8 @@ nav {
     width: 80%;
   }
 }
+
+.nav-logout-btn:hover {
+  color: #ff4d4f !important;
+  transform: scale(1.1);
+}

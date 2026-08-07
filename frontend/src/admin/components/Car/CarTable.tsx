@@ -381,6 +381,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                     <AdminLoader />
                 ) : (
                     <Table
+                        className="admin-table-styled"
                         components={{
                             body: {
                                 cell: EditableCell,
@@ -389,8 +390,13 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                         bordered
                         dataSource={filteredData}
                         columns={mergedColumns}
-                        rowClassName="editable-row"
-                        pagination={{ pageSize: 5 }}
+                        rowClassName={(_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")}
+                        pagination={{
+                            pageSize: 5,
+                            showSizeChanger: true,
+                            pageSizeOptions: ["5", "10", "25"],
+                            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} cars`,
+                        }}
                         scroll={{ x: 2400, y: 460 }}
                     />
                 )
