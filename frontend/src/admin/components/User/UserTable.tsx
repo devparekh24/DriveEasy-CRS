@@ -4,6 +4,7 @@ import { Form, Input, Popconfirm, Table, Typography, message } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import AdminLoader from '../AdminLoader/AdminLoader';
+import { isV2Enabled } from '../../../utils/featureFlags';
 import { User, UserState } from '../../../slices/userSlice';
 import { useRemoveUserMutation, useUpdateUserMutation } from '../../../services/userApi';
 import UserImageUploader from '../../../components/ImageUploader/UserImageUploader';
@@ -150,6 +151,8 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
         sortDirections: ['ascend', 'descend'],
     }));
 
+    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth <= 768;
+
     const mergedColumns = columns.map((col) => {
         if (!col.editable || col.dataIndex === '_id' || col.dataIndex === 'user' || col.dataIndex === 'car') {
             return col;
@@ -163,7 +166,7 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
                 title: col.title,
                 editing: isEditing(record),
             }),
-            fixed: col.dataIndex === 'name' ? 'left' : undefined,
+            fixed: (!isMobileScreen && col.dataIndex === 'name') ? 'left' : undefined,
         };
     });
 
@@ -172,7 +175,7 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
         {
             title: 'Action',
             key: 'action',
-            fixed: 'right', // Fix the Action column to the right
+            fixed: !isMobileScreen ? 'right' : undefined, // Fix the Action column to the right on desktop only
             width: 75,
             render: (_: any, record: User) => {
                 const editable = isEditing(record);
@@ -234,7 +237,7 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
                     <AdminLoader />
                 ) : (
                     <Table
-                        className="admin-table-styled"
+                        className={isV2Enabled() ? "admin-table-styled" : ""}
                         components={{
                             body: {
                                 cell: EditableCell,
@@ -243,7 +246,7 @@ const UserTable = ({ headers, tableData }: { headers: string[]; tableData: UserS
                         bordered
                         dataSource={filteredData}
                         columns={mergedColumns}
-                        rowClassName={(_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")}
+                        rowClassName={isV2Enabled() ? ((_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")) : () => "editable-row"}
                         pagination={{
                             pageSize: 5,
                             showSizeChanger: true,

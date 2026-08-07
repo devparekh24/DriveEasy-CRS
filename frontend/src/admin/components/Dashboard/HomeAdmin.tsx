@@ -1,150 +1,99 @@
-import { useEffect, useMemo, useState } from "react";
-import { useGetAllCarsQuery } from "../../../services/carApi";
+import React, { useState } from 'react';
 import DashBoardLayout from "../../pages/DashBoardLayout";
 import CardCom from "./Card";
 import RevenueChart from "./RevenueChart";
 import FleetDistributionChart from "./FleetDistributionChart";
-import './card.css';
-import { Card, Table, Tag, Input, Button, Space, Typography } from "antd";
-import { useGetAllUsersQuery } from "../../../services/userApi";
-import { useGetAllOrdersQuery } from "../../../services/orderApi";
-import { useGetAllDamageReportsQuery } from "../../../services/damageReportApi";
 import {
-    CarOutlined,
+    DollarOutlined,
     ShoppingCartOutlined,
+    CarOutlined,
     UserOutlined,
     WarningOutlined,
-    DollarOutlined,
+    ReloadOutlined,
     SearchOutlined,
-    EyeOutlined,
-    ReloadOutlined
+    EyeOutlined
 } from "@ant-design/icons";
+import { useGetAllCarsQuery } from "../../../services/carApi";
+import { useGetAllOrdersQuery } from "../../../services/orderApi";
+import { useGetAllUsersQuery } from "../../../services/userApi";
+import { useGetAllDamageReportsQuery } from "../../../services/damageReportApi";
+import { Table, Button, Input, Tag, Typography, Card } from "antd";
 import { useNavigate } from "react-router-dom";
+import { isV2Enabled } from '../../../utils/featureFlags';
 
 const { Title, Text } = Typography;
 
-const Home = () => {
+const HomeAdmin: React.FC = () => {
     const navigate = useNavigate();
     const [searchText, setSearchText] = useState("");
 
-    const {
-        data: carData,
-        isError: isErrorOnCar,
-        error: errorOnCar,
-        refetch: refetchCars,
-        isLoading: isLoadingCars
-    } = useGetAllCarsQuery();
-
-    const {
-        data: userData,
-        isError: isErrorOnUser,
-        error: errorOnUser,
-        refetch: refetchUsers,
-        isLoading: isLoadingUsers
-    } = useGetAllUsersQuery();
-
-    const {
-        data: orderData,
-        isError: isErrorOnOrder,
-        error: errorOnOrder,
-        refetch: refetchOrders,
-        isLoading: isLoadingOrders
-    } = useGetAllOrdersQuery();
-
-    const {
-        data: damageReportData,
-        isError: isErrorOnDamageReport,
-        error: errorOnDamageReport,
-        refetch: refetchDamageReports,
-        isLoading: isLoadingDamageReports
-    } = useGetAllDamageReportsQuery();
-
-    // Safely extract arrays from backend nested response structure { data: { data: [...] } } or direct array
-    const carsList = useMemo(() => {
-        if (!carData) return [];
-        if (Array.isArray(carData)) return carData;
-        if (Array.isArray((carData as any)?.data?.data)) return (carData as any).data.data;
-        if (Array.isArray((carData as any)?.data)) return (carData as any).data;
-        return [];
-    }, [carData]);
-
-    const usersList = useMemo(() => {
-        if (!userData) return [];
-        if (Array.isArray(userData)) return userData;
-        if (Array.isArray((userData as any)?.data?.data)) return (userData as any).data.data;
-        if (Array.isArray((userData as any)?.data)) return (userData as any).data;
-        return [];
-    }, [userData]);
-
-    const ordersList = useMemo(() => {
-        if (!orderData) return [];
-        if (Array.isArray(orderData)) return orderData;
-        if (Array.isArray((orderData as any)?.data?.data)) return (orderData as any).data.data;
-        if (Array.isArray((orderData as any)?.data)) return (orderData as any).data;
-        return [];
-    }, [orderData]);
-
-    const damageReportsList = useMemo(() => {
-        if (!damageReportData) return [];
-        if (Array.isArray(damageReportData)) return damageReportData;
-        if (Array.isArray((damageReportData as any)?.data?.data)) return (damageReportData as any).data.data;
-        if (Array.isArray((damageReportData as any)?.data)) return (damageReportData as any).data;
-        return [];
-    }, [damageReportData]);
-
-    // Calculate metrics
-    const totalCarsCount = carsList.length || (carData as any)?.resutls || 0;
-    const totalUsersCount = usersList.length || (userData as any)?.resutls || 0;
-    const totalOrdersCount = ordersList.length || (orderData as any)?.resutls || 0;
-    const totalDamageReportsCount = damageReportsList.length || (damageReportData as any)?.resutls || 0;
-
-    const totalRevenue = useMemo(() => {
-        return ordersList.reduce((sum: number, item: any) => sum + (Number(item?.totalAmount) || 0), 0);
-    }, [ordersList]);
+    const { data: carsData, refetch: refetchCars } = useGetAllCarsQuery();
+    const { data: ordersData, refetch: refetchOrders, isLoading: isLoadingOrders } = useGetAllOrdersQuery();
+    const { data: usersData, refetch: refetchUsers } = useGetAllUsersQuery();
+    const { data: damageData, refetch: refetchDamage } = useGetAllDamageReportsQuery();
 
     const handleRefreshAll = () => {
         refetchCars();
-        refetchUsers();
         refetchOrders();
-        refetchDamageReports();
+        refetchUsers();
+        refetchDamage();
     };
 
-    // Filtered Recent Orders for Table
-    const filteredOrders = useMemo(() => {
-        if (!searchText.trim()) return ordersList;
-        const q = searchText.toLowerCase();
-        return ordersList.filter(
-            (o: any) =>
-                o?.fullName?.toLowerCase().includes(q) ||
-                o?.emailAddress?.toLowerCase().includes(q) ||
-                o?.phoneNo?.toLowerCase().includes(q) ||
-                o?.pickupAddress?.toLowerCase().includes(q)
-        );
-    }, [ordersList, searchText]);
+    const carsList = (carsData as any)?.data?.data || (carsData as any)?.data || [];
+    const ordersList = (ordersData as any)?.data?.data || (ordersData as any)?.data || [];
+    const usersList = (usersData as any)?.data?.data || (usersData as any)?.data || [];
+    const damageList = (damageData as any)?.data?.data || (damageData as any)?.data || [];
+
+    const totalCarsCount = Array.isArray(carsList) ? carsList.length : 0;
+    const totalOrdersCount = Array.isArray(ordersList) ? ordersList.length : 0;
+    const totalUsersCount = Array.isArray(usersList) ? usersList.length : 0;
+    const totalDamageReportsCount = Array.isArray(damageList) ? damageList.length : 0;
+
+    const totalRevenue = Array.isArray(ordersList)
+        ? ordersList.reduce((sum: number, o: any) => sum + (Number(o.totalAmount) || 0), 0)
+        : 0;
+
+    const filteredOrders = Array.isArray(ordersList)
+        ? ordersList.filter((o: any) => {
+            const query = searchText.toLowerCase();
+            const customerName = o.user?.name || o.name || "";
+            const customerEmail = o.user?.email || o.email || "";
+            const carName = o.car?.carName || o.carName || "";
+            return (
+                customerName.toLowerCase().includes(query) ||
+                customerEmail.toLowerCase().includes(query) ||
+                carName.toLowerCase().includes(query)
+            );
+        })
+        : [];
 
     const columns = [
         {
-            title: "Customer Name",
-            dataIndex: "fullName",
-            key: "fullName",
-            render: (text: string, record: any) => (
-                <div>
-                    <div style={{ fontWeight: 600 }}>{text || "N/A"}</div>
-                    <div style={{ fontSize: "11px", color: "#8c8c8c" }}>{record.emailAddress || ""}</div>
+            title: "Customer",
+            dataIndex: "user",
+            key: "user",
+            render: (userObj: any, record: any) => (
+                <div style={{ fontWeight: 600, color: "#1e293b" }}>
+                    {userObj?.name || record.name || "N/A"}
+                    <div style={{ fontSize: "12px", color: "#64748b", fontWeight: 400 }}>
+                        {userObj?.email || record.email || ""}
+                    </div>
                 </div>
             ),
         },
         {
-            title: "Pickup Address",
-            dataIndex: "pickupAddress",
-            key: "pickupAddress",
-            render: (text: string) => text || "N/A",
+            title: "Vehicle",
+            dataIndex: "car",
+            key: "car",
+            render: (carObj: any, record: any) => (
+                <span>{carObj?.carName || record.carName || "N/A"}</span>
+            ),
         },
         {
-            title: "Total Km",
+            title: "Trip Distance",
             dataIndex: "totalKm",
             key: "totalKm",
-            render: (km: number) => (km ? `${Number(km).toFixed(1)} km` : "N/A"),
+            render: (km: number) => <span>{km ? `${Number(km).toFixed(1)} km` : "N/A"}</span>,
         },
         {
             title: "Amount",
@@ -171,6 +120,37 @@ const Home = () => {
         },
     ];
 
+    // Standard Baseline View when v2_features_enabled cookie is OFF
+    if (!isV2Enabled()) {
+        return (
+            <DashBoardLayout>
+                <div style={{ paddingBottom: 24 }}>
+                    <Title level={3} style={{ marginBottom: 20 }}>Dashboard Overview</Title>
+                    
+                    {/* Baseline Stat Cards */}
+                    <div className="cards-grid" style={{ marginBottom: 24 }}>
+                        <CardCom title="Total Cars" totalQty={totalCarsCount} icon={<CarOutlined />} color="#722ed1" />
+                        <CardCom title="Total Orders" totalQty={totalOrdersCount} icon={<ShoppingCartOutlined />} color="#1890ff" />
+                        <CardCom title="Total Users" totalQty={totalUsersCount} icon={<UserOutlined />} color="#fa8c16" />
+                        <CardCom title="Total Damage Reports" totalQty={totalDamageReportsCount} icon={<WarningOutlined />} color="#f5222d" />
+                    </div>
+
+                    {/* Baseline Orders Table */}
+                    <Card title="Recent Orders" bordered={false}>
+                        <Table
+                            dataSource={filteredOrders}
+                            columns={columns}
+                            rowKey={(rec) => rec._id || Math.random().toString()}
+                            pagination={{ pageSize: 5 }}
+                            loading={isLoadingOrders}
+                        />
+                    </Card>
+                </div>
+            </DashBoardLayout>
+        );
+    }
+
+    // V2 Feature View when v2_features_enabled cookie is ON
     return (
         <DashBoardLayout>
             <div style={{ paddingBottom: 24 }}>
@@ -200,10 +180,10 @@ const Home = () => {
                 </div>
 
                 {/* Top Stat Cards Grid */}
-                <div className="cards-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, marginBottom: 24 }}>
+                <div className="cards-grid" style={{ marginBottom: 24 }}>
                     <CardCom
                         title="Total Revenue"
-                        totalQty={`₹${totalRevenue.toLocaleString("en-IN")}`}
+                        totalQty={`₹${Math.round(totalRevenue || 0).toLocaleString("en-IN")}`}
                         icon={<DollarOutlined />}
                         color="#52c41a"
                     />
@@ -278,4 +258,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default HomeAdmin;

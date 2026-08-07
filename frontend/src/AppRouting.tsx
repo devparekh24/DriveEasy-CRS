@@ -36,8 +36,11 @@ const ProtectedRoute: React.FC<{ element: React.ReactNode }> = ({ element }) => 
 
         const checkAuthentication = async () => {
             try {
-                const userStorage = localStorage.getItem('user');
-                const storedUserIdToken = userStorage ? JSON.parse(userStorage)?.userId : null;
+                const isLoggingOut = sessionStorage.getItem('isLoggingOut');
+                if (isLoggingOut) {
+                    sessionStorage.removeItem('isLoggingOut');
+                    return;
+                }
                 if (!isAuthenticated) {
                     toast.error('You have to Login First!', {
                         autoClose: 2000,

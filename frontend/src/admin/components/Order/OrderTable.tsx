@@ -4,6 +4,7 @@ import { Form, Input, InputNumber, Popconfirm, Select, Table, Typography, messag
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import AdminLoader from '../AdminLoader/AdminLoader';
+import { isV2Enabled } from '../../../utils/featureFlags';
 import { Order, OrderState } from '../../../slices/orderSlice';
 import { useRemoveOrderMutation, useUpdateOrderMutation } from '../../../services/orderApi';
 const { Search } = Input;
@@ -146,6 +147,8 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
         sortDirections: ['ascend', 'descend'],
     }));
 
+    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth <= 768;
+
     const mergedColumns = columns.map((col) => {
         if (!col.editable || col.dataIndex === '_id' || col.dataIndex === 'user' || col.dataIndex === 'car') {
             return col;
@@ -159,7 +162,7 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
                 title: col.title,
                 editing: isEditing(record),
             }),
-            fixed: col.dataIndex === 'fullName' || col.dataIndex === 'emailAddress' ? 'left' : undefined,
+            fixed: (!isMobileScreen && (col.dataIndex === 'fullName' || col.dataIndex === 'emailAddress')) ? 'left' : undefined,
         };
     });
 
@@ -168,7 +171,7 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
         {
             title: 'Action',
             key: 'action',
-            fixed: 'right', // Fix the Action column to the right
+            fixed: !isMobileScreen ? 'right' : undefined, // Fix the Action column to the right on desktop only
             width: 75,
             render: (_: any, record: Order) => {
                 const editable = isEditing(record);
@@ -230,7 +233,7 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
                     <AdminLoader />
                 ) : (
                     <Table
-                        className="admin-table-styled"
+                        className={isV2Enabled() ? "admin-table-styled" : ""}
                         components={{
                             body: {
                                 cell: EditableCell,
@@ -239,7 +242,7 @@ const OrderTable = ({ headers, tableData }: { headers: string[]; tableData: Orde
                         bordered
                         dataSource={filteredData}
                         columns={mergedColumns}
-                        rowClassName={(_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")}
+                        rowClassName={isV2Enabled() ? ((_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")) : () => "editable-row"}
                         pagination={{
                             pageSize: 5,
                             showSizeChanger: true,

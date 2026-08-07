@@ -12,13 +12,69 @@
 
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
 }
 
 @media screen and (max-width: 768px) {
     .cards-grid {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+        gap: 12px !important;
+    }
+
+    .admin-card-hover h1 {
+        font-size: 22px !important;
+        word-break: break-word;
+    }
+
+    .ant-table-wrapper {
+        overflow-x: auto !important;
+        width: 100% !important;
+    }
+
+    .admin-table-styled .ant-table {
+        min-width: 600px !important;
+    }
+
+    .admin-table-styled .ant-pagination {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+
+    .modal-btn {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin-bottom: 14px !important;
+    }
+
+    .modal-btn h2, .modal-btn h3 {
+        font-size: 18px !important;
+        margin: 0 !important;
+    }
+
+    .modal-btn .ant-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 36px !important;
+        padding: 0 14px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        border-radius: 6px !important;
+        white-space: nowrap !important;
+        max-width: 100% !important;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .cards-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
     }
 }
 

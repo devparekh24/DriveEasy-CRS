@@ -4,6 +4,7 @@ import { Form, Input, Popconfirm, Select, Table, Typography, message } from 'ant
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import AdminLoader from '../AdminLoader/AdminLoader';
+import { isV2Enabled } from '../../../utils/featureFlags';
 import { DamageReport, DamageReportState } from '../../../slices/damageReportSlice';
 import { useRemoveDamageReportMutation, useUpdateDamageReportMutation } from '../../../services/damageReportApi';
 const { Search } = Input;
@@ -164,6 +165,8 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
         },
     }));
 
+    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth <= 768;
+
     const mergedColumns = columns.map((col) => {
         if (!col.editable || col.dataIndex === '_id' || col.dataIndex === 'user' || col.dataIndex === 'car') {
             return col;
@@ -177,7 +180,7 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
                 title: col.title,
                 editing: isEditing(record),
             }),
-            fixed: col.dataIndex === 'description' ? 'left' : undefined,
+            fixed: (!isMobileScreen && col.dataIndex === 'description') ? 'left' : undefined,
         };
     });
 
@@ -186,7 +189,7 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
         {
             title: 'Action',
             key: 'action',
-            fixed: 'right', // Fix the Action column to the right
+            fixed: !isMobileScreen ? 'right' : undefined, // Fix the Action column to the right on desktop only
             width: 75,
             render: (_: any, record: DamageReport) => {
                 const editable = isEditing(record);
@@ -246,7 +249,7 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
                     <AdminLoader />
                 ) : (
                     <Table
-                        className="admin-table-styled"
+                        className={isV2Enabled() ? "admin-table-styled" : ""}
                         components={{
                             body: {
                                 cell: EditableCell,
@@ -255,7 +258,7 @@ const DamageReportTable = ({ headers, tableData }: { headers: string[]; tableDat
                         bordered
                         dataSource={filteredData}
                         columns={mergedColumns}
-                        rowClassName={(_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")}
+                        rowClassName={isV2Enabled() ? ((_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")) : () => "editable-row"}
                         pagination={{
                             pageSize: 5,
                             showSizeChanger: true,

@@ -1,6 +1,18 @@
-import React, { useEffect } from 'react';
-import { UsergroupAddOutlined, FileTextOutlined, UserOutlined, CarOutlined, HomeOutlined, ShoppingCartOutlined, EnvironmentOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Layout, Menu, message, theme } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { isV2Enabled } from '../../utils/featureFlags';
+import {
+    UsergroupAddOutlined,
+    FileTextOutlined,
+    UserOutlined,
+    CarOutlined,
+    HomeOutlined,
+    ShoppingCartOutlined,
+    EnvironmentOutlined,
+    LogoutOutlined,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined
+} from '@ant-design/icons';
+import { Layout, Menu, message, theme, Button } from 'antd';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { logout } from '../../slices/authSlice';
@@ -10,7 +22,7 @@ import { useGetUserMutation } from '../../services/userApi';
 import { useLogoutMutation } from '../../services/authApi';
 import { setUsers } from '../../slices/userSlice';
 
-const { Content, Footer, Sider } = Layout;
+const { Header, Content, Footer, Sider } = Layout;
 
 interface DashboardProps {
     children: React.ReactNode;
@@ -22,8 +34,23 @@ const DashBoardLayout = (props: DashboardProps) => {
     const dispatch = useAppDispatch();
     const loginUser = useAppSelector(state => state.user.users);
     const isLogin = useAppSelector(state => state.auth.isLoggedIn);
-    
-    const [getUser, { data, isError, error, isSuccess }] = useGetUserMutation();
+
+    const [collapsed, setCollapsed] = useState<boolean>(window.innerWidth <= 992);
+    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 992);
+
+    useEffect(() => {
+        const handleResize = () => {
+            const mobile = window.innerWidth <= 992;
+            setIsMobile(mobile);
+            if (mobile) {
+                setCollapsed(true);
+            }
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const [getUser, { isError, error }] = useGetUserMutation();
     const [logoutApi] = useLogoutMutation();
 
     const storedUser = localStorage.getItem('user');
@@ -48,20 +75,13 @@ const DashBoardLayout = (props: DashboardProps) => {
         }
     }, [isLogin, userId]);
 
-    useEffect(() => {
-        if (isSuccess && data) {
-            const userObj = (data as any)?.data?.data || (data as any)?.data;
-            if (userObj) {
-                dispatch(setUsers([userObj]));
-            }
-        }
-    }, [dispatch, isSuccess, data]);
-
-    const authState = useAppSelector(state => state.auth);
-
+    // Extract user profile image correctly from Redux state or localStorage
     const rawUser: any = loginUser[0];
-    const currentUser = (rawUser?.data && typeof rawUser.data === 'object' && !Array.isArray(rawUser.data) ? rawUser.data : rawUser) || authState.user || (storedUser ? JSON.parse(storedUser)?.user : null);
-    let rawImg = currentUser?.image || (currentUser as any)?.user?.image;
+    const authState = useAppSelector(state => state.auth);
+    const authUser = storedUser ? JSON.parse(storedUser)?.user : null;
+    const currentUser = (rawUser?.data && typeof rawUser.data === 'object' && !Array.isArray(rawUser.data) ? rawUser.data : rawUser) || authUser;
+
+    let rawImg = currentUser?.image || currentUser?.user?.image;
     if (rawImg && typeof rawImg === 'string' && rawImg.startsWith('http://res.cloudinary.com')) {
         rawImg = rawImg.replace('http://res.cloudinary.com', 'https://res.cloudinary.com');
     }
@@ -73,6 +93,7 @@ const DashBoardLayout = (props: DashboardProps) => {
     } = theme.useToken();
 
     const handleLogout = async () => {
+        sessionStorage.setItem('isLoggingOut', 'true');
         try {
             await logoutApi().unwrap();
         } catch {
@@ -80,6 +101,7 @@ const DashBoardLayout = (props: DashboardProps) => {
         }
         dispatch(logout());
         dispatch(setUsers([]));
+        message.success('Logged out successfully!');
         navigate('/login');
     };
 
@@ -97,9 +119,31 @@ const DashBoardLayout = (props: DashboardProps) => {
     };
 
     return (
-        <Layout style={{ height: '100vh', overflow: 'hidden' }}>
+        <Layout style={{ minHeight: '100vh', overflow: 'hidden', position: 'relative' }}>
+            {/* Dim Backdrop Overlay for Mobile when Sider is open */}
+            {isMobile && !collapsed && (
+                <div
+                    onClick={() => setCollapsed(true)}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0, 0, 0, 0.45)',
+                        zIndex: 999,
+                        transition: 'opacity 0.2s ease',
+                    }}
+                />
+            )}
+
             {/* Fixed Left Sidebar */}
             <Sider
+                trigger={null}
+                collapsible
+                collapsed={collapsed}
+                collapsedWidth="0"
+                width={230}
                 style={{
                     position: 'fixed',
                     left: 0,
@@ -108,12 +152,10 @@ const DashBoardLayout = (props: DashboardProps) => {
                     height: '100vh',
                     borderStartEndRadius: '24px',
                     borderBottomRightRadius: '24px',
-                    zIndex: 100,
-                    boxShadow: '4px 0 16px rgba(0, 0, 0, 0.1)',
+                    zIndex: 1000,
+                    boxShadow: collapsed ? 'none' : '4px 0 16px rgba(0, 0, 0, 0.15)',
+                    transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
-                breakpoint="lg"
-                collapsedWidth="0"
-                width={230}
             >
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '16px 0 20px 0' }}>
                     {/* User Profile Avatar Section */}
@@ -123,9 +165,9 @@ const DashBoardLayout = (props: DashboardProps) => {
                             sx={{
                                 width: 60,
                                 height: 60,
-                                border: '2.5px solid #1890ff',
-                                boxShadow: '0 4px 12px rgba(24, 144, 255, 0.4)',
-                                bgcolor: '#1890ff',
+                                border: isV2Enabled() ? '2.5px solid #343a40' : '2.5px solid #1890ff',
+                                boxShadow: isV2Enabled() ? '0 4px 12px rgba(0, 0, 0, 0.4)' : '0 4px 12px rgba(24, 144, 255, 0.4)',
+                                bgcolor: isV2Enabled() ? '#1e293b' : '#1890ff',
                                 color: '#fff',
                                 fontSize: '24px',
                                 fontWeight: 600,
@@ -139,7 +181,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                         <span style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '12px' }}>Admin Dashboard</span>
                     </div>
 
-                    {/* Main Nav Menu (Scrollable if screen height is small) */}
+                    {/* Main Nav Menu */}
                     <div style={{ flex: 1, overflowY: 'auto' }}>
                         <Menu theme="dark" mode="inline" selectedKeys={[getSelectedKey()]}>
                             <Menu.Item key="1" icon={<HomeOutlined />}>
@@ -166,7 +208,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                         </Menu>
                     </div>
 
-                    {/* Bottom Nav Menu (Fixed at the end of sidebar) */}
+                    {/* Bottom Nav Menu */}
                     <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', paddingTop: '10px' }}>
                         <Menu theme="dark" mode="inline" selectedKeys={[getSelectedKey()]}>
                             <Menu.Item key="8" icon={<UserOutlined />}>
@@ -180,12 +222,43 @@ const DashBoardLayout = (props: DashboardProps) => {
                 </div>
             </Sider>
 
-            {/* Right Side Content Container with Independent Scrollbar */}
-            <Layout style={{ marginLeft: 230, height: '100vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', background: '#f5f7fa' }}>
-                <Content style={{ margin: '24px 16px 16px', flex: '1 0 auto', display: 'flex', flexDirection: 'column' }}>
+            {/* Main Content Layout Container */}
+            <Layout style={{
+                marginLeft: isMobile ? 0 : (collapsed ? 0 : 230),
+                width: isMobile ? '100%' : (collapsed ? '100%' : 'calc(100% - 230px)'),
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                height: '100vh',
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                background: '#f5f7fa'
+            }}>
+                {/* Top Header Navigation Bar with Toggle Button */}
+                <Header style={{
+                    padding: '0 16px',
+                    background: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                    zIndex: 99,
+                    height: 56,
+                    lineHeight: '56px'
+                }}>
+                    <Button
+                        type="text"
+                        icon={collapsed ? <MenuUnfoldOutlined style={{ fontSize: 20 }} /> : <MenuFoldOutlined style={{ fontSize: 20 }} />}
+                        onClick={() => setCollapsed(!collapsed)}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    />
+                    <span style={{ fontWeight: 700, fontSize: 16, color: '#0f172a' }}>DriveEasy Admin</span>
+                    <div style={{ width: 32 }} />
+                </Header>
+
+                <Content style={{ margin: isMobile ? '12px 8px 8px' : '24px 16px 16px', flex: '1 0 auto', display: 'flex', flexDirection: 'column' }}>
                     <div
                         style={{
-                            padding: 24,
+                            padding: isMobile ? 12 : 24,
                             flex: 1,
                             background: colorBgContainer,
                             borderRadius: borderRadiusLG,
@@ -195,6 +268,7 @@ const DashBoardLayout = (props: DashboardProps) => {
                         {props.children}
                     </div>
                 </Content>
+
                 {/* Fixed/Sticky Bottom Right Footer across all Admin Tabs */}
                 <Footer
                     style={{

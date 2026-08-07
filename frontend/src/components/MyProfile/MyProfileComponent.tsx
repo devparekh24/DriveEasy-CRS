@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { isV2Enabled } from '../../utils/featureFlags';
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks"
 import { toast } from "react-toastify"
 import Avatar from '@mui/material/Avatar';
@@ -212,10 +213,10 @@ export const MyProfileComponent = () => {
               sx={{
                 width: 100,
                 height: 100,
-                border: '3px solid #343a40',
-                boxShadow: '0 6px 16px rgba(0, 0, 0, 0.25)',
-                bgcolor: '#1e293b',
-                color: '#ffffff',
+                border: isV2Enabled() ? '3px solid #343a40' : '3px solid #1890ff',
+                boxShadow: isV2Enabled() ? '0 6px 16px rgba(0, 0, 0, 0.25)' : '0 6px 16px rgba(24, 144, 255, 0.3)',
+                bgcolor: isV2Enabled() ? '#1e293b' : '#1890ff',
+                color: '#fff',
                 fontSize: '36px',
                 fontWeight: 600,
               }}

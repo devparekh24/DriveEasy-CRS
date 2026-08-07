@@ -2,6 +2,8 @@ import React from 'react';
 import { Card } from 'antd';
 import './card.css';
 
+import { isV2Enabled } from '../../../utils/featureFlags';
+
 interface CardCompProps {
     title: string;
     totalQty: number | string;
@@ -13,13 +15,14 @@ interface CardCompProps {
 
 const CardCom: React.FC<CardCompProps> = ({ title, totalQty, icon, subtitle, color = '#1890ff', background }) => (
     <Card
-        className="admin-card-hover"
+        className={isV2Enabled() ? "admin-card-hover" : "card-single"}
         bordered={false}
+        bodyStyle={{ padding: '16px 18px' }}
         style={{
-            minWidth: 200,
-            flex: 1,
+            width: '100%',
             cursor: 'pointer',
             background: background || '#ffffff',
+            overflow: 'hidden',
         }}
     >
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

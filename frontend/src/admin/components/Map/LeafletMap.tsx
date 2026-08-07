@@ -14,6 +14,7 @@ import {
     WifiOutlined
 } from '@ant-design/icons';
 import { useGetAllCarsQuery } from '../../../services/carApi';
+import { isV2Enabled } from '../../../utils/featureFlags';
 
 interface Coordinates {
     latitude: number;
@@ -130,13 +131,41 @@ const DUMMY_FLEET: CarFleetMarker[] = [
     }
 ];
 
-const LeafletMap = () => {
-    const defaultCenter: Coordinates = { latitude: 21.1702, longitude: 72.8311 };
+// Original Baseline Simple Map (Rendered when v2_features_enabled cookie is OFF)
+const SimpleBaselineMap: React.FC<{ center: Coordinates }> = ({ center }) => {
+    useEffect(() => {
+        let map = L.map('simple-map').setView([center.latitude, center.longitude], 13);
 
-    // Toggle for 5-second live API polling
+        L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+        }).addTo(map);
+
+        const marker = L.marker([center.latitude, center.longitude]).addTo(map);
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const { latitude, longitude } = position.coords;
+                    map.setView([latitude, longitude], 13);
+                    marker.setLatLng([latitude, longitude])
+                        .bindPopup('Admin - You are here!')
+                        .openPopup();
+                }
+            );
+        }
+
+        return () => {
+            map.remove();
+        };
+    }, [center]);
+
+    return <div id="simple-map" style={{ height: '550px' }} />;
+};
+
+// V2 Interactive Live Fleet GPS Map Component (Rendered when v2_features_enabled cookie is ON)
+const V2FleetMap: React.FC<{ defaultCenter: Coordinates }> = ({ defaultCenter }) => {
     const [isLivePolling, setIsLivePolling] = useState<boolean>(false);
 
-    // RTK Query with optional pollingInterval
     const { data: carsData } = useGetAllCarsQuery(undefined, {
         pollingInterval: isLivePolling ? 5000 : 0,
     });
@@ -148,11 +177,6 @@ const LeafletMap = () => {
     const mapRef = useRef<L.Map | null>(null);
     const markersRef = useRef<{ [key: string]: L.Marker }>({});
 
-    /**
-     * LIVE GPS DATA RESOLUTION STRATEGY:
-     * Reads real GPS fields (car.currentLocation.lat / car.latitude / car.lat) if provided by backend API,
-     * otherwise maps backend cars to realistic fallback GPS coordinates.
-     */
     const fleetList = useMemo(() => {
         const backendCars = (carsData as any)?.data?.data || (carsData as any)?.data || [];
         if (!backendCars || backendCars.length === 0) {
@@ -162,7 +186,6 @@ const LeafletMap = () => {
         return backendCars.map((car: any, index: number) => {
             const preset = DUMMY_FLEET[index % DUMMY_FLEET.length];
 
-            // Check if backend car contains live GPS coordinates
             const liveLat = car.currentLocation?.lat ?? car.latitude ?? car.lat;
             const liveLng = car.currentLocation?.lng ?? car.longitude ?? car.lng;
             const liveSpeed = car.currentLocation?.speed ?? car.speed;
@@ -208,7 +231,6 @@ const LeafletMap = () => {
         return { total, available, onTrip, maintenance };
     }, [fleetList]);
 
-    // Initialize Leaflet map
     useEffect(() => {
         const mapContainer = document.getElementById('fleet-map');
         if (!mapContainer) return;
@@ -230,17 +252,14 @@ const LeafletMap = () => {
 
         const map = mapRef.current;
 
-        // Clear existing markers
         Object.values(markersRef.current).forEach((marker) => marker.remove());
         markersRef.current = {};
 
-        // Render markers for filtered fleet
         filteredFleet.forEach((car) => {
             let badgeBg = '#1890ff';
             if (car.status === 'Available') badgeBg = '#52c41a';
             if (car.status === 'Maintenance') badgeBg = '#ff4d4f';
 
-            // Custom Pulsing DivIcon
             const customIcon = L.divIcon({
                 className: 'custom-fleet-pin',
                 html: `
@@ -305,7 +324,6 @@ const LeafletMap = () => {
             markersRef.current[car.id] = marker;
         });
 
-        // Get user's current admin location
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((pos) => {
                 const adminLat = pos.coords.latitude;
@@ -355,7 +373,6 @@ const LeafletMap = () => {
     return (
         <DashBoardLayout>
             <div style={{ paddingBottom: 24 }}>
-                {/* Header Title & Controls */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
                     <div>
                         <h2 style={{ margin: 0, fontWeight: 700 }}>Live Fleet GPS Tracker</h2>
@@ -363,7 +380,6 @@ const LeafletMap = () => {
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                        {/* Live Polling Toggle Switch */}
                         <Tooltip title="Auto-refetches live GPS coordinates from backend every 5 seconds">
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f1f5f9', padding: '6px 12px', borderRadius: 8 }}>
                                 <WifiOutlined style={{ color: isLivePolling ? '#52c41a' : '#8c8c8c' }} />
@@ -376,7 +392,6 @@ const LeafletMap = () => {
                             </div>
                         </Tooltip>
 
-                        {/* Center View */}
                         <Button
                             type="primary"
                             icon={<AimOutlined />}
@@ -391,7 +406,6 @@ const LeafletMap = () => {
                     </div>
                 </div>
 
-                {/* Fleet Quick Stats Cards */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginBottom: 20 }}>
                     <Card size="small" className="admin-card-hover" style={{ borderRadius: 10 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -442,9 +456,7 @@ const LeafletMap = () => {
                     </Card>
                 </div>
 
-                {/* Main Interactive Map & Vehicle Drawer Grid */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
-                    {/* Left/Main Map Container */}
                     <Card
                         className="admin-card-hover"
                         bordered={false}
@@ -454,7 +466,6 @@ const LeafletMap = () => {
                         <div id="fleet-map" style={{ height: '540px', width: '100%' }} />
                     </Card>
 
-                    {/* Right Vehicle List Sidebar Panel */}
                     <Card
                         className="admin-card-hover"
                         title={
@@ -525,6 +536,21 @@ const LeafletMap = () => {
             </div>
         </DashBoardLayout>
     );
+};
+
+const LeafletMap = () => {
+    const defaultCenter: Coordinates = { latitude: 21.1702, longitude: 72.8311 };
+
+    if (!isV2Enabled()) {
+        return (
+            <DashBoardLayout>
+                <h2 style={{ marginBottom: 15 }}>Map</h2>
+                <SimpleBaselineMap center={defaultCenter} />
+            </DashBoardLayout>
+        );
+    }
+
+    return <V2FleetMap defaultCenter={defaultCenter} />;
 };
 
 export default LeafletMap;

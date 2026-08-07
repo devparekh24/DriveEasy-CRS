@@ -13,6 +13,8 @@ import { message } from "antd";
 import { setUsers } from "../../slices/userSlice";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 
+import { isV2Enabled } from '../../utils/featureFlags';
+
 const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
     const isLogin = useAppSelector(state => state.auth.isLoggedIn);
@@ -68,6 +70,7 @@ const Navbar = () => {
     };
 
     const handleLogout = async () => {
+        sessionStorage.setItem('isLoggingOut', 'true');
         try {
             await logoutApi().unwrap();
         } catch {
@@ -75,6 +78,7 @@ const Navbar = () => {
         }
         dispatch(logout());
         dispatch(setUsers([]));
+        message.success('Logged out successfully!');
         navigate("/login");
     };
 
@@ -113,8 +117,8 @@ const Navbar = () => {
                                         sx={{
                                             width: 38,
                                             height: 38,
-                                            border: '2px solid #1890ff',
-                                            bgcolor: '#1890ff',
+                                            border: isV2Enabled() ? '2px solid #343a40' : '2px solid #1890ff',
+                                            bgcolor: isV2Enabled() ? '#1e293b' : '#1890ff',
                                             color: '#fff',
                                             fontSize: '16px',
                                             fontWeight: 600

@@ -11,6 +11,7 @@ const { Search } = Input;
 import type { GetProps } from 'antd';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import { isV2Enabled } from '../../../utils/featureFlags';
 
 type RangePickerProps = GetProps<typeof DatePicker.RangePicker>;
 
@@ -291,6 +292,8 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
         }
     });
 
+    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth <= 768;
+
     const mergedColumns = columns.map((col) => {
         if (!col.editable || col.dataIndex === '_id') {
             return col;
@@ -309,8 +312,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                 title: col.title,
                 editing: isEditing(record),
             }),
-            // Set 'left' for carName and image columns
-            fixed: col.dataIndex === 'carName' || col.dataIndex === 'image' ? 'left' : undefined,
+            fixed: (!isMobileScreen && (col.dataIndex === 'carName' || col.dataIndex === 'image')) ? 'left' : undefined,
         };
     });
 
@@ -319,7 +321,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
         {
             title: 'Action',
             key: 'action',
-            fixed: 'right', // Fix the Action column to the right
+            fixed: !isMobileScreen ? 'right' : undefined, // Fix the Action column to the right on desktop only
             width: 75,
             render: (_: any, record: Item) => {
                 const editable = isEditing(record);
@@ -381,7 +383,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                     <AdminLoader />
                 ) : (
                     <Table
-                        className="admin-table-styled"
+                        className={isV2Enabled() ? "admin-table-styled" : ""}
                         components={{
                             body: {
                                 cell: EditableCell,
@@ -390,7 +392,7 @@ const CarTable = ({ headers, tableData }: { headers: string[]; tableData: Car[] 
                         bordered
                         dataSource={filteredData}
                         columns={mergedColumns}
-                        rowClassName={(_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")}
+                        rowClassName={isV2Enabled() ? ((_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")) : () => "editable-row"}
                         pagination={{
                             pageSize: 5,
                             showSizeChanger: true,

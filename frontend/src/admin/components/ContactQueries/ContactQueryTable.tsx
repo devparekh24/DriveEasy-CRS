@@ -4,6 +4,7 @@ import { Form, Input, Popconfirm, Select, Table, Typography, message } from 'ant
 import type { TableColumnsType } from 'antd';
 import { QuestionCircleOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import AdminLoader from '../AdminLoader/AdminLoader';
+import { isV2Enabled } from '../../../utils/featureFlags';
 import { ContactQuery, ContactQueryState } from '../../../slices/contactQuerySlice';
 import { useRemoveContactQueryMutation, useUpdateContactQueryMutation } from '../../../services/contactQueryApi';
 const { Search } = Input;
@@ -155,6 +156,8 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
         sortDirections: ['ascend', 'descend'],
     }));
 
+    const isMobileScreen = typeof window !== 'undefined' && window.innerWidth <= 768;
+
     const mergedColumns = columns.map((col) => {
         if (!col.editable || col.dataIndex === '_id') {
             return col;
@@ -168,7 +171,7 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
                 title: col.title,
                 editing: isEditing(record),
             }),
-            fixed: col.dataIndex === 'name' ? 'left' : undefined,
+            fixed: (!isMobileScreen && col.dataIndex === 'name') ? 'left' : undefined,
         };
     });
 
@@ -177,7 +180,7 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
         {
             title: 'Action',
             key: 'action',
-            fixed: 'right', // Fix the Action column to the right
+            fixed: !isMobileScreen ? 'right' : undefined, // Fix the Action column to the right on desktop only
             width: 75,
             render: (_: any, record: ContactQuery) => {
                 const editable = isEditing(record);
@@ -239,7 +242,7 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
                     <AdminLoader />
                 ) : (
                     <Table
-                        className="admin-table-styled"
+                        className={isV2Enabled() ? "admin-table-styled" : ""}
                         components={{
                             body: {
                                 cell: EditableCell,
@@ -248,7 +251,7 @@ const ContactQueryTable = ({ headers, tableData }: { headers: string[]; tableDat
                         bordered
                         dataSource={filteredData}
                         columns={mergedColumns}
-                        rowClassName={(_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")}
+                        rowClassName={isV2Enabled() ? ((_, index) => (index % 2 === 0 ? "editable-row even-row" : "editable-row odd-row")) : () => "editable-row"}
                         pagination={{
                             pageSize: 10,
                             showSizeChanger: true,
