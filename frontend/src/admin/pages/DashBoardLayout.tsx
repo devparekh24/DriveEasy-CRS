@@ -76,11 +76,10 @@ const DashBoardLayout = (props: DashboardProps) => {
     }, [isLogin, userId]);
 
     // Extract user profile image correctly from Redux state or localStorage
+    const rawUser: any = loginUser[0];
     const authState = useAppSelector(state => state.auth);
-    const authUserId = authState.userId;
-    const activeUserObj: any = loginUser.find((u: any) => (u._id || u.id) === authUserId) || (loginUser[0] && (loginUser[0]._id === authUserId || (loginUser[0] as any).id === authUserId) ? loginUser[0] : null);
     const authUser = storedUser ? JSON.parse(storedUser)?.user : null;
-    const currentUser = (activeUserObj?.data && typeof activeUserObj.data === 'object' && !Array.isArray(activeUserObj.data) ? activeUserObj.data : activeUserObj) || authState.user || authUser;
+    const currentUser = (rawUser?.data && typeof rawUser.data === 'object' && !Array.isArray(rawUser.data) ? rawUser.data : rawUser) || authUser;
 
     let rawImg = currentUser?.image || currentUser?.user?.image;
     if (rawImg && typeof rawImg === 'string' && rawImg.startsWith('http://res.cloudinary.com')) {

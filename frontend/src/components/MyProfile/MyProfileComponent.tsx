@@ -147,15 +147,9 @@ export const MyProfileComponent = () => {
     }
   }
 
-  const authState = useAppSelector(state => state.auth);
-  const authUserId = authState.userId;
-  const authToken = authState.token;
-
   useEffect(() => {
-    if (authUserId) {
-      getCurrentUser()
-    }
-  }, [authUserId, authToken, image])
+    getCurrentUser()
+  }, [image])
 
   useEffect(() => {
     if (isSuccessOnGetUser && userData) {
@@ -167,8 +161,10 @@ export const MyProfileComponent = () => {
   }, [dispatch, isSuccessOnGetUser, userData]);
 
   const loginUser = useAppSelector(state => state.user.users);
-  const activeUserObj: any = loginUser.find((u: any) => (u._id || u.id) === authUserId) || (loginUser[0] && (loginUser[0]._id === authUserId || (loginUser[0] as any).id === authUserId) ? loginUser[0] : null);
-  const currentUser = (activeUserObj?.data && typeof activeUserObj.data === 'object' && !Array.isArray(activeUserObj.data) ? activeUserObj.data : activeUserObj) || authState.user || (storedUser ? JSON.parse(storedUser)?.user : null);
+
+  const authState = useAppSelector(state => state.auth);
+  const rawUser: any = loginUser[0];
+  const currentUser = (rawUser?.data && typeof rawUser.data === 'object' && !Array.isArray(rawUser.data) ? rawUser.data : rawUser) || authState.user || (storedUser ? JSON.parse(storedUser)?.user : null);
 
   useEffect(() => {
     // Update local state with the initial name email contactNumber from the user profile

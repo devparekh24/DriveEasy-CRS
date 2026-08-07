@@ -9,7 +9,7 @@ import { message } from 'antd';
 import AdminLoader from '../AdminLoader/AdminLoader';
 
 const UsersComponent = () => {
-    const { data, isError, isLoading, error, isSuccess } = useGetAllUsersQuery(undefined, { refetchOnMountOrArgChange: true });
+    const { data, isError, isLoading, error, isSuccess } = useGetAllUsersQuery();
     const dispatch = useAppDispatch();
     const usersList = useAppSelector(state => state.user.users)
 

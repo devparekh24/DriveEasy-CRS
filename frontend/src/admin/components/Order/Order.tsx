@@ -10,7 +10,7 @@ import AdminLoader from '../AdminLoader/AdminLoader';
 
 const OrdersComponent = () => {
 
-    const { data, isError, isLoading, error, isSuccess } = useGetAllOrdersQuery(undefined, { refetchOnMountOrArgChange: true });
+    const { data, isError, isLoading, error, isSuccess } = useGetAllOrdersQuery();
     const dispatch = useAppDispatch();
     const ordersList = useAppSelector(state => state.order.orders)
 

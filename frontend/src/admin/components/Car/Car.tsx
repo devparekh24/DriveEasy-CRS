@@ -223,7 +223,7 @@ const AddCarModal: FC = () => {
 
 
 const Car: FC = () => {
-    const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery(undefined, { refetchOnMountOrArgChange: true });
+    const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
     const dispatch = useAppDispatch();
     const carsList = useAppSelector(state => state.car.cars)
     const [headers, setHeaders] = useState<string[]>([])
