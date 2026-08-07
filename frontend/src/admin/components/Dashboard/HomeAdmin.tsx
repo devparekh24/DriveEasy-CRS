@@ -56,9 +56,11 @@ const HomeAdmin: React.FC = () => {
     const filteredOrders = Array.isArray(ordersList)
         ? ordersList.filter((o: any) => {
             const query = searchText.toLowerCase();
-            const customerName = o.user?.name || o.name || "";
-            const customerEmail = o.user?.email || o.email || "";
-            const carName = o.car?.carName || o.carName || "";
+            const carMatchedName = typeof o.car === 'string' ? carsList.find((c: any) => c._id === o.car)?.carName : '';
+            const userMatchedName = typeof o.user === 'string' ? usersList.find((u: any) => u._id === o.user)?.name : '';
+            const customerName = o.user?.name || o.fullName || o.name || userMatchedName || "";
+            const customerEmail = o.user?.email || o.emailAddress || o.email || "";
+            const carName = o.car?.carName || o.carName || carMatchedName || "";
             return (
                 customerName.toLowerCase().includes(query) ||
                 customerEmail.toLowerCase().includes(query) ||
@@ -72,22 +74,31 @@ const HomeAdmin: React.FC = () => {
             title: "Customer",
             dataIndex: "user",
             key: "user",
-            render: (userObj: any, record: any) => (
-                <div style={{ fontWeight: 600, color: "#1e293b" }}>
-                    {userObj?.name || record.name || "N/A"}
-                    <div style={{ fontSize: "12px", color: "#64748b", fontWeight: 400 }}>
-                        {userObj?.email || record.email || ""}
+            render: (userObj: any, record: any) => {
+                const userMatched = typeof record.user === 'string' ? usersList.find((u: any) => u._id === record.user) : null;
+                const name = userObj?.name || record.fullName || record.name || userMatched?.name || "N/A";
+                const email = userObj?.email || record.emailAddress || record.email || userMatched?.email || "";
+                return (
+                    <div style={{ fontWeight: 600, color: "#1e293b" }}>
+                        {name}
+                        {email && (
+                            <div style={{ fontSize: "12px", color: "#64748b", fontWeight: 400 }}>
+                                {email}
+                            </div>
+                        )}
                     </div>
-                </div>
-            ),
+                );
+            },
         },
         {
             title: "Vehicle",
             dataIndex: "car",
             key: "car",
-            render: (carObj: any, record: any) => (
-                <span>{carObj?.carName || record.carName || "N/A"}</span>
-            ),
+            render: (carObj: any, record: any) => {
+                const carMatched = typeof record.car === 'string' ? carsList.find((c: any) => c._id === record.car) : null;
+                const vehicleName = carObj?.carName || record.carName || carMatched?.carName || "N/A";
+                return <span>{vehicleName}</span>;
+            },
         },
         {
             title: "Trip Distance",
