@@ -90,7 +90,9 @@ const MyBookingTable = ({ headers, tableData }: { headers: string[]; tableData: 
 
 const MyBooking = () => {
 
-  const { data, isLoading, isError, error, isSuccess } = useGetUserOrdersQuery()
+  const { data, isLoading, isError, error, isSuccess } = useGetUserOrdersQuery(undefined, {
+    refetchOnMountOrArgChange: true
+  });
   const [headers, setHeaders] = useState<string[]>([])
   const [tableData, setTableData] = useState<BookingState[]>([]);
   const bookingList = useAppSelector(state => state.booking.bookings)
@@ -115,7 +117,11 @@ const MyBooking = () => {
   }
 
   const getHeaders = async () => {
-    const columns = await Object.keys(bookingList[0]!);
+    if (!bookingList || bookingList.length === 0) {
+      setHeaders([]);
+      return;
+    }
+    const columns = Object.keys(bookingList[0]!);
     const sortedHeaders = columns.filter((header) => (header !== '_id' && header !== 'car' && header !== 'user' && header !== '__v'))
     const finalHeaders = [...sortedHeaders];
     setHeaders(finalHeaders);
@@ -123,15 +129,15 @@ const MyBooking = () => {
 
   useEffect(() => {
     getUserOrders()
-  }, [])
+  }, [isError, error, data])
 
   useEffect(() => {
     getHeaders()
   }, [bookingList])
 
   useEffect(() => {
-    if (isSuccess && data && (data as any).data && (data as any).data.orders) {
-      const ordersData = (data as any).data.orders || [];
+    if (isSuccess && data) {
+      const ordersData = (data as any)?.data?.orders || [];
       setTableData(ordersData);
       dispatch(setBookingData({ data: ordersData }));
     }
