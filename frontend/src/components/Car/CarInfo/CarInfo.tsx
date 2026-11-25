@@ -17,11 +17,13 @@ import type { RadioChangeEvent } from 'antd';
 import { ConfigProvider, Radio } from 'antd';
 import CarBookingFormPerHour from "../CarBookingForm/CarBookingFormPerHour";
 import CarBookingFormPerKm from "../CarBookingForm/CarBookingFormPerKm";
+import { isV2Enabled } from "../../../utils/featureFlags";
 
 const CarInfo: React.FC = () => {
+  const v2Active = isV2Enabled();
   const { data, isError, isLoading, error, isSuccess } = useGetAllCarsQuery();
   const dispatch = useAppDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const carData = async () => {
     try {
@@ -64,14 +66,16 @@ const CarInfo: React.FC = () => {
     <>
       {isLoading && <Loader />}
       {find_car && (
-        <div className="car-info">
+        <div className={`car-info ${v2Active ? 'v2-car-info' : ''}`}>
           <div className="car-info-row">
             <div className="car-info-text-col">
-              <h3 onClick={() => navigate('/cars')} className="go-back-btn"> <u>Go Back</u></h3>
+              <h3 onClick={() => navigate('/cars')} className="go-back-btn">
+                <u>{v2Active ? "← Back to Luxury Fleet" : "Go Back"}</u>
+              </h3>
               <div className="car-image">
                 <img src={find_car?.image} alt={find_car?.image} />
               </div>
-              <h1>{find_car?.carName} - {find_car?.companyName}</h1>
+              <h1>{find_car?.carName} <span className="car-company-name">- {find_car?.companyName}</span></h1>
               <div className="car-interior-info">
                 <div>
                   <span>{find_car?.carNumberPlate}</span>
@@ -138,11 +142,9 @@ const CarInfo: React.FC = () => {
               <ConfigProvider
                 theme={{
                   token: {
-                    // Seed Token
-                    colorPrimary: '#000',
-
-                    // Alias Token
-                    colorBgContainer: '#d1d1d1',
+                    colorPrimary: v2Active ? '#e2b956' : '#000',
+                    colorBgContainer: v2Active ? '#121826' : '#d1d1d1',
+                    colorText: v2Active ? '#ffffff' : 'rgba(0, 0, 0, 0.88)',
                   },
                 }}
               >
@@ -157,9 +159,8 @@ const CarInfo: React.FC = () => {
               {bookingFormValue === 'km' && <CarBookingFormPerKm />}
             </div>
           </div>
-        </div >
-      )
-      }
+        </div>
+      )}
     </>
   );
 };

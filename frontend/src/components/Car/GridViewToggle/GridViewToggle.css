@@ -228,3 +228,42 @@
         font-size: 1.1rem;
     }
 }
+
+/* ===== V2 Luxury Dark Theme Styles ===== */
+.v2-cars-theme .grid-toggle-btn {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(18, 24, 38, 0.75);
+    color: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(8px);
+}
+
+.v2-cars-theme .grid-toggle-btn:hover {
+    border-color: #e2b956;
+    color: #e2b956;
+    background: rgba(226, 185, 86, 0.1);
+}
+
+.v2-cars-theme .grid-toggle-btn.active {
+    background: linear-gradient(135deg, #e2b956 0%, #c99f3b 100%);
+    border-color: #e2b956;
+    color: #080a0f;
+    box-shadow: 0 4px 15px rgba(226, 185, 86, 0.35);
+}
+
+.v2-cars-theme .grid-fab-main {
+    background: linear-gradient(135deg, #e2b956 0%, #c99f3b 100%);
+    color: #080a0f;
+    box-shadow: 0 4px 20px rgba(226, 185, 86, 0.4);
+}
+
+.v2-cars-theme .grid-fab-option {
+    background-color: #121826;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.v2-cars-theme .grid-fab-option.active {
+    background: #e2b956;
+    border-color: #e2b956;
+    color: #080a0f;
+}

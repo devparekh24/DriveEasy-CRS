@@ -67,12 +67,12 @@
 }
 
 .input-group #name,
-input {
+.input-group input {
     margin-bottom: 0;
 }
 
 .input-group #email,
-input {
+.input-group input {
     padding: 15px;
     border-radius: 8px;
     border: 1px solid #ddd;
@@ -82,7 +82,7 @@ input {
 }
 
 .input-group #email:focus,
-input:focus {
+.input-group input:focus {
     border-color: #000000;
     outline: none;
 }
@@ -202,7 +202,7 @@ input:focus {
     }
 
     .input-group #email,
-    input,
+    .input-group input,
     .input-group #message {
         font-size: 15px;
         padding: 12px;
@@ -239,7 +239,7 @@ input:focus {
     }
 
     .input-group #email,
-    input,
+    .input-group input,
     .input-group #message {
         font-size: 14px;
         padding: 10px;

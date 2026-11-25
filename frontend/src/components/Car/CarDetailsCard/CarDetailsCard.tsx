@@ -6,6 +6,7 @@ import { SiSpeedtest } from "react-icons/si";
 import { TbManualGearbox } from "react-icons/tb";
 import { BiSolidCarMechanic } from "react-icons/bi";
 import { Car } from "../../../slices/carSlice";
+import { isV2Enabled } from "../../../utils/featureFlags";
 
 const formatDate = (dateStr: string | Date) => {
   const d = new Date(dateStr);
@@ -22,6 +23,8 @@ const CarDetailsCard: React.FC<Car> = ({
   _id,
   capacity,
   carName,
+  companyName,
+  fule,
   image,
   mileage,
   transmission,
@@ -34,6 +37,7 @@ const CarDetailsCard: React.FC<Car> = ({
   conflictingBookings,
 }) => {
   const navigate = useNavigate();
+  const v2Active = isV2Enabled();
 
   const handleNavigate = () => {
     navigate(`${_id}`);
@@ -41,7 +45,7 @@ const CarDetailsCard: React.FC<Car> = ({
 
   return (
     <div
-      className={`CarDetailsCard ${isBookedForPeriod ? 'car-card-booked' : ''}`}
+      className={`CarDetailsCard ${isBookedForPeriod ? 'car-card-booked' : ''} ${v2Active ? 'v2-car-card' : ''}`}
       id={_id}
       onClick={handleNavigate}
     >
@@ -70,7 +74,15 @@ const CarDetailsCard: React.FC<Car> = ({
       {/* Booked overlay */}
       {isBookedForPeriod && <div className="booked-overlay" />}
 
-      <img src={image} alt="" className="card-details-image" />
+      {/* V2 Top Category Bar */}
+      {v2Active && (
+        <div className="v2-card-top-tag-bar">
+          {companyName && <span className="v2-car-brand-tag">{companyName}</span>}
+          {fule && <span className="v2-car-fuel-tag">{fule}</span>}
+        </div>
+      )}
+
+      <img src={image} alt={carName} className="card-details-image" />
       <div className="car-details-text">
         <div className="car-details-text-left">
           <h3>{carName}</h3>
@@ -78,16 +90,16 @@ const CarDetailsCard: React.FC<Car> = ({
             <p>{carNumberPlate}</p>
           </div>
           <p className="info-icons">
-            <span className="info-icon">
+            <span className="info-icon" title="Capacity">
               <MdPersonOutline />
             </span>
-            <span className="info-icon">
+            <span className="info-icon" title="Mileage">
               <SiSpeedtest />
             </span>
-            <span className="info-icon">
+            <span className="info-icon" title="Transmission">
               <TbManualGearbox />
             </span>
-            <span className="info-icon">
+            <span className="info-icon" title="Manufacture Year">
               <BiSolidCarMechanic />
             </span>
           </p>

@@ -4,8 +4,116 @@ import { FaGithub, FaLinkedin, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 import { SiMediamarkt } from "react-icons/si";
+import { isV2Enabled } from "../../utils/featureFlags";
 
 const Footer = () => {
+    const v2Active = isV2Enabled();
+
+    if (v2Active) {
+        return (
+            <footer className="v2-luxury-footer">
+                <div className="v2-footer-glow-line" />
+                <div className="v2-footer-container">
+                    <div className="v2-footer-grid">
+                        {/* Brand Column */}
+                        <div className="v2-footer-col v2-footer-brand">
+                            <div className="v2-footer-logo-row">
+                                <div className="v2-footer-logo-circle">
+                                    <SiMediamarkt className="v2-footer-logo-icon" />
+                                </div>
+                                <h2>Drive<span>Easy</span></h2>
+                            </div>
+                            <p className="v2-footer-tagline">
+                                Experience the pinnacle of automotive excellence. Curated luxury supercars, effortless reservations, and 24/7 VIP concierge service.
+                            </p>
+                            <div className="v2-footer-badge">
+                                <span>PREMIUM MOBILITY EXPERIENCE</span>
+                            </div>
+                        </div>
+
+                        {/* Quick Links Column */}
+                        <div className="v2-footer-col">
+                            <h3 className="v2-footer-heading">Quick Navigation</h3>
+                            <ul className="v2-footer-links">
+                                <li><Link to="/">Home Showcase</Link></li>
+                                <li><Link to="/cars">Luxury Fleet</Link></li>
+                                <li><Link to="/booking">My Bookings</Link></li>
+                                <li><Link to="/contact">VIP Concierge</Link></li>
+                            </ul>
+                        </div>
+
+                        {/* Contact Info Column */}
+                        <div className="v2-footer-col">
+                            <h3 className="v2-footer-heading">Contact & Concierge</h3>
+                            <div className="v2-footer-contact-item">
+                                <HiOutlineDevicePhoneMobile className="v2-footer-icon" />
+                                <div>
+                                    <span className="v2-contact-label">Direct Line</span>
+                                    <p>+91-932-806-6996</p>
+                                </div>
+                            </div>
+                            <div className="v2-footer-contact-item">
+                                <IoLocationOutline className="v2-footer-icon" />
+                                <div>
+                                    <span className="v2-contact-label">Showroom</span>
+                                    <p>Surat, Gujarat, India</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Developer / Creator Column */}
+                        <div className="v2-footer-col">
+                            <h3 className="v2-footer-heading">Developer</h3>
+                            <div className="v2-footer-contact-item">
+                                <FaUser className="v2-footer-icon" />
+                                <div>
+                                    <span className="v2-contact-label">Lead Engineer</span>
+                                    <p>Dev Parekh</p>
+                                </div>
+                            </div>
+                            <div className="v2-footer-social-row">
+                                <a
+                                    href="https://www.linkedin.com/in/devparekh24/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="v2-social-btn"
+                                    aria-label="LinkedIn Profile"
+                                >
+                                    <FaLinkedin />
+                                    <span>LinkedIn</span>
+                                </a>
+                                <a
+                                    href="https://github.com/devparekh24"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="v2-social-btn"
+                                    aria-label="GitHub Profile"
+                                >
+                                    <FaGithub />
+                                    <span>GitHub</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Bottom Bar */}
+                    <div className="v2-footer-bottom">
+                        <div className="v2-footer-bottom-copy">
+                            <SiMediamarkt className="v2-footer-mini-icon" />
+                            <p>DriveEasy © {new Date().getFullYear()}. All Rights Reserved.</p>
+                        </div>
+                        <ul className="v2-footer-bottom-links">
+                            <li><Link to="/">Home</Link></li>
+                            <li><Link to="/cars">Cars</Link></li>
+                            <li><Link to="/booking">Booking</Link></li>
+                            <li><Link to="/contact">Contact</Link></li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
+        );
+    }
+
     return (
         <div className="footer">
             <div className="footer-row">
@@ -69,7 +177,7 @@ const Footer = () => {
                         <Link to="/">Home</Link>
                     </li>
                     <li>
-                        <Link to="/about">Cars</Link>
+                        <Link to="/cars">Cars</Link>
                     </li>
                     <li>
                         <Link to="/booking">Booking</Link>

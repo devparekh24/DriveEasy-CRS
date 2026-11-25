@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Titillium+Web:wght@400;600;700&display=swap");
 
 * {
   padding: 0;
@@ -8,50 +8,406 @@
 }
 
 :root {
-  --mainColor: #000000;
-  --mainColorLight: #5767aa;
-  --secondaryColor: #db2b39;
-  --textColor: #eee;
+  --nav-bg: rgba(18, 18, 22, 0.82);
+  --nav-bg-scrolled: rgba(10, 10, 14, 0.92);
+  --nav-border: rgba(255, 255, 255, 0.14);
+  --nav-shadow: 0 20px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --pill-btn-bg: #ffffff;
+  --pill-btn-text: #0b0f19;
+  --text-main: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.7);
+  --accent-gold: #e2b956;
 }
 
-header {
+/* Floating Navbar Wrapper - Permanently floating capsule pill */
+.floating-nav-wrapper {
+  position: fixed;
+  top: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1020px;
+  z-index: 1000;
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.floating-nav-wrapper.is-scrolled {
+  top: 0.85rem;
+  width: 92%;
+  max-width: 1000px;
+}
+
+/* Main Header Floating Capsule */
+header.floating-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  padding: 0 10px 0 10px;
+  background: var(--nav-bg);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--nav-border);
+  border-radius: 9999px;
+  box-shadow: var(--nav-shadow);
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: navPillPulse 6s ease-in-out infinite;
+}
+
+.floating-nav-wrapper.is-scrolled header.floating-navbar {
+  height: 60px;
+  background: var(--nav-bg-scrolled);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+/* Left Logo Badge */
+.brand-badge-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  padding-left: 6px;
+  margin-right: 1rem;
+}
+
+.logo-badge-circle {
+  width: 44px;
+  height: 44px;
+  background: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand-badge-link:hover .logo-badge-circle {
+  transform: scale(1.06) rotate(-5deg);
+}
+
+.logo-badge-circle .badge-icon {
+  font-size: 26px;
+  color: #0b0f19;
+}
+
+.brand-text {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #ffffff 40%, rgba(255, 255, 255, 0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-text-gold {
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: #e2b956;
+  color: #e2b956;
+}
+
+/* Center Nav Links */
+nav.nav-center-menu {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+nav.nav-center-menu a {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+nav.nav-center-menu a:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+nav.nav-center-menu a.active {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.15);
+  font-weight: 700;
+}
+
+/* Remove old pseudo underline styling */
+nav.nav-center-menu a:after {
+  display: none !important;
+}
+
+/* Right Oval Capsule Button Container */
+.nav-right-capsule-container {
+  display: flex;
+  align-items: center;
+}
+
+.nav-user-capsule {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Right Oval Pill Button matching reference image */
+.user-email-pill,
+.nav-guest-capsule {
+  background: var(--pill-btn-bg);
+  color: var(--pill-btn-text);
+  padding: 8px 20px 8px 12px;
+  border-radius: 9999px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.25), inset 0 -2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-guest-capsule {
+  padding: 10px 24px;
+}
+
+.user-email-pill:hover,
+.nav-guest-capsule:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 22px rgba(255, 255, 255, 0.4);
+  background: #ffffff;
+  color: #000000;
+}
+
+.pill-email-text {
+  letter-spacing: -0.2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
+
+.capsule-logout-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(239, 68, 68, 0.6);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff4d4f;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  padding: 0;
+}
+
+.capsule-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ff4d4f;
+  color: #ff6b6b;
+  transform: scale(1.08);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+}
+
+.logout-icon,
+.logout-icon svg,
+.capsule-logout-btn svg {
+  width: 20px !important;
+  height: 20px !important;
+  font-size: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  color: #ff4d4f !important;
+  fill: currentColor !important;
+}
+
+
+
+.mobile-only-auth {
+  display: none;
+}
+
+/* Nav Mobile Trigger Buttons */
+header .nav-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+
+/* Responsive Media Queries */
+@media only screen and (max-width: 992px) {
+  .floating-nav-wrapper {
+    width: 94%;
+    top: 1rem;
+  }
+
+  .pill-email-text {
+    max-width: 150px;
+  }
+
+  nav.nav-center-menu {
+    gap: 1rem;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .floating-nav-wrapper {
+    width: 94%;
+    top: 0.8rem;
+  }
+
+  .brand-text {
+    font-size: 1.1rem;
+  }
+
+  .logo-badge-circle {
+    width: 38px;
+    height: 38px;
+  }
+
+  .logo-badge-circle .badge-icon {
+    font-size: 22px;
+  }
+
+  .pill-email-text {
+    display: none; /* Hide email text on small mobile, keep pill avatar/action */
+  }
+
+  .user-email-pill,
+  .nav-guest-capsule {
+    padding: 6px 12px;
+  }
+
+  header .nav-btn.nav-open-btn {
+    display: flex;
+  }
+
+  header nav.nav-center-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 80%;
+    max-width: 320px;
+    background: rgba(15, 18, 26, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 5rem 2rem 2rem 2rem;
+    gap: 1.25rem;
+    transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+    z-index: 1001;
+  }
+
+  header nav.nav-center-menu.responsive_nav {
+    right: 0;
+  }
+
+  nav.nav-center-menu a {
+    font-size: 1.1rem;
+    width: 100%;
+    padding: 12px 16px;
+  }
+
+  .mobile-only-auth {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 1rem;
+  }
+
+  .mobile-profile-link,
+  .mobile-login-link {
+    color: #ffffff;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 600;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 12px 16px;
+    border-radius: 12px;
+    display: block;
+  }
+
+  .mobile-logout-btn {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ff4d4f;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  nav .nav-close-btn {
+    display: flex !important;
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+}
+
+/* V1 Classic Navbar Styles (when V2 feature flag is disabled) */
+header.v1-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 80px;
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   padding: 0 5rem;
-  /* background-color: var(--mainColor); */
   background-color: rgb(0, 0, 0);
-  color: var(--textColor);
+  color: #eee;
   z-index: 1000;
 }
 
-header h3 {
+header.v1-header h3 {
   font-size: 2rem;
+  font-family: "Titillium Web", sans-serif;
+  color: #fff;
 }
 
-header h3::first-letter {
-  font-weight: 200;
-}
-
-
-nav a {
+nav.v1-nav a {
   margin: 0 1rem;
-  color: var(--textColor);
+  color: #fff;
   text-decoration: none;
   font-weight: 600;
-  color: #fff;
   text-transform: uppercase;
   display: inline-block;
   padding: 15px 20px;
   position: relative;
+  font-family: "Titillium Web", sans-serif;
 }
 
-nav a:after {
-  background: none repeat scroll 0 0 transparent;
-  bottom: 0;
+nav.v1-nav a:after {
   content: "";
   display: block;
   height: 2px;
@@ -62,69 +418,18 @@ nav a:after {
   width: 0;
 }
 
-nav a:hover:after {
+nav.v1-nav a:hover:after,
+nav.v1-nav a.active:after {
   width: 100%;
   left: 0;
 }
 
-nav .active:after {
-  width: 100%;
-  left: 0;
-}
-
-header .nav-btn {
-  padding: 5px;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--textColor);
-  display: none;
-  opacity: 0;
-  font-size: 1.8rem;
-}
-
-header div,
-nav {
-  display: flex;
-  align-items: center;
-  z-index: 1000;
-}
-
-/* Tablet styles */
-@media only screen and (max-width: 1024px) and (min-width: 768px) {
-  header {
-    padding: 0 2rem;
-  }
-
-  header h3 {
-    font-size: 1.8rem;
-  }
-
-  nav a {
-    margin: 0 0.7rem;
-    padding: 12px 15px;
-    font-size: 0.9rem;
-  }
-}
-
-/* Mobile and small tablet styles */
-@media only screen and (max-width: 767px) {
-  header {
+@media only screen and (max-width: 768px) {
+  header.v1-header {
     padding: 0 1rem;
-    z-index: 1000;
   }
 
-  header h3 {
-    font-size: 1.5rem;
-  }
-
-  header .nav-btn {
-    display: block;
-    opacity: 1;
-  }
-
-  header nav {
+  nav.v1-nav {
     position: fixed;
     top: 0;
     left: 100%;
@@ -135,53 +440,13 @@ nav {
     align-items: center;
     justify-content: center;
     gap: 1.5rem;
-    background-color: var(--mainColor);
+    background-color: #000;
     transition: 0.5s;
     z-index: 1001;
   }
 
-  header .responsive_nav {
+  nav.v1-nav.responsive_nav {
     transform: translateX(-100%);
   }
-
-  nav .nav-close-btn {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    color: white !important;
-  }
-
-  nav a {
-    font-size: 1.1rem;
-    color: white;
-    width: 80%;
-    text-align: center;
-  }
-
-  /* Center avatar in mobile menu */
-  nav a[href="/my-profile"] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 }
 
-/* Extra small mobile devices */
-@media only screen and (max-width: 480px) {
-  header {
-    padding: 0 0.8rem;
-  }
-
-  header h3 {
-    font-size: 1.3rem;
-  }
-
-  header nav {
-    width: 80%;
-  }
-}
-
-.nav-logout-btn:hover {
-  color: #ff4d4f !important;
-  transform: scale(1.1);
-}

@@ -18,7 +18,7 @@
 }
 
 .input-group #email,
-input {
+.input-group input {
   padding: 15px;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -28,7 +28,7 @@ input {
 }
 
 .input-group #email:focus,
-input:focus {
+.input-group input:focus {
   border-color: #000000;
   outline: none;
 }
@@ -128,7 +128,7 @@ input:focus {
   }
 
   .input-group #email,
-  input,
+  .input-group input,
   .input-group #message {
     font-size: 15px;
     padding: 12px;
@@ -159,9 +159,193 @@ input:focus {
   }
 
   .input-group #email,
-  input,
+  .input-group input,
   .input-group #message {
     font-size: 14px;
     padding: 10px;
   }
 }
+
+/* ===== V2 Luxury Dark Theme Styles ===== */
+.v2-contact-theme {
+  background-color: #080a0f;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.v2-contact-header {
+  text-align: center;
+  padding: 4.5rem 2rem 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.v2-contact-tag {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #e2b956;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 0.6rem;
+}
+
+.v2-contact-header h2 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.v2-gold-span {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  color: #e2b956;
+}
+
+.v2-contact-header p {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+}
+
+.v2-contact-component {
+  background-image: none !important;
+  background-color: transparent !important;
+  padding: 2rem 3rem 6rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: stretch;
+}
+
+.v2-contact-component .contact-form-container {
+  background: rgba(18, 24, 38, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  width: 58%;
+  padding: 2.5rem;
+}
+
+.v2-contact-component .input-group {
+  margin-bottom: 1.2rem;
+}
+
+.v2-contact-component .input-group input,
+.v2-contact-component .input-group #email,
+.v2-contact-component .input-group #message {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 10px;
+  color: #ffffff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+}
+
+.v2-contact-component .input-group input:focus,
+.v2-contact-component .input-group #email:focus,
+.v2-contact-component .input-group #message:focus {
+  border-color: #e2b956 !important;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(226, 185, 86, 0.2);
+  outline: none;
+}
+
+.v2-contact-component .input-group input::placeholder,
+.v2-contact-component .input-group #message::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.v2-contact-component button[type="submit"] {
+  background: linear-gradient(135deg, #e2b956 0%, #c99f3b 100%);
+  color: #080a0f;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  width: 100%;
+  box-shadow: 0 4px 15px rgba(226, 185, 86, 0.35);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 0.5rem;
+}
+
+.v2-contact-component button[type="submit"]:hover {
+  background: #ffffff;
+  color: #080a0f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.35);
+}
+
+.v2-contact-component .contact-box {
+  background: rgba(18, 24, 38, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  width: 36%;
+  height: auto;
+  min-height: 280px;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.35s ease;
+}
+
+.v2-contact-component .contact-box:hover {
+  border-color: rgba(226, 185, 86, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(226, 185, 86, 0.15);
+}
+
+.v2-contact-component .contact-box h4 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.v2-contact-component .contact-box p {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0.6rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.v2-contact-component .contact-box .icon {
+  color: #e2b956;
+  font-size: 1.2rem;
+}
+
+@media screen and (max-width: 900px) {
+  .v2-contact-component {
+    flex-direction: column;
+    padding: 1.5rem 1.5rem 4rem;
+  }
+  .v2-contact-component .contact-form-container,
+  .v2-contact-component .contact-box {
+    width: 100%;
+  }
+  .v2-contact-header h2 {
+    font-size: 2rem;
+  }
+}

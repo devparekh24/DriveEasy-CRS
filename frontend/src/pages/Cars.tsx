@@ -3,8 +3,10 @@ import CommonHeader from '../components/CommonHeader/CommonHeader';
 import SearchFields from '../components/SearchFields/SearchFields';
 import CarsShowcase from '../components/Car/CarShowcase/CarsShowcase';
 import GridViewToggle from '../components/Car/GridViewToggle/GridViewToggle';
+import { isV2Enabled } from '../utils/featureFlags';
 
 const Cars: React.FC = () => {
+  const v2Active = isV2Enabled();
 
   const [filters, setFilters] = useState({
     sortBy: '',
@@ -30,8 +32,8 @@ const Cars: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      <CommonHeader heading={'Cars'} />
+    <div className={v2Active ? "v2-cars-theme" : ""}>
+      <CommonHeader heading={'Cars'} subtitle={v2Active ? "Explore our exclusive fleet of high-performance vehicles" : undefined} />
       <SearchFields onFilterChange={handleFilterChange} />
       <GridViewToggle currentView={gridView} onViewChange={handleGridViewChange} />
       <CarsShowcase filters={filters} gridView={gridView} />

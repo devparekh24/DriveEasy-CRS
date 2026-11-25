@@ -313,3 +313,271 @@
     font-size: 0.9rem;
   }
 }
+
+/* ===== V2 Luxury Dark Theme Styles ===== */
+.v2-carinfo-theme {
+  background-color: #080a0f;
+  color: #ffffff;
+  min-height: 100vh;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.v2-car-info {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 7.5rem 2rem 6rem;
+}
+
+.v2-car-info .go-back-btn {
+  color: #e2b956;
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 8px 18px;
+  background: rgba(226, 185, 86, 0.08);
+  border: 1px solid rgba(226, 185, 86, 0.25);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.v2-car-info .go-back-btn u {
+  text-decoration: none;
+}
+
+.v2-car-info .go-back-btn:hover {
+  background: rgba(226, 185, 86, 0.2);
+  border-color: #e2b956;
+  transform: translateX(-4px);
+  color: #ffffff;
+}
+
+.v2-car-info .car-image {
+  height: 360px;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.07) 0%, rgba(14, 18, 28, 0.6) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 2rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v2-car-info .car-image img {
+  max-height: 100%;
+  max-width: 90%;
+  object-fit: contain;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.7));
+  transition: transform 0.4s ease;
+}
+
+.v2-car-info .car-image:hover img {
+  transform: scale(1.03);
+}
+
+.v2-car-info .car-info-text-col h1 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  margin: 0.8rem 0 1.2rem;
+}
+
+.v2-car-info .car-company-name {
+  color: #e2b956;
+  font-weight: 600;
+}
+
+.v2-car-info .car-interior-info {
+  background: rgba(18, 24, 38, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.2rem 1.6rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.v2-car-info .car-interior-info div:first-child span {
+  background: rgba(226, 185, 86, 0.12);
+  border: 1px solid rgba(226, 185, 86, 0.3);
+  color: #e2b956;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+}
+
+.v2-car-info .car-interior-info div span {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.v2-car-info .car-interior-info div p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+.v2-car-info .car-info-icon {
+  color: #e2b956;
+  font-size: 1.5rem;
+}
+
+.v2-car-info .include {
+  background: rgba(18, 24, 38, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.5rem 1.8rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.v2-car-info .include h3 {
+  color: #e2b956;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.v2-car-info .include p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.v2-car-info .check-icon {
+  color: #22c55e;
+}
+
+.v2-car-info .car-route-map {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+}
+
+/* Booking Form Column in V2 */
+.v2-car-info .car-info-form-col {
+  margin-top: 15px;
+}
+
+.v2-car-info .car-info-form-col h1 {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.3px;
+  margin-bottom: 0.8rem;
+}
+
+.v2-car-info .ant-radio-group {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+
+.v2-car-info .ant-radio-wrapper {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.v2-car-info .ant-radio-wrapper h3 {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.v2-car-info .car-info-form-col form {
+  background: rgba(18, 24, 38, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  padding: 0 0 1.5rem 0;
+}
+
+.v2-car-info .car-info-form-col form h2 {
+  background: linear-gradient(135deg, #182032 0%, #101522 100%);
+  color: #e2b956;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.v2-car-info .car-info-form-col form label {
+  color: rgba(255, 255, 255, 0.85);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.v2-car-info .car-info-form-col form input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border-radius: 9px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  padding: 0.65rem 0.9rem;
+  transition: all 0.25s ease;
+}
+
+.v2-car-info .car-info-form-col form input:focus {
+  border-color: #e2b956;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(226, 185, 86, 0.2);
+}
+
+.v2-car-info .booking-btn {
+  background: linear-gradient(135deg, #e2b956 0%, #c99f3b 100%);
+  color: #080a0f;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 10px;
+  padding: 0.85rem;
+  box-shadow: 0 4px 15px rgba(226, 185, 86, 0.35);
+  transition: all 0.25s ease;
+}
+
+.v2-car-info .booking-btn:hover {
+  background: #ffffff;
+  color: #080a0f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.35);
+}
+
+@media screen and (max-width: 1024px) {
+  .v2-car-info {
+    padding-top: 6.5rem;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .v2-car-info {
+    padding-top: 6rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+

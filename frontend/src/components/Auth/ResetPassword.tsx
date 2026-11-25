@@ -6,9 +6,10 @@ import { toast } from 'react-toastify'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 import { validatePassword, validateConfirmPassword } from '../../utils/validation'
+import { isV2Enabled } from '../../utils/featureFlags'
 
 const ResetPassword = () => {
-
+    const v2Active = isV2Enabled();
     const navigate = useNavigate()
     const params = useParams<{ token: string }>();
     const passwordRef = useRef<HTMLInputElement | null>(null)
@@ -69,7 +70,7 @@ const ResetPassword = () => {
     }, []);
 
     return (
-        <div className="login">
+        <div className={`login ${v2Active ? 'v2-auth-page' : ''}`}>
             <div className="login-container">
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h1>Reset Your Password</h1>

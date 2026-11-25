@@ -1,0 +1,147 @@
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* V2 Luxury Dark Theme Loader */
+.v2-loader-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 55vh;
+  width: 100%;
+  padding: 3rem 1rem;
+  box-sizing: border-box;
+}
+
+.v2-loader-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 140px;
+  height: 140px;
+}
+
+.v2-loader-glow-ring {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #e2b956;
+  border-right-color: rgba(226, 185, 86, 0.4);
+  box-shadow: 0 0 25px rgba(226, 185, 86, 0.35);
+  animation: v2-spin 1.4s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.v2-loader-glow-ring.inner {
+  width: 85px;
+  height: 85px;
+  border-top-color: transparent;
+  border-bottom-color: #e2b956;
+  border-left-color: rgba(226, 185, 86, 0.5);
+  box-shadow: 0 0 15px rgba(226, 185, 86, 0.25);
+  animation: v2-spin-reverse 1.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+.v2-loader-emblem {
+  position: relative;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(226, 185, 86, 0.25) 0%, rgba(8, 10, 15, 0.95) 70%);
+  border: 1px solid rgba(226, 185, 86, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #e2b956;
+  box-shadow: 0 0 20px rgba(226, 185, 86, 0.3);
+  animation: v2-pulse 2s ease-in-out infinite;
+}
+
+.v2-loader-emblem svg {
+  width: 24px;
+  height: 24px;
+}
+
+.v2-loader-brand {
+  margin-top: 1.5rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.v2-loader-brand span {
+  color: #e2b956;
+}
+
+.v2-loader-subtitle {
+  margin-top: 0.4rem;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.v2-loader-progress-bar {
+  margin-top: 1.2rem;
+  width: 140px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.v2-loader-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, #e2b956, transparent);
+  border-radius: 999px;
+  animation: v2-loading-bar 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes v2-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes v2-spin-reverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes v2-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(226, 185, 86, 0.25);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 35px rgba(226, 185, 86, 0.5);
+  }
+}
+
+@keyframes v2-loading-bar {
+  0% {
+    left: -40%;
+  }
+  100% {
+    left: 100%;
+  }
+}

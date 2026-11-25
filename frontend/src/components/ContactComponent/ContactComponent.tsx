@@ -34,9 +34,10 @@ const initialState: initialState = {
 }
 
 import { validateName, validateEmail, validatePhone } from "../../utils/validation";
+import { isV2Enabled } from "../../utils/featureFlags";
 
 export default function ContactComponent() {
-
+  const v2Active = isV2Enabled();
   const [formData, setFormData] = useState<initialState>(initialState)
   const [addContactQuery, { isError, error, isSuccess }] = useAddContactQueryMutation()
 
@@ -115,21 +116,33 @@ export default function ContactComponent() {
 
   return (
     <>
-
-      <div className="contact-header">
-        <div>
-          <h1>Contact Us Or Use This Form To Rent A Car</h1>
+      {v2Active ? (
+        <div className="v2-contact-header">
+          <span className="v2-contact-tag">GET IN TOUCH</span>
+          <h2>
+            CONCIERGE & <span className="v2-gold-span">INQUIRIES</span>
+          </h2>
           <p>
-            Get in touch with us to rent a car! Whether you have questions, need assistance, we're here to help.
-            <p>
-              Reach out to us using the form below, and we'll get back to you as soon as possible. Your satisfaction is our priority.
-            </p>
-            <p>
-              Feel free to contact us regarding any inquiries about our car rental services. Thank you for considering us for your next journey.</p>
+            Have questions about bookings, fleet availability, or custom itineraries? Our executive team is available 24/7 to assist you.
           </p>
         </div>
-      </div>
-      <div className="contact-component">
+      ) : (
+        <div className="contact-header">
+          <div>
+            <h1>Contact Us Or Use This Form To Rent A Car</h1>
+            <p>
+              Get in touch with us to rent a car! Whether you have questions, need assistance, we're here to help.
+              <p>
+                Reach out to us using the form below, and we'll get back to you as soon as possible. Your satisfaction is our priority.
+              </p>
+              <p>
+                Feel free to contact us regarding any inquiries about our car rental services. Thank you for considering us for your next journey.</p>
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className={`contact-component ${v2Active ? 'v2-contact-component' : ''}`}>
         <div className="contact-form-container">
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="input-group">

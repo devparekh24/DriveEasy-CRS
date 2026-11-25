@@ -8,8 +8,10 @@ import { setUserSignup } from '../../slices/authSlice'
 import { AiOutlineLoading3Quarters, AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 import { validateName, validateEmail, validatePhone, validatePassword, validateConfirmPassword } from '../../utils/validation'
+import { isV2Enabled } from '../../utils/featureFlags'
 
 const Signup = () => {
+    const v2Active = isV2Enabled();
     const userNameRef = useRef<HTMLInputElement | null>(null)
     const emailRef = useRef<HTMLInputElement | null>(null)
     const passwordRef = useRef<HTMLInputElement | null>(null)
@@ -111,7 +113,7 @@ const Signup = () => {
     }, []);
 
     return (
-        <div className="login">
+        <div className={`login ${v2Active ? 'v2-auth-page' : ''}`}>
             <div className="login-container">
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h1>Sign up</h1>

@@ -1,0 +1,146 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap");
+
+.luxury-features-section {
+  width: 100%;
+  padding: 6rem 2rem;
+  background: linear-gradient(180deg, #080a0f 0%, #0d111a 100%);
+  position: relative;
+  overflow: hidden;
+  color: #ffffff;
+}
+
+.features-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.crown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(226, 185, 86, 0.1);
+  border: 1px solid rgba(226, 185, 86, 0.3);
+  border-radius: 9999px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #e2b956;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+.crown-icon {
+  font-size: 0.85rem;
+}
+
+.features-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+}
+
+.gold-text {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  color: #e2b956;
+}
+
+.features-subtitle {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(226, 185, 86, 0.35);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.feature-icon-box {
+  width: 56px;
+  height: 56px;
+  background: rgba(226, 185, 86, 0.12);
+  border: 1px solid rgba(226, 185, 86, 0.3);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  color: #e2b956;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon-box {
+  background: #e2b956;
+  color: #0b0f19;
+  transform: scale(1.08) rotate(4deg);
+}
+
+.feature-card-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+
+.feature-card-desc {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.55;
+}
+
+@media screen and (max-width: 1024px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .luxury-features-section {
+    padding: 4rem 1rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}

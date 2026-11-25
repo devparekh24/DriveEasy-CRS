@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import './SearchFields.css';
 import { LuFilterX } from 'react-icons/lu';
+import { isV2Enabled } from '../../utils/featureFlags';
 
 const SearchFields = ({ onFilterChange }: { onFilterChange: (filters: any) => void }) => {
+  const v2Active = isV2Enabled();
 
   const [selectedFilters, setSelectedFilters] = useState({
     sortBy: '',
@@ -45,7 +47,7 @@ const SearchFields = ({ onFilterChange }: { onFilterChange: (filters: any) => vo
   };
 
   return (
-    <div className="search-fields">
+    <div className={`search-fields ${v2Active ? 'v2-search-fields' : ''}`}>
       <div className="search-fields-container">
 
         {/* Date Range Row */}

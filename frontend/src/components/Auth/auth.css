@@ -48,7 +48,7 @@
 }
 
 .input-group #email,
-input {
+.input-group input {
     padding: 16px;
     border-radius: 8px;
     border: 2px solid #e0e0e0;
@@ -59,7 +59,7 @@ input {
 }
 
 .input-group #email:focus,
-input:focus {
+.input-group input:focus {
     border-color: #000000;
     outline: none;
     background-color: #fff;
@@ -73,7 +73,7 @@ input:focus {
     border-color: #d0d0d0;
 }
 
-button {
+.login-form button {
     padding: 16px;
     border: none;
     border-radius: 8px;
@@ -91,24 +91,24 @@ button {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-button:hover:not(:disabled) {
+.login-form button:hover:not(:disabled) {
     background-color: #333;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-button:active:not(:disabled) {
+.login-form button:active:not(:disabled) {
     transform: translateY(0);
 }
 
-button:disabled {
+.login-form button:disabled {
     background-color: #999;
     cursor: not-allowed;
     opacity: 0.6;
     box-shadow: none;
 }
 
-button.loading {
+.login-form button.loading {
     background-color: #555;
 }
 
@@ -232,12 +232,12 @@ button.loading {
     }
 
     .input-group #email,
-    input {
+    .input-group input {
         padding: 14px;
         font-size: 16px;
     }
 
-    button {
+    .login-form button {
         font-size: 15px;
         padding: 14px;
     }
@@ -263,13 +263,209 @@ button.loading {
     }
 
     .input-group #email,
-    input {
+    .input-group input {
         padding: 12px;
         font-size: 15px;
     }
 
-    button {
+    .login-form button {
         padding: 12px;
         font-size: 14px;
     }
 }
+
+/* =========================================================
+   V2 LUXURY DARK THEME FOR AUTH (LOGIN, SIGNUP, FORGOT, RESET)
+   ========================================================= */
+.login.v2-auth-page {
+    background: radial-gradient(circle at 50% 20%, rgba(226, 185, 86, 0.08) 0%, rgba(8, 10, 15, 0.98) 75%),
+                linear-gradient(rgba(8, 10, 15, 0.88), rgba(8, 10, 15, 0.95)),
+                url("https://images.unsplash.com/photo-1548618607-fe992dd33eff?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    padding: 120px 20px 80px;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: #ffffff;
+}
+
+.login.v2-auth-page .login-container {
+    background: rgba(18, 24, 38, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(226, 185, 86, 0.08);
+    padding: 50px 42px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.login.v2-auth-page .login-container:hover {
+    border-color: rgba(226, 185, 86, 0.3);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.75), 0 0 45px rgba(226, 185, 86, 0.15);
+}
+
+/* Subtle top golden accent shimmer line */
+.login.v2-auth-page .login-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #e2b956, transparent);
+    opacity: 0.8;
+}
+
+.login.v2-auth-page .login-form h1 {
+    font-family: "Plus Jakarta Sans", sans-serif;
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+
+.login.v2-auth-page .login-form p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 15px;
+    margin-bottom: 28px;
+    font-weight: 400;
+}
+
+.login.v2-auth-page .input-group {
+    margin-bottom: 22px;
+}
+
+.login.v2-auth-page .input-group input,
+.login.v2-auth-page .input-group #email {
+    background: rgba(14, 18, 28, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 12px;
+    color: #ffffff;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 15px;
+    padding: 16px 18px;
+    transition: all 0.25s ease;
+}
+
+.login.v2-auth-page .input-group input::placeholder,
+.login.v2-auth-page .input-group #email::placeholder {
+    color: rgba(255, 255, 255, 0.38);
+    font-weight: 400;
+}
+
+.login.v2-auth-page .input-group input:focus,
+.login.v2-auth-page .input-group #email:focus {
+    border-color: #e2b956;
+    background: rgba(18, 24, 38, 0.95);
+    box-shadow: 0 0 0 3px rgba(226, 185, 86, 0.18);
+    outline: none;
+}
+
+.login.v2-auth-page .input-group input:disabled {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.login.v2-auth-page .password-input-wrapper input {
+    padding-right: 50px !important;
+}
+
+.login.v2-auth-page .password-toggle-icon {
+    color: rgba(255, 255, 255, 0.5);
+    right: 16px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.login.v2-auth-page .password-toggle-icon:hover {
+    color: #e2b956;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.login.v2-auth-page .login-form button {
+    background: linear-gradient(135deg, #e2b956 0%, #c49a37 100%);
+    color: #080a0f;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.3px;
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 14px;
+    border: none;
+    box-shadow: 0 8px 25px rgba(226, 185, 86, 0.35);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.login.v2-auth-page .login-form button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #f0cc6e 0%, #d4aa42 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(226, 185, 86, 0.5);
+}
+
+.login.v2-auth-page .login-form button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.login.v2-auth-page .login-form button:disabled {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.4);
+    box-shadow: none;
+}
+
+.login.v2-auth-page .bottom-text {
+    margin-top: 28px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.login.v2-auth-page .bottom-text p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.login.v2-auth-page .bottom-text a {
+    color: #e2b956;
+    font-weight: 700;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.login.v2-auth-page .bottom-text a:hover {
+    color: #f7d57f;
+    text-shadow: 0 0 10px rgba(226, 185, 86, 0.4);
+    text-decoration: none;
+}
+
+@media screen and (max-width: 600px) {
+    .login.v2-auth-page {
+        padding: 90px 16px 50px;
+    }
+
+    .login.v2-auth-page .login-container {
+        padding: 36px 22px;
+        border-radius: 20px;
+    }
+
+    .login.v2-auth-page .login-form h1 {
+        font-size: 24px;
+    }
+
+    .login.v2-auth-page .input-group input,
+    .login.v2-auth-page .input-group #email {
+        padding: 14px 16px;
+        font-size: 14px;
+    }
+
+    .login.v2-auth-page .login-form button {
+        padding: 14px;
+        font-size: 15px;
+    }
+}

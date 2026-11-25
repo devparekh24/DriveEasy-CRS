@@ -9,8 +9,10 @@ import { AiOutlineLoading3Quarters, AiOutlineEye, AiOutlineEyeInvisible } from '
 
 import { validateEmail, validatePassword } from '../../utils/validation'
 
-const Login = () => {
+import { isV2Enabled } from '../../utils/featureFlags'
 
+const Login = () => {
+    const v2Active = isV2Enabled();
     const emailRef = useRef<HTMLInputElement | null>(null)
     const passwordRef = useRef<HTMLInputElement | null>(null)
     const [showPassword, setShowPassword] = useState(false)
@@ -71,7 +73,7 @@ const Login = () => {
     }, []);
 
     return (
-        <div className="login">
+        <div className={`login ${v2Active ? 'v2-auth-page' : ''}`}>
             <div className="login-container">
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h1>Log in to DriveEasy</h1>

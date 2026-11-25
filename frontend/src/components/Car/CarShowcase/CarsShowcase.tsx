@@ -6,6 +6,7 @@ import { Car, setCars } from "../../../slices/carSlice";
 import { useGetAllCarsQuery, useGetCarsWithAvailabilityQuery } from "../../../services/carApi";
 import { toast } from "react-toastify";
 import Loader from "../../Loader/Loader";
+import { isV2Enabled } from "../../../utils/featureFlags";
 
 interface CarsShowcaseProps {
   filters: any;
@@ -13,6 +14,7 @@ interface CarsShowcaseProps {
 }
 
 const CarsShowcase: React.FC<CarsShowcaseProps> = ({ filters, gridView }) => {
+  const v2Active = isV2Enabled();
 
   const hasDateFilter = filters.startDate && filters.endDate;
 
@@ -156,9 +158,9 @@ const CarsShowcase: React.FC<CarsShowcaseProps> = ({ filters, gridView }) => {
   return (
     isLoading ? (<Loader />) :
       (
-        <div className="cars-showcase">
+        <div className={`cars-showcase ${v2Active ? 'v2-cars-showcase' : ''}`}>
           <div className={`list-row grid-${gridView}`}>
-            {filteredCars.length === 0 ? (<h3>No car found!</h3>) :
+            {filteredCars.length === 0 ? (<h3 className="no-cars-found">No car found!</h3>) :
               (<>
                 {filteredCars.map((car: Car) => (
                   <CarDetailsCard

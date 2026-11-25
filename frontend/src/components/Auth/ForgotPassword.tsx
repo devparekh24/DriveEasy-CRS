@@ -6,9 +6,10 @@ import { toast } from 'react-toastify';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 
 import { validateEmail } from '../../utils/validation';
+import { isV2Enabled } from '../../utils/featureFlags';
 
 const ForgotPassword = () => {
-
+    const v2Active = isV2Enabled();
     const emailRef = useRef<HTMLInputElement | null>(null)
     const [forgotPassword, { data, isSuccess, isError, isLoading, error }] = useForgotPasswordMutation()
 
@@ -55,7 +56,7 @@ const ForgotPassword = () => {
     }, []);
 
     return (
-        <div className="login">
+        <div className={`login ${v2Active ? 'v2-auth-page' : ''}`}>
             <div className="login-container">
                 <form className="login-form" onSubmit={handleSubmit}>
                     <h1>Forgot Your Password</h1>

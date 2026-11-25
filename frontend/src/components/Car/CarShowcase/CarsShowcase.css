@@ -123,3 +123,36 @@
     gap: 0.6rem;
   }
 }
+
+/* ===== V2 Luxury Dark Theme Styles ===== */
+.v2-cars-theme {
+  background-color: #080a0f;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.v2-cars-showcase {
+  background: transparent;
+  padding: 1.5rem 4rem 5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.v2-cars-showcase .no-cars-found {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  text-align: center;
+  padding: 3rem 0;
+}
+
+@media screen and (max-width: 1024px) {
+  .v2-cars-showcase {
+    padding: 1rem 2rem 4rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .v2-cars-showcase {
+    padding: 0.8rem 1rem 3rem;
+  }
+}

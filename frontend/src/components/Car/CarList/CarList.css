@@ -1,97 +1,387 @@
-.cars-list {
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap");
+
+.luxury-fleet-section {
   width: 100%;
-  min-height: 100vh;
+  padding: 6rem 2rem;
+  background: #080a0f;
+  color: #ffffff;
+  position: relative;
+}
+
+.fleet-header-box {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.fleet-subtitle-tag {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #e2b956;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 0.6rem;
+}
+
+.fleet-main-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+}
+
+.gold-text-span {
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  color: #e2b956;
+}
+
+.fleet-description {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 580px;
+  margin: 0 auto 2rem;
+}
+
+/* Category Filter Tabs */
+.fleet-filter-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  backdrop-filter: blur(12px);
+}
+
+.filter-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 10px 22px;
+  border-radius: 9999px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.filter-tab:hover {
+  color: #ffffff;
+}
+
+.filter-tab.active {
+  background: #ffffff;
+  color: #0b0f19;
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+/* Grid Container */
+.fleet-grid-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* Luxury Card */
+.fleet-luxury-card {
+  background: rgba(18, 24, 38, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.fleet-luxury-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(226, 185, 86, 0.4);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(226, 185, 86, 0.15);
+  background: rgba(24, 32, 50, 0.8);
+}
+
+.card-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.car-category-pill {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #e2b956;
+  background: rgba(226, 185, 86, 0.12);
+  border: 1px solid rgba(226, 185, 86, 0.3);
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+.car-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.star-icon {
+  color: #facc15;
+  font-size: 0.9rem;
+}
+
+.car-image-box {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.car-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+}
+
+.fleet-luxury-card:hover .car-img {
+  transform: scale(1.08) translateY(-4px);
+}
+
+.car-details-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.car-title {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 12px;
+}
+
+.car-specs-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.spec-icon {
+  color: #e2b956;
+}
+
+.car-price-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.price-tag {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.currency {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e2b956;
+}
+
+.amount {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.per-day {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 2px;
+}
+
+.reserve-btn {
+  background: #ffffff;
+  color: #0b0f19;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.reserve-btn:hover {
+  background: #e2b956;
+  color: #0b0f19;
+  transform: scale(1.04);
+}
+
+.arrow-icon {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.reserve-btn:hover .arrow-icon {
+  transform: translateX(3px);
+}
+
+/* Footer Action */
+.fleet-footer-action {
+  text-align: center;
+  margin-top: 3.5rem;
+}
+
+.view-all-fleet-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 36px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  color: #ffffff;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.view-all-fleet-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+/* Responsive Media Queries */
+@media screen and (max-width: 1024px) {
+  .fleet-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .luxury-fleet-section {
+    padding: 4rem 1rem;
+  }
+
+  .fleet-grid-container {
+    grid-template-columns: 1fr;
+  }
+
+  .fleet-filter-tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 20px;
+  }
+}
+
+/* V1 Classic CarList Styles */
+.v1-cars-list {
+  width: 100%;
+  min-height: 80vh;
   padding: 5rem 4rem;
   text-align: center;
   font-size: 1.2rem;
+  background-color: #ffffff;
+  color: #000000;
 }
 
-.cars-list h5 {
+.v1-cars-list h5 {
   color: rgb(148, 147, 147);
 }
 
-.car-list-container {
+.v1-car-list-container {
   width: 90%;
-  margin-top: 2rem;
+  margin: 2rem auto 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
-  margin: 2rem auto 0;
 }
 
-.car-card {
+.v1-car-card {
   width: 20rem;
   height: 22rem;
   position: relative;
   border-radius: 13px;
   margin: 1rem 0.5rem;
   box-shadow: 0 0 2px 0px rgb(128, 128, 128);
+  background-color: #ffffff;
+  overflow: hidden;
 }
 
-.card-image {
+.v1-card-image {
   width: 100%;
-  height: 100%;
+  height: 80%;
   display: block;
-  filter: brightness(80%);
-  border-radius: 13px;
+  border-radius: 13px 13px 0 0;
   object-fit: contain;
   cursor: pointer;
+  padding: 1rem 1rem 0;
 }
 
-.car-card:hover {
-  transition: 0.7s;
-  top: -8px;
-  box-shadow: 0px 20px 40px rgb(128, 128, 128);
-}
-
-.overlay {
+.v1-overlay {
   position: absolute;
   bottom: 0;
+  left: 0;
   width: 100%;
-  transition: 0.5s ease;
-  font-size: 1.6rem;
-  padding: 10px;
+  padding: 0.8rem 1.2rem;
   text-align: left;
-  font-weight: bold;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #000000;
+  background: transparent;
+  transition: 0.3s ease;
 }
 
-/* find-car-list */
-.find-car-list {
-  width: 100%;
-  min-height: 100vh;
-  padding: 2rem 4rem;
-  text-align: center;
-  font-size: 1.2rem;
-}
-
-.find-car-list h5 {
-  color: rgb(148, 147, 147);
-}
-
-.card-type-container {
-  width: 90%;
-  margin: 2rem auto 0rem;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-@media screen and (max-width: 1024px) {
-  .cars-list {
-    padding: 4rem 0.8rem;
-  }
-
-  .car-list-container {
-    width: 100%;
-  }
-
-  .find-car-list {
-    padding: 2rem 1rem;
-  }
-
-  .card-type-container {
-    width: 100%;
-  }
-}
+
